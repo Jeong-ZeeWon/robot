@@ -119,33 +119,25 @@ body {
   overflow: hidden;
 }
 
-.v4-tabs {
+.v41-panel {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  padding: 9px;
-  background: rgba(237, 247, 255, .78);
+  gap: 0;
+  overflow: visible;
 }
 
-.v4-tab {
-  border: 0;
-  border-radius: 17px;
-  padding: 11px 6px;
-  background: transparent;
-  color: #667086;
-  font-size: 13px;
-  font-weight: 900;
-  cursor: pointer;
+.v4-tabs {
+  display: none;
 }
 
-.v4-tab.is-active {
-  background: #18202f;
-  color: #fff;
-  box-shadow: 0 8px 18px rgba(24,32,47,.18);
+.v4-tab-panel,
+.v4-tab-panel.is-active {
+  display: block;
+  padding: 16px;
 }
 
-.v4-tab-panel { display: none; padding: 16px; }
-.v4-tab-panel.is-active { display: block; }
+.v41-section + .v41-section {
+  border-top: 1px solid rgba(120, 137, 166, .16);
+}
 
 .section-title {
   display: flex;
@@ -155,7 +147,7 @@ body {
 }
 
 .section-title span { font-size: 16px; font-weight: 900; }
-.section-title small { color: var(--muted); font-size: 12px; }
+.section-title small { color: var(--muted); font-size: 12px; line-height: 1.45; }
 
 .emotion-grid {
   display: grid;
@@ -178,15 +170,36 @@ body {
   cursor: pointer;
 }
 
-.v4-care-actions {
+.v4-care-actions,
+.v41-care-actions {
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin: 0;
 }
 
-.v4-care-actions button { font-size: 16px; }
+.v41-care-actions button {
+  min-height: 76px;
+  padding: 12px;
+  text-align: left;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+}
+
+.v41-care-actions button strong {
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+.v41-care-actions button small {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
 .v4-meters { margin-top: 14px; }
-.meter.fullness i { background: linear-gradient(90deg, #ffd18f, #ffbd7a); }
 .meter.lonely i { background: linear-gradient(90deg, #b7c8ff, #8ee7ff); }
 
 .voice-grid { display: grid; gap: 12px; }
@@ -211,6 +224,14 @@ body {
 .voice-grid input[type="range"] { accent-color: #38a98f; }
 .v4-wide-button { width: 100%; background: #18202f; color: #fff; }
 
+.voice-note {
+  margin: -2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
 .face.curious .eye {
   width: 18px;
   height: 18px;
@@ -232,4 +253,5 @@ body[data-theme="lonely"] { background: radial-gradient(circle at 50% 0%, #fffff
 @media (max-width: 390px) {
   .v4-stage { height: 285px; }
   .v4-tab-panel { padding: 14px; }
+  .v41-care-actions button { min-height: 72px; }
 }
