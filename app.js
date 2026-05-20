@@ -1,6 +1,7 @@
 const STORAGE_KEY = "sioni-v41-state";
 const LEGACY_STORAGE_KEYS = ["sioni-v4-state", "sioni-v3-state", "sioni-v2-state", "sioni-v1-state"];
 const BOT_NAME = "시오니";
+const COOLDOWN_MS = 10 * 1000;
 
 const todayKey = () => {
   const now = new Date();
@@ -30,12 +31,6 @@ const defaultState = {
   lastSleptAt: null,
   sleepStartedAt: null,
   idleCount: 0,
-};
-
-const COOLDOWNS = {
-  feed: 3 * 60 * 1000,
-  play: 60 * 1000,
-  sleep: 5 * 60 * 1000,
 };
 
 const el = {
@@ -185,23 +180,14 @@ function daysBetween(dateA, dateB) {
   return Math.round((b - a) / 86400000);
 }
 
-function minutesSince(iso) {
-  if (!iso) return Infinity;
-  return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 60000));
-}
-
-function cooldownLeft(action) {
-  const key = action === "feed" ? "lastFedAt" : action === "play" ? "lastPlayedAt" : "lastSleptAt";
-  const last = state[key];
-  if (!last) return 0;
-  const left = COOLDOWNS[action] - (Date.now() - new Date(last).getTime());
-  return Math.max(0, left);
+function cooldownLeft(lastIso) {
+  if (!lastIso) return 0;
+  return Math.max(0, COOLDOWN_MS - (Date.now() - new Date(lastIso).getTime()));
 }
 
 function cooldownText(ms) {
   const seconds = Math.ceil(ms / 1000);
-  if (seconds < 60) return `${seconds}초`;
-  return `${Math.ceil(seconds / 60)}분`;
+  return `${seconds}초`;
 }
 
 function resetDailyIfNeeded() {
@@ -217,20 +203,20 @@ function applyTimeDrift(previousVisit) {
   const awayMinutes = Math.max(0, Math.floor((Date.now() - new Date(previousVisit).getTime()) / 60000));
   if (awayMinutes < 2) return;
 
-  const hungerGain = Math.min(34, Math.floor(awayMinutes / 30) * 2);
-  const baseEnergyGain = Math.min(16, Math.floor(awayMinutes / 30) * 2);
+  const hungerGain = Math.min(28, Math.floor(awayMinutes / 30) * 2);
+  const energyGain = Math.min(22, Math.floor(awayMinutes / 20) * 2);
   const lonelinessGain = awayMinutes >= 1440 ? 18 : awayMinutes >= 720 ? 10 : awayMinutes >= 180 ? 5 : 1;
   const moodLoss = awayMinutes >= 1440 ? 8 : awayMinutes >= 720 ? 4 : awayMinutes >= 180 ? 2 : 0;
 
   let sleepBonus = 0;
   if (state.sleepStartedAt) {
-    const sleepMinutes = minutesSince(state.sleepStartedAt);
-    sleepBonus = Math.min(24, Math.floor(sleepMinutes / 5) * 3);
-    if (sleepMinutes > 60) state.sleepStartedAt = null;
+    const sleepMinutes = Math.max(0, Math.floor((Date.now() - new Date(state.sleepStartedAt).getTime()) / 60000));
+    sleepBonus = Math.min(30, Math.floor(sleepMinutes / 2) * 4);
+    if (sleepMinutes > 30) state.sleepStartedAt = null;
   }
 
   state.hunger = clamp(state.hunger + hungerGain);
-  state.energy = clamp(state.energy + baseEnergyGain + sleepBonus);
+  state.energy = clamp(state.energy + energyGain + sleepBonus);
   state.loneliness = clamp(state.loneliness + lonelinessGain);
   state.mood = clamp(state.mood - moodLoss);
 }
@@ -243,8 +229,7 @@ function updateVisitHistory() {
 
   if (state.lastVisitDate && state.lastVisitDate !== today) {
     const diff = daysBetween(state.lastVisitDate, today);
-    if (diff === 1) state.streak += 1;
-    else state.streak = 1;
+    state.streak = diff === 1 ? (state.streak || 1) + 1 : 1;
     state.bestStreak = Math.max(state.bestStreak || 1, state.streak);
   }
 
@@ -307,7 +292,7 @@ function getResponse(category, replacements = {}) {
 
 function say(text, faceName = "calm", motion = "bounce", hint = "") {
   el.message.textContent = text.replaceAll("v3", "v4.1").replaceAll("포만감", "소화 상태");
-  el.microHint.textContent = hint || "배고픔은 간식으로, 에너지는 쉬기로, 외로움은 쓰담과 인사로 돌봐주세요.";
+  el.microHint.textContent = hint || "쿨타임은 모두 10초예요. 몇 번만 돌봐도 게이지가 눈에 띄게 움직여요.";
   render(false);
   setFace(faceName, faceName);
   animateRobot(motion);
@@ -372,11 +357,13 @@ function render(updateFaceFromMood = true) {
     })
     .join("");
 
-  const feedLeft = cooldownLeft("feed");
-  const playLeft = cooldownLeft("play");
+  const feedLeft = cooldownLeft(state.lastFedAt);
+  const playLeft = cooldownLeft(state.lastPlayedAt);
+  const sleepLeft = cooldownLeft(state.lastSleptAt);
   const cooldownLine = [
     feedLeft ? `간식 ${cooldownText(feedLeft)}` : "간식 가능",
     playLeft ? `놀이 ${cooldownText(playLeft)}` : "놀이 가능",
+    sleepLeft ? `쉬기 ${cooldownText(sleepLeft)}` : "쉬기 가능",
   ].join(" · ");
 
   el.memoryLine.textContent = `총 ${state.visits || 0}번 만났고, ${state.totalTalks || 0}번 이야기했어요. 최근 기억: ${state.lastTopic || "아직 없음"}. ${cooldownLine}`;
@@ -433,65 +420,65 @@ function handlePet() {
   if (tapCount >= 4) {
     tapCount = 0;
     completeMission("pet");
-    respond("surprise", { delta: { mood: 2, affection: 1, energy: -2, loneliness: -2 }, topic: "연속 터치", hint: "빠르게 여러 번 누르면 놀라는 반응이 나와요." });
+    respond("surprise", { delta: { mood: 8, affection: 4, energy: -3, loneliness: -9 }, topic: "연속 터치", hint: "빠르게 여러 번 누르면 기분과 친밀도가 확 올라가요." });
     return;
   }
 
-  const effect = tapCount === 1 ? { mood: 2, affection: 2, loneliness: -3 } : { mood: 1, affection: 1, loneliness: -2 };
+  const effect = tapCount === 1 ? { mood: 5, affection: 4, loneliness: -8 } : { mood: 4, affection: 3, loneliness: -7 };
   completeMission("pet");
-  respond("pet", { delta: effect, topic: "쓰다듬기" });
+  respond("pet", { delta: effect, topic: "쓰다듬기", hint: "쓰담은 외로움을 크게 낮추고 친밀도를 올려요." });
 }
 
 function handleFeed() {
-  const left = cooldownLeft("feed");
+  const left = cooldownLeft(state.lastFedAt);
   if (left > 0) {
-    respond("fedCooldown", { topic: "간식 쿨타임", hint: `간식은 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요.` });
+    respond("fedCooldown", { delta: { mood: 1, affection: 1 }, topic: "간식 쿨타임", hint: `간식은 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요. 기다리는 동안 쓰담은 가능해요.` });
     return;
   }
 
   state.lastFedAt = new Date().toISOString();
   completeMission("feed");
   respond("fedSuccess", {
-    delta: { hunger: -10, mood: 2, affection: 1, energy: 1 },
+    delta: { hunger: -22, mood: 4, affection: 2, energy: 2, loneliness: -3 },
     topic: "간식 주기",
     motion: "charge",
-    hint: "간식은 배고픔을 조금 낮춰요. 너무 자주 주면 쿨타임이 걸려요.",
+    hint: "간식 효과를 키웠어요. 몇 번만 줘도 배고픔이 확 내려가요.",
   });
 }
 
 function handlePlay() {
-  const left = cooldownLeft("play");
-  if (state.energy <= 20) {
-    respond("lowEnergy", { topic: "에너지 부족" });
+  const left = cooldownLeft(state.lastPlayedAt);
+  if (state.energy <= 10) {
+    respond("lowEnergy", { delta: { mood: 1, loneliness: -2 }, topic: "에너지 부족", hint: "에너지가 아주 낮을 때는 먼저 쉬게 해주세요." });
     return;
   }
-  if (state.hunger >= 86) {
-    respond("tooHungry", { topic: "배고픔" });
+  if (state.hunger >= 94) {
+    respond("tooHungry", { delta: { affection: 1 }, topic: "배고픔", hint: "너무 배고플 때는 간식부터 주면 좋아요." });
     return;
   }
   if (left > 0) {
-    respond("playCooldown", { topic: "놀이 쿨타임", hint: `놀이는 ${cooldownText(left)} 뒤에 다시 좋아져요.` });
+    respond("playCooldown", { delta: { mood: 2, loneliness: -2 }, topic: "놀이 쿨타임", hint: `놀이는 ${cooldownText(left)} 뒤에 다시 좋아져요.` });
     return;
   }
 
-  const hungerPenalty = state.hunger >= 70 ? 0.6 : 1;
+  const hungerPenalty = state.hunger >= 76 ? 0.75 : 1;
   state.lastPlayedAt = new Date().toISOString();
   respond("bored", {
-    delta: { mood: Math.round(8 * hungerPenalty), affection: 3, energy: -12, hunger: 6, loneliness: -10 },
+    delta: { mood: Math.round(14 * hungerPenalty), affection: 6, energy: -9, hunger: 8, loneliness: -16 },
     topic: "놀이",
     motion: "bounce",
-    hint: "놀이는 기분을 올리지만 에너지와 배고픔을 함께 소모해요.",
+    hint: "놀이는 기분과 외로움에 크게 효과가 있지만 에너지와 배고픔을 함께 소모해요.",
   });
 }
 
 function handleSleep() {
-  const left = cooldownLeft("sleep");
-  if (state.energy >= 86) {
-    respond("rested", { delta: { mood: 1 }, topic: "충분한 에너지", hint: "에너지가 높을 때는 쉬기 효과가 작아요." });
+  const left = cooldownLeft(state.lastSleptAt);
+  if (state.energy >= 94) {
+    respond("rested", { delta: { mood: 2, loneliness: -2 }, topic: "충분한 에너지", hint: "에너지가 이미 높아서 쉬기 효과는 작게 들어가요." });
     return;
   }
   if (left > 0) {
-    respond("rested", { delta: { energy: 1, mood: 1 }, topic: "수면 쿨타임", hint: `쉬기는 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요.` });
+    respond("rested", { delta: { energy: 3, mood: 1, loneliness: -2 }, topic: "쉬기 쿨타임", hint: `아직 깊은 쉬기는 ${cooldownText(left)} 뒤에 가능하지만, 살짝 회복은 돼요.` });
     return;
   }
 
@@ -499,10 +486,10 @@ function handleSleep() {
   state.sleepStartedAt = state.lastSleptAt;
   completeMission("sleep");
   respond("rested", {
-    delta: { energy: 5, mood: 2, loneliness: -3 },
+    delta: { energy: 18, mood: 5, loneliness: -8, hunger: 2 },
     topic: "쉬기",
     motion: "sleepy",
-    hint: "쉬기는 즉시 조금만 회복되고, 시간이 지나며 추가 회복돼요.",
+    hint: "쉬기 효과를 키웠어요. 즉시 회복되고, 시간이 지나면 추가 회복돼요.",
   });
 }
 
@@ -511,7 +498,7 @@ function handleTalk(rawText) {
   if (!text) return;
 
   state.totalTalks += 1;
-  tune({ energy: -2, hunger: 1, loneliness: -3, affection: 1 });
+  tune({ energy: -1, hunger: 1, loneliness: -5, affection: 2, mood: 1 });
 
   const category = classify(text);
   const missionCategory = ["tired", "sad", "joy", "angry", "anxious"].includes(category) ? "mood" : null;
@@ -558,7 +545,7 @@ function categoryToTopic(category) {
 }
 
 function firstMessageForVisit(previousVisit) {
-  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v4.1이에요. 이제 각 돌봄 버튼의 역할을 한 화면에서 바로 볼 수 있어요.`;
+  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v4.1이에요. 이제 돌봄 효과가 더 잘 보이도록 조정됐어요.`;
 
   const hoursAway = (Date.now() - new Date(previousVisit).getTime()) / 36e5;
   if (hoursAway > 72) return "오랜만이에요… 조금 배고프고 외로웠지만, 다시 와줘서 정말 좋아요.";
@@ -584,8 +571,8 @@ function bindEvents() {
     clearTimeout(holdTimer);
     holdTimer = setTimeout(() => {
       longPressHandled = true;
-      tune({ mood: 2, affection: 4, energy: -1, loneliness: -5 });
-      respond("pet", { face: "shy", motion: "pulse", topic: "길게 누르기", hint: "길게 누르면 포근한 반응이 나와요." });
+      tune({ mood: 7, affection: 7, energy: -2, loneliness: -12 });
+      respond("pet", { face: "shy", motion: "pulse", topic: "길게 누르기", hint: "길게 누르면 쓰담 효과가 더 크게 들어가요." });
     }, 750);
   });
 
@@ -649,4 +636,4 @@ applyTimeDrift(previousVisit);
 bindEvents();
 updateVisitHistory();
 render(true);
-say(firstMessageForVisit(previousVisit), moodInfo().face, "peek", "v4.1 정리판: 포만감 표시를 없애고 돌봄 역할을 바로 보이게 바꿨어요.");
+say(firstMessageForVisit(previousVisit), moodInfo().face, "peek", "쿨타임을 모두 10초로 줄이고 게이지 변화량을 키웠어요.");
