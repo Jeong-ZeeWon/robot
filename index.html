@@ -3,34 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#7cf7d4" />
-  <meta name="description" content="무료로 시작하는 반응형 포켓 로봇 웹앱 v1" />
-  <title>시오니 v1</title>
+  <meta name="theme-color" content="#75f5d3" />
+  <meta name="description" content="시간, 방문 기록, 미션에 따라 반응하는 포켓 로봇 시오니 v2" />
+  <title>시오니 v2</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <main class="app-shell" aria-label="시오니 v1">
+<body data-theme="calm">
+  <main class="app-shell" aria-label="시오니 v2">
     <section class="hero-card">
       <div class="top-bar">
         <div>
-          <p class="eyebrow">Pocket Robot v1</p>
+          <p class="eyebrow">Pocket Robot v2</p>
           <h1 id="botName">시오니</h1>
+          <p class="subtitle" id="timeGreeting">오늘도 같이 있어줄게요.</p>
         </div>
-        <button id="voiceToggle" class="icon-button" type="button" aria-pressed="true" title="목소리 켜기/끄기">🔊</button>
+        <div class="top-actions">
+          <button id="voiceToggle" class="icon-button" type="button" aria-pressed="true" title="목소리 켜기/끄기">🔊</button>
+          <button id="resetButton" class="icon-button subtle" type="button" title="상태 초기화">↺</button>
+        </div>
+      </div>
+
+      <div class="badge-row" aria-label="시오니 관계 정보">
+        <span id="levelBadge" class="soft-badge">Lv.1 처음 만난 사이</span>
+        <span id="streakBadge" class="soft-badge">연속 1일</span>
       </div>
 
       <div class="robot-stage" aria-live="polite">
         <div class="sparkle sparkle-one"></div>
         <div class="sparkle sparkle-two"></div>
-        <button id="robot" class="robot" type="button" aria-label="로봇 쓰다듬기">
+        <button id="robot" class="robot" type="button" aria-label="시오니 쓰다듬기">
           <span class="lanyard"></span>
           <span class="head">
             <span class="sensor"></span>
             <span id="face" class="face calm">
               <span class="eye left-eye"></span>
               <span class="eye right-eye"></span>
+              <span class="mouth"></span>
             </span>
           </span>
           <span class="neck"></span>
@@ -44,12 +54,20 @@
       </div>
 
       <div class="speech-card">
-        <p id="message">안녕하세요. 저는 시오니예요. 화면을 톡 누르거나 말을 걸어주세요.</p>
+        <p id="message">안녕하세요. 저는 시오니예요. 이제 시간과 미션도 기억해요.</p>
+        <small id="microHint">로봇을 톡 누르거나 아래 문장을 눌러보세요.</small>
+      </div>
+
+      <div class="prompt-chips" aria-label="빠른 말걸기">
+        <button type="button" data-say="안녕 시오니">안녕</button>
+        <button type="button" data-say="나 오늘 힘들어">힘들어</button>
+        <button type="button" data-say="심심해">심심해</button>
+        <button type="button" data-say="오늘 뭐하지?">오늘 뭐하지?</button>
       </div>
 
       <form id="talkForm" class="talk-form">
         <label class="sr-only" for="userInput">시오니에게 말하기</label>
-        <input id="userInput" name="message" autocomplete="off" placeholder="예: 나 오늘 힘들어" />
+        <input id="userInput" name="message" autocomplete="off" placeholder="예: 나 오늘 기뻐" />
         <button type="submit">말하기</button>
       </form>
 
@@ -61,9 +79,12 @@
       </div>
     </section>
 
-    <section class="status-card" aria-label="로봇 상태">
+    <section class="status-card" aria-label="시오니 상태">
       <div class="status-heading">
-        <strong id="moodLabel">상태 확인 중</strong>
+        <div>
+          <strong id="moodLabel">상태 확인 중</strong>
+          <p id="levelLabel">관계 레벨을 계산 중이에요</p>
+        </div>
         <span id="lastSeen">처음 만났어요</span>
       </div>
 
@@ -85,14 +106,22 @@
         </div>
         <div class="meter-row">
           <span>배고픔</span>
-          <div class="meter"><i id="hungerBar"></i></div>
+          <div class="meter danger"><i id="hungerBar"></i></div>
           <b id="hungerValue">0</b>
         </div>
       </div>
 
       <div class="mini-log">
-        <span>오늘의 목표</span>
-        <p id="dailyMission">시오니와 한 번 대화하기</p>
+        <div class="mini-log-title">
+          <span>오늘의 미션</span>
+          <strong id="missionCount">0/5</strong>
+        </div>
+        <ul id="missionList" class="mission-list"></ul>
+      </div>
+
+      <div class="memory-card">
+        <span>시오니의 기억</span>
+        <p id="memoryLine">아직 오늘의 기억을 정리하는 중이에요.</p>
       </div>
     </section>
   </main>
