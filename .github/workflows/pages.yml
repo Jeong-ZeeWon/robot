@@ -41,6 +41,7 @@ jobs:
           cp v4.js dist/
           cp v5.js dist/
           cp app.js dist/
+          cp v5-version.js dist/
           cp persist.js dist/
           cp manifest.json dist/
           cp icon.svg dist/
