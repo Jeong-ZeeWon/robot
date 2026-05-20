@@ -137,6 +137,41 @@
   border-color: rgba(117, 217, 245, .22);
 }
 
+.v5-mini-fx {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1px;
+  height: 1px;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.v5-mini-fx span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 18px;
+  font-weight: 900;
+  white-space: nowrap;
+  filter: drop-shadow(0 7px 10px rgba(24,32,47,.16));
+  animation: v5-mini-pop .95s ease forwards;
+}
+
+@keyframes v5-mini-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(.55) rotate(0deg);
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1.15) rotate(var(--r));
+    opacity: 0;
+  }
+}
+
 .v5-adventure-card {
   border: 1px solid rgba(255, 195, 74, .28);
   border-radius: 30px;
