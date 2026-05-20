@@ -80,9 +80,60 @@
         </div>
       </div>
 
+      <section class="v5-status-card" aria-label="시오니 상태와 게이지">
+        <div class="status-heading">
+          <div>
+            <strong id="moodLabel">상태 확인 중</strong>
+            <p id="levelLabel">관계 레벨을 계산 중이에요</p>
+          </div>
+          <span id="lastSeen">처음 만났어요</span>
+        </div>
+
+        <div class="meter-list v4-meters">
+          <div class="meter-row">
+            <span>기분</span>
+            <div class="meter"><i id="moodBar"></i></div>
+            <b id="moodValue">0</b>
+          </div>
+          <div class="meter-row">
+            <span>친밀도</span>
+            <div class="meter"><i id="affectionBar"></i></div>
+            <b id="affectionValue">0</b>
+          </div>
+          <div class="meter-row">
+            <span>에너지</span>
+            <div class="meter"><i id="energyBar"></i></div>
+            <b id="energyValue">0</b>
+          </div>
+          <div class="meter-row">
+            <span>배고픔</span>
+            <div class="meter danger"><i id="hungerBar"></i></div>
+            <b id="hungerValue">0</b>
+          </div>
+          <div class="meter-row">
+            <span>외로움</span>
+            <div class="meter lonely"><i id="lonelinessBar"></i></div>
+            <b id="lonelinessValue">0</b>
+          </div>
+        </div>
+
+        <div class="mini-log v5-legacy-mission-hidden" aria-hidden="true">
+          <div class="mini-log-title">
+            <span>기본 미션 기록</span>
+            <strong id="missionCount">0/5</strong>
+          </div>
+          <ul id="missionList" class="mission-list"></ul>
+        </div>
+
+        <div class="memory-card v5-memory-compact">
+          <span>시오니의 기억</span>
+          <p id="memoryLine">아직 오늘의 기억을 정리하는 중이에요.</p>
+        </div>
+      </section>
+
       <div class="speech-card v4-speech">
-        <p id="message">안녕하세요. 저는 시오니예요. 양옆 버튼으로 바로 말을 걸고 돌봐주세요.</p>
-        <small id="microHint">왼쪽은 기분 말하기, 오른쪽은 돌보기예요. 로봇 옆 버튼을 눌러 교감해요.</small>
+        <p id="message">안녕하세요. 저는 시오니예요. 버튼을 누르면 바로 아래 게이지가 변해요.</p>
+        <small id="microHint">로봇 옆 버튼을 누른 뒤 바로 아래 상태창에서 변화를 확인해보세요.</small>
       </div>
 
       <div class="recommend-card">
@@ -161,57 +212,6 @@
           <div class="v5-treasure-box"><span>🖼️</span><strong id="stickerCount">0</strong><small>스티커</small></div>
         </div>
         <div id="stickerBook" class="v5-sticker-book" aria-label="스티커 도감"></div>
-      </section>
-
-      <section class="v4-tab-panel is-active v41-section" data-panel="status" aria-label="상태와 기억">
-        <div class="status-heading">
-          <div>
-            <strong id="moodLabel">상태 확인 중</strong>
-            <p id="levelLabel">관계 레벨을 계산 중이에요</p>
-          </div>
-          <span id="lastSeen">처음 만났어요</span>
-        </div>
-
-        <div class="meter-list v4-meters">
-          <div class="meter-row">
-            <span>기분</span>
-            <div class="meter"><i id="moodBar"></i></div>
-            <b id="moodValue">0</b>
-          </div>
-          <div class="meter-row">
-            <span>친밀도</span>
-            <div class="meter"><i id="affectionBar"></i></div>
-            <b id="affectionValue">0</b>
-          </div>
-          <div class="meter-row">
-            <span>에너지</span>
-            <div class="meter"><i id="energyBar"></i></div>
-            <b id="energyValue">0</b>
-          </div>
-          <div class="meter-row">
-            <span>배고픔</span>
-            <div class="meter danger"><i id="hungerBar"></i></div>
-            <b id="hungerValue">0</b>
-          </div>
-          <div class="meter-row">
-            <span>외로움</span>
-            <div class="meter lonely"><i id="lonelinessBar"></i></div>
-            <b id="lonelinessValue">0</b>
-          </div>
-        </div>
-
-        <div class="mini-log v5-legacy-mission-hidden" aria-hidden="true">
-          <div class="mini-log-title">
-            <span>기본 미션 기록</span>
-            <strong id="missionCount">0/5</strong>
-          </div>
-          <ul id="missionList" class="mission-list"></ul>
-        </div>
-
-        <div class="memory-card">
-          <span>시오니의 기억</span>
-          <p id="memoryLine">아직 오늘의 기억을 정리하는 중이에요.</p>
-        </div>
       </section>
 
       <section class="v4-tab-panel is-active v41-section" data-panel="settings" aria-label="설정">
