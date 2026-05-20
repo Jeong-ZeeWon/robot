@@ -39,6 +39,22 @@
         <span class="room-item room-window">☁️</span>
         <span class="room-item room-rug">🟢</span>
         <span class="room-item room-toy">🧸</span>
+
+        <div class="v5-orbit-controls v5-orbit-left" aria-label="시오니에게 기분 말하기">
+          <button type="button" data-say="안녕 시오니" data-v5-step="greet" title="안녕"><span>😊</span><small>안녕</small></button>
+          <button type="button" data-say="나 오늘 힘들어" data-v5-step="mood" title="힘들어"><span>😔</span><small>힘듦</small></button>
+          <button type="button" data-say="나 오늘 기뻐" data-v5-step="mood" title="기뻐"><span>✨</span><small>기쁨</small></button>
+          <button type="button" data-say="불안해" data-v5-step="mood" title="불안해"><span>😟</span><small>불안</small></button>
+          <button type="button" data-say="심심해" data-v5-step="mood" title="심심해"><span>🎈</span><small>심심</small></button>
+        </div>
+
+        <div class="v5-orbit-controls v5-orbit-right" aria-label="시오니 돌보기">
+          <button type="button" data-action="pet" data-v5-step="pet" title="쓰담"><span>💚</span><small>쓰담</small></button>
+          <button type="button" data-action="feed" data-v5-step="feed" title="간식"><span>🍪</span><small>간식</small></button>
+          <button type="button" data-action="play" data-v5-step="play" title="놀기"><span>🎈</span><small>놀기</small></button>
+          <button type="button" data-action="sleep" data-v5-step="sleep" title="쉬기"><span>🌙</span><small>쉬기</small></button>
+        </div>
+
         <div class="robot-stage v4-stage v5-stage" aria-live="polite">
           <div class="sparkle sparkle-one"></div>
           <div class="sparkle sparkle-two"></div>
@@ -65,8 +81,8 @@
       </div>
 
       <div class="speech-card v4-speech">
-        <p id="message">안녕하세요. 저는 시오니예요. 오늘의 별 조각 모험을 같이 해볼까요?</p>
-        <small id="microHint">오늘의 모험을 완료하면 별 조각과 스티커를 받을 수 있어요.</small>
+        <p id="message">안녕하세요. 저는 시오니예요. 양옆 버튼으로 바로 말을 걸고 돌봐주세요.</p>
+        <small id="microHint">왼쪽은 기분 말하기, 오른쪽은 돌보기예요. 로봇 옆 버튼을 눌러 교감해요.</small>
       </div>
 
       <div class="recommend-card">
@@ -94,7 +110,7 @@
     </section>
 
     <section class="v4-panel-card v41-panel">
-      <section class="v4-tab-panel is-active v41-section" data-panel="home" aria-label="감정 선택">
+      <section class="v4-tab-panel is-active v41-section v5-legacy-controls-hidden" data-panel="home" aria-label="감정 선택" aria-hidden="true">
         <div class="section-title">
           <span>오늘 나는...</span>
           <small>버튼을 누르면 시오니가 오늘 기분을 기억해요.</small>
@@ -109,7 +125,7 @@
         </div>
       </section>
 
-      <section class="v4-tab-panel is-active v41-section" data-panel="care" aria-label="돌보기">
+      <section class="v4-tab-panel is-active v41-section v5-legacy-controls-hidden" data-panel="care" aria-label="돌보기" aria-hidden="true">
         <div class="section-title">
           <span>돌보기</span>
           <small>각 버튼은 10초 뒤 다시 강하게 작동해요.</small>
