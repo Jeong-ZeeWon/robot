@@ -95,10 +95,10 @@ function speak(text) {
 
 function say(text, faceName = "calm", shouldBounce = true) {
   el.message.textContent = text;
+  render();
   setFace(faceName);
   if (shouldBounce) bounce();
   speak(text);
-  render();
 }
 
 function moodName() {
@@ -110,7 +110,7 @@ function moodName() {
   return ["평온해요", "calm"];
 }
 
-function render() {
+function render(updateFaceFromMood = false) {
   const stats = ["mood", "affection", "energy", "hunger"];
   stats.forEach((key) => {
     state[key] = clamp(state[key]);
@@ -120,7 +120,7 @@ function render() {
 
   const [label, faceName] = moodName();
   el.moodLabel.textContent = label;
-  setFace(faceName);
+  if (updateFaceFromMood) setFace(faceName);
   el.voiceToggle.textContent = state.voiceEnabled ? "🔊" : "🔇";
   el.voiceToggle.setAttribute("aria-pressed", String(state.voiceEnabled));
 
@@ -254,6 +254,8 @@ function onFirstLoad() {
     } else {
       say("다시 왔네요. 오늘은 어떤 이야기를 해볼까요?", "happy", false);
     }
+  } else {
+    render(true);
   }
 
   state.lastVisit = now.toISOString();
@@ -285,7 +287,6 @@ function bindEvents() {
     state.voiceEnabled = !state.voiceEnabled;
     if (!state.voiceEnabled && "speechSynthesis" in window) window.speechSynthesis.cancel();
     saveState();
-    render();
     say(state.voiceEnabled ? "목소리를 켰어요." : "목소리를 껐어요. 이제 조용히 반응할게요.", state.voiceEnabled ? "happy" : "sleepy");
   });
 }
