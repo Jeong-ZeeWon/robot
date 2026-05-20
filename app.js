@@ -88,6 +88,7 @@ let tapCount = 0;
 let tapTimer = null;
 let holdTimer = null;
 let idleTimer = null;
+let longPressHandled = false;
 
 function loadState() {
   try {
@@ -410,6 +411,11 @@ function includesAny(text, words) {
 }
 
 function handlePet() {
+  if (longPressHandled) {
+    longPressHandled = false;
+    return;
+  }
+
   tapCount += 1;
   clearTimeout(tapTimer);
   tapTimer = setTimeout(() => (tapCount = 0), 1100);
@@ -421,9 +427,9 @@ function handlePet() {
     return;
   }
 
-  const effect = tapCount === 1 ? { mood: 4, affection: 3, loneliness: -4 } : { mood: 2, affection: 1, loneliness: -2 };
+  const effect = tapCount === 1 ? { mood: 2, affection: 2, loneliness: -3 } : { mood: 1, affection: 1, loneliness: -2 };
   completeMission("pet");
-  respond("praise", { delta: effect, topic: "쓰다듬기", face: tapCount === 1 ? "happy" : "shy" });
+  respond("pet", { delta: effect, topic: "쓰다듬기" });
 }
 
 function handleFeed() {
@@ -571,10 +577,12 @@ function bindEvents() {
   el.robot.addEventListener("click", handlePet);
 
   el.robot.addEventListener("pointerdown", () => {
+    longPressHandled = false;
     clearTimeout(holdTimer);
     holdTimer = setTimeout(() => {
+      longPressHandled = true;
       tune({ mood: 2, affection: 4, energy: -1, loneliness: -5 });
-      respond("praise", { face: "shy", motion: "pulse", topic: "길게 누르기", hint: "길게 누르면 포근한 반응이 나와요." });
+      respond("pet", { face: "shy", motion: "pulse", topic: "길게 누르기", hint: "길게 누르면 포근한 반응이 나와요." });
     }, 750);
   });
 
