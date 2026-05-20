@@ -1,4 +1,4 @@
-const CACHE_NAME = "sioni-v1-cache-20260520";
+const CACHE_NAME = "sioni-v2-cache-20260520-1";
 const ASSETS = ["./", "./index.html", "./style.css", "./app.js", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
