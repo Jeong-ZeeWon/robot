@@ -35,9 +35,11 @@ jobs:
           cp style.css dist/
           cp motions.css dist/
           cp v4.css dist/
+          cp v5.css dist/
           cp responses.js dist/
           cp responses-extra.js dist/
           cp v4.js dist/
+          cp v5.js dist/
           cp app.js dist/
           cp persist.js dist/
           cp manifest.json dist/
