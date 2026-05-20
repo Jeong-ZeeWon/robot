@@ -4,18 +4,19 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#75f5d3" />
-  <meta name="description" content="시간, 방문 기록, 미션에 따라 반응하는 포켓 로봇 시오니 v2" />
-  <title>시오니 v2</title>
+  <meta name="description" content="다양한 대답과 균형 잡힌 돌봄 게이지를 가진 포켓 로봇 시오니 v3" />
+  <title>시오니 v3</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="motions.css" />
 </head>
 <body data-theme="calm">
-  <main class="app-shell" aria-label="시오니 v2">
+  <main class="app-shell" aria-label="시오니 v3">
     <section class="hero-card">
       <div class="top-bar">
         <div>
-          <p class="eyebrow">Pocket Robot v2</p>
+          <p class="eyebrow">Pocket Robot v3</p>
           <h1 id="botName">시오니</h1>
           <p class="subtitle" id="timeGreeting">오늘도 같이 있어줄게요.</p>
         </div>
@@ -54,8 +55,8 @@
       </div>
 
       <div class="speech-card">
-        <p id="message">안녕하세요. 저는 시오니예요. 이제 시간과 미션도 기억해요.</p>
-        <small id="microHint">로봇을 톡 누르거나 아래 문장을 눌러보세요.</small>
+        <p id="message">안녕하세요. 저는 시오니예요. 이제 같은 말에도 다르게 반응해요.</p>
+        <small id="microHint">v3는 답변 다양화, 반복 방지, 쿨타임, 포만감/외로움 게이지를 사용해요.</small>
       </div>
 
       <div class="prompt-chips" aria-label="빠른 말걸기">
@@ -63,6 +64,7 @@
         <button type="button" data-say="나 오늘 힘들어">힘들어</button>
         <button type="button" data-say="심심해">심심해</button>
         <button type="button" data-say="오늘 뭐하지?">오늘 뭐하지?</button>
+        <button type="button" data-say="시오니 상태 알려줘">상태</button>
       </div>
 
       <form id="talkForm" class="talk-form">
@@ -109,6 +111,16 @@
           <div class="meter danger"><i id="hungerBar"></i></div>
           <b id="hungerValue">0</b>
         </div>
+        <div class="meter-row">
+          <span>포만감</span>
+          <div class="meter fullness"><i id="fullnessBar"></i></div>
+          <b id="fullnessValue">0</b>
+        </div>
+        <div class="meter-row">
+          <span>외로움</span>
+          <div class="meter lonely"><i id="lonelinessBar"></i></div>
+          <b id="lonelinessValue">0</b>
+        </div>
       </div>
 
       <div class="mini-log">
@@ -126,6 +138,7 @@
     </section>
   </main>
 
+  <script src="responses.js" defer></script>
   <script src="app.js" defer></script>
   <script src="persist.js" defer></script>
 </body>
