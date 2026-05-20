@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#75f5d3" />
-  <meta name="description" content="채팅창 없이 터치와 선택으로 돌보는 포켓 로봇 시오니 v4" />
-  <title>시오니 v4</title>
+  <meta name="description" content="한 화면에서 터치와 선택으로 돌보는 포켓 로봇 시오니 v4.1" />
+  <title>시오니 v4.1</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
@@ -13,11 +13,11 @@
   <link rel="stylesheet" href="v4.css" />
 </head>
 <body data-theme="calm">
-  <main class="app-shell v4-shell" aria-label="시오니 v4">
+  <main class="app-shell v4-shell" aria-label="시오니 v4.1">
     <section class="hero-card v4-hero">
       <div class="top-bar">
         <div>
-          <p class="eyebrow">Pocket Robot v4</p>
+          <p class="eyebrow">Pocket Robot v4.1</p>
           <h1 id="botName">시오니</h1>
           <p class="subtitle" id="timeGreeting">오늘도 같이 있어줄게요.</p>
         </div>
@@ -57,8 +57,8 @@
       </div>
 
       <div class="speech-card v4-speech">
-        <p id="message">안녕하세요. 저는 시오니예요. 이제 채팅창 없이 버튼과 터치로 반응해요.</p>
-        <small id="microHint">v4는 로봇 중심 UI, 감정 버튼, 목소리 모드, 반응 이펙트를 사용해요.</small>
+        <p id="message">안녕하세요. 저는 시오니예요. 이제 한 화면에서 바로 돌볼 수 있어요.</p>
+        <small id="microHint">배고픔은 간식으로, 에너지는 쉬기로, 외로움은 쓰담과 인사로 돌봐주세요.</small>
       </div>
 
       <div class="recommend-card">
@@ -73,15 +73,8 @@
       </form>
     </section>
 
-    <section class="v4-panel-card">
-      <nav class="v4-tabs" aria-label="시오니 메뉴">
-        <button type="button" class="v4-tab is-active" data-tab="home">홈</button>
-        <button type="button" class="v4-tab" data-tab="care">돌보기</button>
-        <button type="button" class="v4-tab" data-tab="mission">미션</button>
-        <button type="button" class="v4-tab" data-tab="settings">설정</button>
-      </nav>
-
-      <section class="v4-tab-panel is-active" data-panel="home" aria-label="홈">
+    <section class="v4-panel-card v41-panel">
+      <section class="v4-tab-panel is-active v41-section" data-panel="home" aria-label="감정 선택">
         <div class="section-title">
           <span>오늘 나는...</span>
           <small>말을 치지 말고 마음을 눌러주세요.</small>
@@ -96,20 +89,32 @@
         </div>
       </section>
 
-      <section class="v4-tab-panel" data-panel="care" aria-label="돌보기">
+      <section class="v4-tab-panel is-active v41-section" data-panel="care" aria-label="돌보기">
         <div class="section-title">
           <span>돌보기</span>
-          <small>게이지는 천천히 변해요. 연타보다 루틴이 좋아요.</small>
+          <small>각 버튼이 어떤 역할을 하는지 바로 볼 수 있게 정리했어요.</small>
         </div>
-        <div class="quick-actions v4-care-actions" aria-label="빠른 행동">
-          <button type="button" data-action="pet">💚 쓰담</button>
-          <button type="button" data-action="feed">🍪 간식</button>
-          <button type="button" data-action="play">🎈 놀기</button>
-          <button type="button" data-action="sleep">🌙 쉬기</button>
+        <div class="quick-actions v4-care-actions v41-care-actions" aria-label="빠른 행동">
+          <button type="button" data-action="pet">
+            <strong>💚 쓰담</strong>
+            <small>외로움↓ 친밀도↑ 기분↑</small>
+          </button>
+          <button type="button" data-action="feed">
+            <strong>🍪 간식</strong>
+            <small>배고픔↓ 쿨타임 있음</small>
+          </button>
+          <button type="button" data-action="play">
+            <strong>🎈 놀기</strong>
+            <small>기분↑ 에너지↓ 배고픔↑</small>
+          </button>
+          <button type="button" data-action="sleep">
+            <strong>🌙 쉬기</strong>
+            <small>에너지↑ 천천히 회복</small>
+          </button>
         </div>
       </section>
 
-      <section class="v4-tab-panel" data-panel="mission" aria-label="미션과 상태">
+      <section class="v4-tab-panel is-active v41-section" data-panel="mission" aria-label="미션과 상태">
         <div class="status-heading">
           <div>
             <strong id="moodLabel">상태 확인 중</strong>
@@ -140,11 +145,6 @@
             <b id="hungerValue">0</b>
           </div>
           <div class="meter-row">
-            <span>포만감</span>
-            <div class="meter fullness"><i id="fullnessBar"></i></div>
-            <b id="fullnessValue">0</b>
-          </div>
-          <div class="meter-row">
             <span>외로움</span>
             <div class="meter lonely"><i id="lonelinessBar"></i></div>
             <b id="lonelinessValue">0</b>
@@ -165,20 +165,20 @@
         </div>
       </section>
 
-      <section class="v4-tab-panel" data-panel="settings" aria-label="설정">
+      <section class="v4-tab-panel is-active v41-section" data-panel="settings" aria-label="설정">
         <div class="section-title">
           <span>목소리 설정</span>
-          <small>기기에서 제공하는 음성 안에서 선택돼요.</small>
+          <small>무료 웹앱은 기기에 탑재된 음성 중에서만 고를 수 있어요. 기본값은 과한 고음을 낮췄어요.</small>
         </div>
         <div class="voice-grid">
           <label>
             <span>목소리 모드</span>
             <select id="voicePreset">
-              <option value="cute">귀여운 시오니</option>
-              <option value="tiny">아주 작은 시오니</option>
+              <option value="soft">부드러운 시오니</option>
+              <option value="clear">또렷한 시오니</option>
               <option value="calm">차분한 시오니</option>
               <option value="sleepy">졸린 시오니</option>
-              <option value="excited">신난 시오니</option>
+              <option value="bright">밝은 시오니</option>
             </select>
           </label>
           <label>
@@ -188,18 +188,19 @@
             </select>
           </label>
           <label>
-            <span>음높이 <b id="pitchValue">1.45</b></span>
-            <input id="voicePitch" type="range" min="0.8" max="2" step="0.05" value="1.45" />
+            <span>음높이 <b id="pitchValue">1.10</b></span>
+            <input id="voicePitch" type="range" min="0.8" max="1.45" step="0.03" value="1.10" />
           </label>
           <label>
-            <span>속도 <b id="rateValue">1.08</b></span>
-            <input id="voiceRate" type="range" min="0.75" max="1.35" step="0.03" value="1.08" />
+            <span>속도 <b id="rateValue">0.96</b></span>
+            <input id="voiceRate" type="range" min="0.75" max="1.2" step="0.03" value="0.96" />
           </label>
           <label>
-            <span>볼륨 <b id="volumeValue">0.9</b></span>
-            <input id="voiceVolume" type="range" min="0.2" max="1" step="0.05" value="0.9" />
+            <span>볼륨 <b id="volumeValue">0.85</b></span>
+            <input id="voiceVolume" type="range" min="0.2" max="1" step="0.05" value="0.85" />
           </label>
           <button id="voiceTest" type="button" class="v4-wide-button">목소리 테스트</button>
+          <p class="voice-note">더 자연스러운 어린 로봇 목소리는 브라우저 기본 음성만으로는 어렵고, 별도 TTS 모델이나 녹음 음성 파일이 필요해요.</p>
         </div>
       </section>
     </section>
