@@ -1,20 +1,20 @@
 (() => {
-  const VOICE_KEY = "sioni-v4-voice-settings";
+  const VOICE_KEY = "sioni-v41-voice-settings";
 
   const presets = {
-    cute: { pitch: 1.45, rate: 1.08, volume: 0.9 },
-    tiny: { pitch: 1.75, rate: 1.12, volume: 0.82 },
-    calm: { pitch: 1.18, rate: 0.92, volume: 0.88 },
-    sleepy: { pitch: 0.98, rate: 0.82, volume: 0.72 },
-    excited: { pitch: 1.58, rate: 1.22, volume: 0.95 },
+    soft: { pitch: 1.08, rate: 0.96, volume: 0.85 },
+    clear: { pitch: 1.0, rate: 1.0, volume: 0.9 },
+    calm: { pitch: 0.96, rate: 0.9, volume: 0.82 },
+    sleepy: { pitch: 0.88, rate: 0.82, volume: 0.72 },
+    bright: { pitch: 1.16, rate: 1.04, volume: 0.88 },
   };
 
   const defaultSettings = {
-    preset: "cute",
+    preset: "soft",
     voiceURI: "",
-    pitch: presets.cute.pitch,
-    rate: presets.cute.rate,
-    volume: presets.cute.volume,
+    pitch: presets.soft.pitch,
+    rate: presets.soft.rate,
+    volume: presets.soft.volume,
   };
 
   let settings = loadVoiceSettings();
@@ -57,7 +57,7 @@
     const rate = $("#voiceRate");
     const volume = $("#voiceVolume");
 
-    if (preset) preset.value = settings.preset;
+    if (preset && presets[settings.preset]) preset.value = settings.preset;
     if (voice) voice.value = settings.voiceURI;
     if (pitch) pitch.value = settings.pitch;
     if (rate) rate.value = settings.rate;
@@ -72,7 +72,7 @@
 
   function chooseDefaultVoice(voices) {
     const korean = voices.filter((voice) => /ko|Korean|한국/i.test(`${voice.lang} ${voice.name}`));
-    const preferred = korean.find((voice) => /Yuna|유나|Siri|Female|여성|Sora|Nara/i.test(voice.name));
+    const preferred = korean.find((voice) => /Yuna|유나|Siri|Sora|Nara|여성/i.test(voice.name));
     return preferred || korean[0] || voices[0] || null;
   }
 
@@ -84,16 +84,16 @@
 
   function emotionShiftFor(emotion = currentFace()) {
     return {
-      excited: { pitch: 0.13, rate: 0.08, volume: 0.03 },
-      happy: { pitch: 0.08, rate: 0.04, volume: 0.02 },
-      shy: { pitch: 0.12, rate: -0.02, volume: -0.08 },
-      sad: { pitch: -0.08, rate: -0.08, volume: -0.06 },
-      sleepy: { pitch: -0.22, rate: -0.18, volume: -0.12 },
-      hungry: { pitch: -0.04, rate: -0.04, volume: -0.02 },
-      surprised: { pitch: 0.18, rate: 0.12, volume: 0.04 },
-      thinking: { pitch: 0.02, rate: -0.04, volume: -0.02 },
-      lonely: { pitch: -0.12, rate: -0.09, volume: -0.08 },
-      curious: { pitch: 0.08, rate: 0.02, volume: 0 },
+      excited: { pitch: 0.06, rate: 0.05, volume: 0.03 },
+      happy: { pitch: 0.04, rate: 0.03, volume: 0.02 },
+      shy: { pitch: 0.03, rate: -0.02, volume: -0.08 },
+      sad: { pitch: -0.05, rate: -0.07, volume: -0.06 },
+      sleepy: { pitch: -0.1, rate: -0.12, volume: -0.12 },
+      hungry: { pitch: -0.03, rate: -0.03, volume: -0.02 },
+      surprised: { pitch: 0.08, rate: 0.08, volume: 0.04 },
+      thinking: { pitch: 0, rate: -0.03, volume: -0.02 },
+      lonely: { pitch: -0.06, rate: -0.07, volume: -0.08 },
+      curious: { pitch: 0.03, rate: 0.02, volume: 0 },
     }[emotion] || { pitch: 0, rate: 0, volume: 0 };
   }
 
@@ -104,8 +104,8 @@
 
     const shift = emotionShiftFor(emotion);
     utterance.lang = "ko-KR";
-    utterance.pitch = Math.max(0.5, Math.min(2, Number(settings.pitch) + shift.pitch));
-    utterance.rate = Math.max(0.5, Math.min(1.6, Number(settings.rate) + shift.rate));
+    utterance.pitch = Math.max(0.7, Math.min(1.5, Number(settings.pitch) + shift.pitch));
+    utterance.rate = Math.max(0.65, Math.min(1.25, Number(settings.rate) + shift.rate));
     utterance.volume = Math.max(0.1, Math.min(1, Number(settings.volume) + shift.volume));
     utterance.__sioniVoiceApplied = true;
   }
@@ -151,7 +151,7 @@
   }
 
   function applyPreset(name) {
-    const preset = presets[name] || presets.cute;
+    const preset = presets[name] || presets.soft;
     settings.preset = name;
     settings.pitch = preset.pitch;
     settings.rate = preset.rate;
@@ -205,7 +205,7 @@
       updateNumberLabels();
     });
     if (test) test.addEventListener("click", () => {
-      speakWithSioniVoice("안녕하세요. 저는 시오니예요. 이 목소리가 더 귀엽게 들리나요?", settings.preset === "sleepy" ? "sleepy" : "happy");
+      speakWithSioniVoice("안녕하세요. 저는 시오니예요. 이제 너무 높은 목소리 대신 부드러운 톤으로 말해요.", settings.preset === "sleepy" ? "sleepy" : "happy");
       showEffect("heart");
     });
 
@@ -254,15 +254,13 @@
       mood: getMetric("moodValue"),
       energy: getMetric("energyValue"),
       hunger: getMetric("hungerValue"),
-      fullness: getMetric("fullnessValue"),
       loneliness: getMetric("lonelinessValue"),
     };
 
-    if (s.hunger >= 78 && s.fullness < 68) text.textContent = "배고픔이 높아요. 간식을 조금 주는 게 좋아요.";
-    else if (s.energy <= 24) text.textContent = "에너지가 낮아요. 잠깐 쉬게 해주세요.";
+    if (s.hunger >= 78) text.textContent = "배고픔이 높아요. 간식을 조금 주는 게 좋아요.";
+    else if (s.energy <= 24) text.textContent = "에너지가 낮아요. 쉬기 버튼으로 잠깐 쉬게 해주세요.";
     else if (s.loneliness >= 68) text.textContent = "외로움이 올라갔어요. 쓰담하거나 인사해 주세요.";
     else if (s.mood <= 34) text.textContent = "기분이 낮아요. 감정 버튼으로 위로 모드를 켜보세요.";
-    else if (s.fullness >= 76) text.textContent = "아직 배불러요. 지금은 밥보다 쉬기나 쓰담이 좋아요.";
     else text.textContent = "상태가 괜찮아요. 오늘의 미션을 하나 눌러보세요.";
   }
 
@@ -282,8 +280,8 @@
       new MutationObserver(() => {
         const faceName = currentFace();
         showEffect(effectForFace(faceName));
-        if (message.textContent.includes("v3")) {
-          message.textContent = message.textContent.replaceAll("v3", "v4");
+        if (message.textContent.includes("v3") || message.textContent.includes("v4")) {
+          message.textContent = message.textContent.replaceAll("v3", "v4.1").replaceAll("v4", "v4.1");
         }
       }).observe(message, { childList: true, characterData: true, subtree: true });
     }
