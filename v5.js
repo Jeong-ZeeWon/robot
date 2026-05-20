@@ -33,6 +33,7 @@
     stickers: [],
     counts: { pet: 0, feed: 0, play: 0, sleep: 0, mood: 0, greet: 0, adventure: 0 },
     soundEnabled: true,
+    soundMode: "beep",
   };
 
   let state = load();
@@ -49,7 +50,12 @@
   function load() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      return { ...defaultState, ...saved, counts: { ...defaultState.counts, ...(saved?.counts || {}) } };
+      return {
+        ...defaultState,
+        ...saved,
+        soundMode: saved?.soundMode || "beep",
+        counts: { ...defaultState.counts, ...(saved?.counts || {}) },
+      };
     } catch {
       return { ...defaultState };
     }
@@ -69,28 +75,62 @@
     }
   }
 
+  function getAudioContext() {
+    audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioContext.state === "suspended") audioContext.resume().catch(() => {});
+    return audioContext;
+  }
+
+  function oneTone({ frequency = 700, endFrequency = null, duration = 0.08, delay = 0, type = "sine", volume = 0.08 }) {
+    const ctx = getAudioContext();
+    const now = ctx.currentTime + delay;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(frequency, now);
+    if (endFrequency) osc.frequency.exponentialRampToValueAtTime(endFrequency, now + duration);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(volume, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + duration + 0.03);
+  }
+
+  function soundPlan(kind = "tap") {
+    const mode = state.soundMode || "beep";
+
+    if (mode === "beep") {
+      const base = kind === "star" ? 1040 : kind === "reward" ? 880 : kind === "soft" ? 520 : 720;
+      return [
+        { frequency: base, duration: 0.055, delay: 0, type: "square", volume: 0.055 },
+        { frequency: base * 1.28, duration: 0.06, delay: 0.085, type: "square", volume: 0.045 },
+      ];
+    }
+
+    if (mode === "soft") {
+      const base = kind === "star" ? 620 : kind === "reward" ? 520 : kind === "soft" ? 360 : 440;
+      return [{ frequency: base, endFrequency: base * 1.22, duration: 0.16, type: "triangle", volume: 0.06 }];
+    }
+
+    if (mode === "sparkle") {
+      const base = kind === "star" ? 880 : kind === "reward" ? 760 : 620;
+      return [
+        { frequency: base, duration: 0.055, delay: 0, type: "sine", volume: 0.055 },
+        { frequency: base * 1.5, duration: 0.07, delay: 0.07, type: "sine", volume: 0.05 },
+        { frequency: base * 2, duration: 0.09, delay: 0.15, type: "sine", volume: 0.04 },
+      ];
+    }
+
+    const base = kind === "star" ? 880 : kind === "reward" ? 720 : kind === "soft" ? 420 : 640;
+    const end = kind === "star" ? 1320 : kind === "reward" ? 1020 : kind === "soft" ? 560 : 820;
+    return [{ frequency: base, endFrequency: end, duration: kind === "star" ? 0.18 : kind === "reward" ? 0.14 : 0.08, type: "sine", volume: 0.08 }];
+  }
+
   function playTone(kind = "tap") {
     if (!state.soundEnabled) return;
     try {
-      audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
-      const now = audioContext.currentTime;
-      const osc = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      const tones = {
-        tap: [640, 820, 0.08],
-        reward: [720, 1020, 0.14],
-        star: [880, 1320, 0.18],
-        soft: [420, 560, 0.12],
-      }[kind] || [640, 820, 0.08];
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(tones[0], now);
-      osc.frequency.exponentialRampToValueAtTime(tones[1], now + tones[2]);
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(0.08, now + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + tones[2] + 0.04);
-      osc.connect(gain).connect(audioContext.destination);
-      osc.start(now);
-      osc.stop(now + tones[2] + 0.06);
+      soundPlan(kind).forEach(oneTone);
     } catch {}
   }
 
@@ -271,17 +311,23 @@
     if (reward) reward.textContent = "보상 ⭐ 1";
   }
 
+  function renderSoundControls() {
+    const toggle = $("#soundToggle");
+    if (toggle) {
+      toggle.textContent = state.soundEnabled ? "🔔" : "🔕";
+      toggle.setAttribute("aria-pressed", String(state.soundEnabled));
+    }
+    const mode = $("#soundMode");
+    if (mode) mode.value = state.soundMode || "beep";
+  }
+
   function render() {
     resetDailyIfNeeded();
     renderAdventure();
     renderTreasure();
     renderRoom();
     renderStory();
-    const toggle = $("#soundToggle");
-    if (toggle) {
-      toggle.textContent = state.soundEnabled ? "🔔" : "🔕";
-      toggle.setAttribute("aria-pressed", String(state.soundEnabled));
-    }
+    renderSoundControls();
   }
 
   function bind() {
@@ -302,6 +348,30 @@
         render();
         if (state.soundEnabled) playTone("reward");
         toast(state.soundEnabled ? "효과음 켜짐" : "효과음 꺼짐");
+      });
+    }
+
+    const soundMode = $("#soundMode");
+    if (soundMode) {
+      soundMode.addEventListener("change", () => {
+        state.soundMode = soundMode.value;
+        state.soundEnabled = true;
+        save();
+        render();
+        playTone("reward");
+        toast(soundMode.options[soundMode.selectedIndex]?.textContent || "효과음 모드 변경");
+      });
+    }
+
+    const soundTest = $("#soundTest");
+    if (soundTest) {
+      soundTest.addEventListener("click", () => {
+        state.soundEnabled = true;
+        save();
+        render();
+        playTone("tap");
+        setTimeout(() => playTone("reward"), 220);
+        toast("효과음 테스트");
       });
     }
 
