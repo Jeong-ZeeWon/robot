@@ -14,7 +14,7 @@
 
 .v5-room {
   position: relative;
-  margin: 12px 0 6px;
+  margin: 12px 0 8px;
   border-radius: 32px;
   border: 1px solid rgba(120, 137, 166, .18);
   overflow: hidden;
@@ -135,6 +135,59 @@
 .v5-orbit-left button {
   background: rgba(246, 253, 255, .92);
   border-color: rgba(117, 217, 245, .22);
+}
+
+.v5-status-card {
+  margin: 10px 0 12px;
+  padding: 13px 14px 14px;
+  border-radius: 26px;
+  border: 1px solid rgba(120, 137, 166, .18);
+  background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(247,251,255,.84));
+  box-shadow: 0 14px 36px rgba(33,47,79,.11);
+}
+
+.v5-status-card .status-heading {
+  margin-bottom: 10px;
+}
+
+.v5-status-card .status-heading strong {
+  font-size: 16px;
+}
+
+.v5-status-card .status-heading p {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.v5-status-card .v4-meters {
+  margin-top: 8px;
+}
+
+.v5-status-card .meter-row {
+  grid-template-columns: 52px 1fr 28px;
+  gap: 8px;
+  min-height: 25px;
+}
+
+.v5-status-card .meter-row span,
+.v5-status-card .meter-row b {
+  font-size: 11px;
+}
+
+.v5-memory-compact {
+  margin-top: 10px;
+  padding: 10px 11px;
+  border-radius: 18px;
+  background: rgba(117,245,211,.1);
+}
+
+.v5-memory-compact span {
+  font-size: 11px;
+}
+
+.v5-memory-compact p {
+  font-size: 11px;
+  line-height: 1.35;
 }
 
 .v5-mini-fx {
@@ -365,6 +418,14 @@
   .v5-room {
     margin-left: -4px;
     margin-right: -4px;
+  }
+
+  .v5-status-card {
+    padding: 12px;
+  }
+
+  .v5-status-card .meter-row {
+    grid-template-columns: 48px 1fr 26px;
   }
 
   .v5-orbit-controls button {
