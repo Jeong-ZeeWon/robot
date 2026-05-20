@@ -1,4 +1,5 @@
-const STORAGE_KEY = "monglebot-v1-state";
+const STORAGE_KEY = "sioni-v1-state";
+const BOT_NAME = "시오니";
 
 const defaultState = {
   mood: 72,
@@ -36,10 +37,10 @@ const el = {
 };
 
 const missions = [
-  "몽글봇과 한 번 대화하기",
+  `${BOT_NAME}와 한 번 대화하기`,
   "쓰다듬고 기분 올려주기",
   "힘든 마음을 한 문장으로 말해보기",
-  "몽글봇에게 잘 자라고 인사하기",
+  `${BOT_NAME}에게 잘 자라고 인사하기`,
   "밥 주기 버튼으로 에너지 채우기",
 ];
 
@@ -85,7 +86,7 @@ function speak(text) {
   if (!state.voiceEnabled || !("speechSynthesis" in window)) return;
 
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text.replace(/몽글봇/g, "몽글봇"));
+  const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "ko-KR";
   utterance.rate = 1.04;
   utterance.pitch = 1.22;
@@ -126,7 +127,7 @@ function render(updateFaceFromMood = false) {
 
   const missionIndex = new Date().getDate() % missions.length;
   el.dailyMission.textContent = state.missionCompleted
-    ? "오늘 미션 완료! 몽글봇이 뿌듯해해요."
+    ? `오늘 미션 완료! ${BOT_NAME}가 뿌듯해해요.`
     : missions[missionIndex];
 
   if (state.lastVisit) {
@@ -223,7 +224,7 @@ function handleTalk(rawText) {
 
   if (includesAny(text, ["이름", "누구", "너는" ])) {
     tune({ affection: 3 });
-    say("저는 몽글봇이에요. 아직 v1이라 아주 똑똑하진 않지만, 반응은 꽤 귀엽습니다.", "happy");
+    say(`저는 ${BOT_NAME}예요. 아직 v1이라 아주 똑똑하진 않지만, 반응은 꽤 귀엽습니다.`, "happy");
     return;
   }
 
