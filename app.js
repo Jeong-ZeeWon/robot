@@ -1,5 +1,5 @@
-const STORAGE_KEY = "sioni-v3-state";
-const LEGACY_STORAGE_KEYS = ["sioni-v2-state", "sioni-v1-state"];
+const STORAGE_KEY = "sioni-v41-state";
+const LEGACY_STORAGE_KEYS = ["sioni-v4-state", "sioni-v3-state", "sioni-v2-state", "sioni-v1-state"];
 const BOT_NAME = "시오니";
 
 const todayKey = () => {
@@ -12,7 +12,6 @@ const defaultState = {
   affection: 30,
   energy: 70,
   hunger: 38,
-  fullness: 18,
   loneliness: 20,
   firstSeen: null,
   lastVisit: null,
@@ -62,7 +61,6 @@ const el = {
     affection: document.querySelector("#affectionBar"),
     energy: document.querySelector("#energyBar"),
     hunger: document.querySelector("#hungerBar"),
-    fullness: document.querySelector("#fullnessBar"),
     loneliness: document.querySelector("#lonelinessBar"),
   },
   values: {
@@ -70,7 +68,6 @@ const el = {
     affection: document.querySelector("#affectionValue"),
     energy: document.querySelector("#energyValue"),
     hunger: document.querySelector("#hungerValue"),
-    fullness: document.querySelector("#fullnessValue"),
     loneliness: document.querySelector("#lonelinessValue"),
   },
 };
@@ -78,9 +75,9 @@ const el = {
 const missions = [
   { key: "greet", label: `${BOT_NAME}에게 인사하기` },
   { key: "pet", label: "한 번 쓰다듬기" },
-  { key: "feed", label: "밥 주기" },
+  { key: "feed", label: "간식 주기" },
   { key: "mood", label: "오늘 기분 말하기" },
-  { key: "sleep", label: "잘 자라고 인사하기" },
+  { key: "sleep", label: "쉬게 하기" },
 ];
 
 let state = loadState();
@@ -102,10 +99,27 @@ function loadState() {
       if (legacy) {
         return {
           ...defaultState,
-          ...legacy,
-          fullness: legacy.fullness ?? defaultState.fullness,
+          mood: legacy.mood ?? defaultState.mood,
+          affection: legacy.affection ?? defaultState.affection,
+          energy: legacy.energy ?? defaultState.energy,
+          hunger: legacy.hunger ?? defaultState.hunger,
           loneliness: legacy.loneliness ?? defaultState.loneliness,
+          firstSeen: legacy.firstSeen ?? null,
+          lastVisit: legacy.lastVisit ?? null,
+          lastVisitDate: legacy.lastVisitDate ?? null,
+          visits: legacy.visits ?? 0,
+          streak: legacy.streak ?? 1,
+          bestStreak: legacy.bestStreak ?? 1,
+          totalTalks: legacy.totalTalks ?? 0,
+          voiceEnabled: legacy.voiceEnabled ?? true,
+          completedMissions: legacy.completedMissions ?? {},
+          missionDate: legacy.missionDate ?? todayKey(),
+          lastTopic: legacy.lastTopic ?? "이전 기억",
           recentResponseIds: legacy.recentResponseIds ?? [],
+          lastFedAt: legacy.lastFedAt ?? null,
+          lastPlayedAt: legacy.lastPlayedAt ?? null,
+          lastSleptAt: legacy.lastSleptAt ?? null,
+          sleepStartedAt: legacy.sleepStartedAt ?? null,
         };
       }
     } catch {}
@@ -123,13 +137,13 @@ function clamp(value) {
 }
 
 function clampAll() {
-  ["mood", "affection", "energy", "hunger", "fullness", "loneliness"].forEach((key) => {
+  ["mood", "affection", "energy", "hunger", "loneliness"].forEach((key) => {
     state[key] = clamp(state[key] ?? defaultState[key]);
   });
 }
 
 function tune(delta = {}) {
-  ["mood", "affection", "energy", "hunger", "fullness", "loneliness"].forEach((key) => {
+  ["mood", "affection", "energy", "hunger", "loneliness"].forEach((key) => {
     state[key] = clamp((state[key] ?? defaultState[key]) + (delta[key] ?? 0));
   });
   saveState();
@@ -149,7 +163,6 @@ function moodInfo() {
   if (state.energy <= 18) return { label: "졸려요", face: "sleepy", theme: "sleepy" };
   if (state.hunger >= 82) return { label: "배고파요", face: "hungry", theme: "hungry" };
   if (state.loneliness >= 78) return { label: "조금 외로워요", face: "sad", theme: "sad" };
-  if (state.fullness >= 78) return { label: "배불러요", face: "sleepy", theme: "sleepy" };
   if (state.mood >= 88) return { label: "반짝반짝 신나요", face: "excited", theme: "excited" };
   if (state.affection >= 78) return { label: "마음이 가까워요", face: "happy", theme: "happy" };
   if (state.mood <= 30) return { label: "조금 시무룩해요", face: "sad", theme: "sad" };
@@ -205,7 +218,6 @@ function applyTimeDrift(previousVisit) {
   if (awayMinutes < 2) return;
 
   const hungerGain = Math.min(34, Math.floor(awayMinutes / 30) * 2);
-  const fullnessLoss = Math.min(45, Math.floor(awayMinutes / 20) * 3);
   const baseEnergyGain = Math.min(16, Math.floor(awayMinutes / 30) * 2);
   const lonelinessGain = awayMinutes >= 1440 ? 18 : awayMinutes >= 720 ? 10 : awayMinutes >= 180 ? 5 : 1;
   const moodLoss = awayMinutes >= 1440 ? 8 : awayMinutes >= 720 ? 4 : awayMinutes >= 180 ? 2 : 0;
@@ -218,7 +230,6 @@ function applyTimeDrift(previousVisit) {
   }
 
   state.hunger = clamp(state.hunger + hungerGain);
-  state.fullness = clamp(state.fullness - fullnessLoss);
   state.energy = clamp(state.energy + baseEnergyGain + sleepBonus);
   state.loneliness = clamp(state.loneliness + lonelinessGain);
   state.mood = clamp(state.mood - moodLoss);
@@ -265,9 +276,9 @@ function speak(text) {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "ko-KR";
-  utterance.rate = 1.04;
-  utterance.pitch = 1.2;
-  utterance.volume = 0.9;
+  utterance.rate = 0.96;
+  utterance.pitch = 1.08;
+  utterance.volume = 0.85;
   window.speechSynthesis.speak(utterance);
 }
 
@@ -280,9 +291,7 @@ function rememberResponse(id) {
 function getResponse(category, replacements = {}) {
   const bank = window.SIONI_RESPONSES || {};
   const list = bank[category] || bank.unknown || [];
-  if (!list.length) {
-    return { id: "fallback", text: "시오니가 잠깐 생각 중이에요.", face: "thinking", motion: "peek", delta: {} };
-  }
+  if (!list.length) return { id: "fallback", text: "시오니가 잠깐 생각 중이에요.", face: "thinking", motion: "peek", delta: {} };
 
   const recent = new Set(state.recentResponseIds || []);
   let candidates = list.filter((item) => !recent.has(item.id));
@@ -297,18 +306,19 @@ function getResponse(category, replacements = {}) {
 }
 
 function say(text, faceName = "calm", motion = "bounce", hint = "") {
-  el.message.textContent = text;
-  el.microHint.textContent = hint || "시오니 v3는 같은 말도 다르게 반응하고, 게이지는 천천히 관리돼요.";
+  el.message.textContent = text.replaceAll("v3", "v4.1").replaceAll("포만감", "소화 상태");
+  el.microHint.textContent = hint || "배고픔은 간식으로, 에너지는 쉬기로, 외로움은 쓰담과 인사로 돌봐주세요.";
   render(false);
   setFace(faceName, faceName);
   animateRobot(motion);
-  speak(text);
+  speak(el.message.textContent);
   resetIdleTimer();
 }
 
 function respond(category, options = {}) {
   const response = getResponse(category, options.replacements || {});
   const delta = { ...(response.delta || {}), ...(options.delta || {}) };
+  delete delta.fullness;
   if (Object.keys(delta).length) tune(delta);
   if (options.topic) state.lastTopic = options.topic;
   saveState();
@@ -324,7 +334,7 @@ function completeMission(key) {
 
 function statusSentence() {
   const level = levelInfo();
-  return `Lv.${level.level} ${level.name}, 기분 ${state.mood}, 친밀도 ${state.affection}, 에너지 ${state.energy}, 배고픔 ${state.hunger}, 포만감 ${state.fullness}, 외로움 ${state.loneliness}이에요.`;
+  return `Lv.${level.level} ${level.name}, 기분 ${state.mood}, 친밀도 ${state.affection}, 에너지 ${state.energy}, 배고픔 ${state.hunger}, 외로움 ${state.loneliness}이에요.`;
 }
 
 function getUndoneMission() {
@@ -365,7 +375,7 @@ function render(updateFaceFromMood = true) {
   const feedLeft = cooldownLeft("feed");
   const playLeft = cooldownLeft("play");
   const cooldownLine = [
-    feedLeft ? `밥 ${cooldownText(feedLeft)}` : "밥 가능",
+    feedLeft ? `간식 ${cooldownText(feedLeft)}` : "간식 가능",
     playLeft ? `놀이 ${cooldownText(playLeft)}` : "놀이 가능",
   ].join(" · ");
 
@@ -434,25 +444,18 @@ function handlePet() {
 
 function handleFeed() {
   const left = cooldownLeft("feed");
-  if (state.fullness >= 72) {
-    respond("full", { delta: { fullness: 2, mood: -1 }, topic: "포만감" });
-    return;
-  }
   if (left > 0) {
-    respond("fedCooldown", { topic: "밥 쿨타임", hint: `밥 주기는 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요.` });
+    respond("fedCooldown", { topic: "간식 쿨타임", hint: `간식은 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요.` });
     return;
   }
 
-  const multiplier = state.fullness >= 45 ? 0.55 : 1;
-  const hungerDown = Math.round(-8 * multiplier);
-  const fullnessUp = Math.round(24 * multiplier);
   state.lastFedAt = new Date().toISOString();
   completeMission("feed");
   respond("fedSuccess", {
-    delta: { hunger: hungerDown, fullness: fullnessUp, mood: 2, affection: 1, energy: 1 },
-    topic: "밥 주기",
+    delta: { hunger: -10, mood: 2, affection: 1, energy: 1 },
+    topic: "간식 주기",
     motion: "charge",
-    hint: "v3에서는 밥을 줘도 배고픔이 천천히 줄고, 포만감이 올라가요.",
+    hint: "간식은 배고픔을 조금 낮춰요. 너무 자주 주면 쿨타임이 걸려요.",
   });
 }
 
@@ -467,7 +470,7 @@ function handlePlay() {
     return;
   }
   if (left > 0) {
-    respond("playCooldown", { topic: "놀이 쿨타임", hint: `놀이 모드는 ${cooldownText(left)} 뒤에 다시 좋아져요.` });
+    respond("playCooldown", { topic: "놀이 쿨타임", hint: `놀이는 ${cooldownText(left)} 뒤에 다시 좋아져요.` });
     return;
   }
 
@@ -484,11 +487,11 @@ function handlePlay() {
 function handleSleep() {
   const left = cooldownLeft("sleep");
   if (state.energy >= 86) {
-    respond("rested", { delta: { mood: 1, fullness: -2 }, topic: "충분한 에너지", hint: "에너지가 높을 때는 수면 효과가 작아요." });
+    respond("rested", { delta: { mood: 1 }, topic: "충분한 에너지", hint: "에너지가 높을 때는 쉬기 효과가 작아요." });
     return;
   }
   if (left > 0) {
-    respond("rested", { delta: { energy: 1, mood: 1 }, topic: "수면 쿨타임", hint: `수면 모드는 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요.` });
+    respond("rested", { delta: { energy: 1, mood: 1 }, topic: "수면 쿨타임", hint: `쉬기는 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요.` });
     return;
   }
 
@@ -496,10 +499,10 @@ function handleSleep() {
   state.sleepStartedAt = state.lastSleptAt;
   completeMission("sleep");
   respond("rested", {
-    delta: { energy: 5, mood: 2, loneliness: -3, fullness: -4 },
-    topic: "수면",
+    delta: { energy: 5, mood: 2, loneliness: -3 },
+    topic: "쉬기",
     motion: "sleepy",
-    hint: "수면은 즉시 조금만 회복되고, 시간이 지나며 추가 회복돼요.",
+    hint: "쉬기는 즉시 조금만 회복되고, 시간이 지나며 추가 회복돼요.",
   });
 }
 
@@ -555,7 +558,7 @@ function categoryToTopic(category) {
 }
 
 function firstMessageForVisit(previousVisit) {
-  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v3예요. 이제 같은 말에도 다르게 반응하고, 밥과 에너지도 천천히 관리돼요.`;
+  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v4.1이에요. 이제 각 돌봄 버튼의 역할을 한 화면에서 바로 볼 수 있어요.`;
 
   const hoursAway = (Date.now() - new Date(previousVisit).getTime()) / 36e5;
   if (hoursAway > 72) return "오랜만이에요… 조금 배고프고 외로웠지만, 다시 와줘서 정말 좋아요.";
@@ -636,9 +639,7 @@ function bindEvents() {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {
-      // GitHub Pages나 일부 미리보기 환경에서는 서비스워커 등록이 실패할 수 있습니다.
-    });
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
   });
 }
 
@@ -648,4 +649,4 @@ applyTimeDrift(previousVisit);
 bindEvents();
 updateVisitHistory();
 render(true);
-say(firstMessageForVisit(previousVisit), moodInfo().face, "peek", "v3 업그레이드: 답변 다양화와 게이지 밸런스가 적용됐어요.");
+say(firstMessageForVisit(previousVisit), moodInfo().face, "peek", "v4.1 정리판: 포만감 표시를 없애고 돌봄 역할을 바로 보이게 바꿨어요.");
