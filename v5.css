@@ -75,6 +75,68 @@
   opacity: .72;
 }
 
+.v5-orbit-controls {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 8px;
+}
+
+.v5-orbit-left {
+  left: 10px;
+}
+
+.v5-orbit-right {
+  right: 10px;
+}
+
+.v5-orbit-controls button {
+  width: 54px;
+  height: 54px;
+  border: 1px solid rgba(120,137,166,.18);
+  border-radius: 20px;
+  background: rgba(255,255,255,.88);
+  box-shadow: 0 10px 24px rgba(24,32,47,.11), inset 0 -2px 0 rgba(0,0,0,.035);
+  backdrop-filter: blur(12px);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1px;
+  cursor: pointer;
+  padding: 3px;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.v5-orbit-controls button:active {
+  transform: scale(.94);
+  box-shadow: 0 4px 12px rgba(24,32,47,.13), inset 0 -1px 0 rgba(0,0,0,.04);
+  background: rgba(255,255,255,.98);
+}
+
+.v5-orbit-controls button span {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.v5-orbit-controls button small {
+  color: #4b5872;
+  font-size: 9.5px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.v5-orbit-right button {
+  background: rgba(255, 253, 243, .92);
+  border-color: rgba(255, 195, 74, .22);
+}
+
+.v5-orbit-left button {
+  background: rgba(246, 253, 255, .92);
+  border-color: rgba(117, 217, 245, .22);
+}
+
 .v5-adventure-card {
   border: 1px solid rgba(255, 195, 74, .28);
   border-radius: 30px;
@@ -212,7 +274,8 @@
   opacity: .34;
 }
 
-.v5-legacy-mission-hidden {
+.v5-legacy-mission-hidden,
+.v5-legacy-controls-hidden {
   display: none !important;
 }
 
@@ -263,6 +326,30 @@
   100% { transform: translateY(105vh) rotate(260deg); opacity: 0; }
 }
 
+@media (max-width: 430px) {
+  .v5-room {
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+
+  .v5-orbit-controls button {
+    width: 48px;
+    height: 48px;
+    border-radius: 18px;
+  }
+
+  .v5-orbit-controls button span {
+    font-size: 20px;
+  }
+
+  .v5-orbit-controls button small {
+    font-size: 8.5px;
+  }
+
+  .v5-orbit-left { left: 7px; }
+  .v5-orbit-right { right: 7px; }
+}
+
 @media (max-width: 390px) {
   .v5-adventure-card {
     padding: 14px;
@@ -270,5 +357,23 @@
 
   .v5-treasure-box {
     min-height: 78px;
+  }
+
+  .v5-orbit-controls {
+    gap: 6px;
+  }
+
+  .v5-orbit-controls button {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+  }
+
+  .v5-orbit-controls button span {
+    font-size: 18px;
+  }
+
+  .v5-orbit-controls button small {
+    font-size: 8px;
   }
 }
