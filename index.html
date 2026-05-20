@@ -205,6 +205,16 @@
         </div>
         <div class="voice-grid">
           <label>
+            <span>효과음 모드</span>
+            <select id="soundMode">
+              <option value="beep">삐삐 기계음</option>
+              <option value="cute">귀여운 띠링</option>
+              <option value="soft">부드러운 뿅</option>
+              <option value="sparkle">보상 반짝음</option>
+            </select>
+          </label>
+          <button id="soundTest" type="button" class="v4-wide-button">효과음 테스트</button>
+          <label>
             <span>목소리 모드</span>
             <select id="voicePreset">
               <option value="soft">부드러운 시오니</option>
@@ -233,7 +243,7 @@
             <input id="voiceVolume" type="range" min="0.2" max="1" step="0.05" value="0.85" />
           </label>
           <button id="voiceTest" type="button" class="v4-wide-button">목소리 테스트</button>
-          <p class="voice-note">더 자연스러운 어린 로봇 목소리는 브라우저 기본 음성만으로는 어렵고, 별도 TTS 모델이나 녹음 음성 파일이 필요해요.</p>
+          <p class="voice-note">삐삐 기계음은 실제 음성 모델이 아니라 버튼 반응에 나는 로봇 효과음이에요. 더 자연스러운 어린 로봇 목소리는 별도 TTS 모델이나 녹음 음성 파일이 필요해요.</p>
         </div>
       </section>
     </section>
