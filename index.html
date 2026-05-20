@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#7cf7d4" />
+  <meta name="description" content="무료로 시작하는 반응형 포켓 로봇 웹앱 v1" />
+  <title>몽글봇 v1</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell" aria-label="몽글봇 v1">
+    <section class="hero-card">
+      <div class="top-bar">
+        <div>
+          <p class="eyebrow">Pocket Robot v1</p>
+          <h1 id="botName">몽글봇</h1>
+        </div>
+        <button id="voiceToggle" class="icon-button" type="button" aria-pressed="true" title="목소리 켜기/끄기">🔊</button>
+      </div>
+
+      <div class="robot-stage" aria-live="polite">
+        <div class="sparkle sparkle-one"></div>
+        <div class="sparkle sparkle-two"></div>
+        <button id="robot" class="robot" type="button" aria-label="로봇 쓰다듬기">
+          <span class="lanyard"></span>
+          <span class="head">
+            <span class="sensor"></span>
+            <span id="face" class="face calm">
+              <span class="eye left-eye"></span>
+              <span class="eye right-eye"></span>
+            </span>
+          </span>
+          <span class="neck"></span>
+          <span class="body">
+            <span class="arm arm-left"></span>
+            <span class="arm arm-right"></span>
+            <span class="heart-light"></span>
+          </span>
+          <span class="shadow"></span>
+        </button>
+      </div>
+
+      <div class="speech-card">
+        <p id="message">안녕하세요. 저는 작은 포켓 로봇이에요. 화면을 톡 누르거나 말을 걸어주세요.</p>
+      </div>
+
+      <form id="talkForm" class="talk-form">
+        <label class="sr-only" for="userInput">몽글봇에게 말하기</label>
+        <input id="userInput" name="message" autocomplete="off" placeholder="예: 나 오늘 힘들어" />
+        <button type="submit">말하기</button>
+      </form>
+
+      <div class="quick-actions" aria-label="빠른 행동">
+        <button type="button" data-action="pet">쓰다듬기</button>
+        <button type="button" data-action="feed">밥 주기</button>
+        <button type="button" data-action="play">놀아주기</button>
+        <button type="button" data-action="sleep">재우기</button>
+      </div>
+    </section>
+
+    <section class="status-card" aria-label="로봇 상태">
+      <div class="status-heading">
+        <strong id="moodLabel">상태 확인 중</strong>
+        <span id="lastSeen">처음 만났어요</span>
+      </div>
+
+      <div class="meter-list">
+        <div class="meter-row">
+          <span>기분</span>
+          <div class="meter"><i id="moodBar"></i></div>
+          <b id="moodValue">0</b>
+        </div>
+        <div class="meter-row">
+          <span>친밀도</span>
+          <div class="meter"><i id="affectionBar"></i></div>
+          <b id="affectionValue">0</b>
+        </div>
+        <div class="meter-row">
+          <span>에너지</span>
+          <div class="meter"><i id="energyBar"></i></div>
+          <b id="energyValue">0</b>
+        </div>
+        <div class="meter-row">
+          <span>배고픔</span>
+          <div class="meter"><i id="hungerBar"></i></div>
+          <b id="hungerValue">0</b>
+        </div>
+      </div>
+
+      <div class="mini-log">
+        <span>오늘의 목표</span>
+        <p id="dailyMission">몽글봇과 한 번 대화하기</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
