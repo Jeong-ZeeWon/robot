@@ -1,4 +1,4 @@
-name: Deploy MongleBot to GitHub Pages
+name: Deploy Sioni to GitHub Pages
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -28,10 +28,27 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Prepare static site
+        run: |
+          mkdir -p dist
+          cp index.html dist/
+          cp style.css dist/
+          cp motions.css dist/
+          cp v4.css dist/
+          cp responses.js dist/
+          cp responses-extra.js dist/
+          cp v4.js dist/
+          cp app.js dist/
+          cp persist.js dist/
+          cp manifest.json dist/
+          cp icon.svg dist/
+          cp sw.js dist/
+          touch dist/.nojekyll
+
       - name: Upload static files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment
