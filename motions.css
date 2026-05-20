@@ -23,7 +23,8 @@
 }
 
 .robot.is-motion-pulse .heart-light,
-.robot.is-motion-glow .heart-light {
+.robot.is-motion-glow .heart-light,
+.robot.is-motion-heartpop .heart-light {
   animation: heart-pulse 0.9s ease;
 }
 
@@ -34,6 +35,54 @@
 .robot.is-motion-charge .body,
 .robot.is-motion-glow .body {
   animation: body-glow 1s ease;
+}
+
+.robot.is-motion-spin {
+  animation: motion-spin 0.76s cubic-bezier(.2,.8,.2,1);
+}
+
+.robot.is-motion-hop {
+  animation: motion-hop 0.72s ease;
+}
+
+.robot.is-motion-dance {
+  animation: motion-dance 0.95s ease;
+}
+
+.robot.is-motion-munch .head {
+  animation: motion-munch-head 0.7s ease;
+}
+
+.robot.is-motion-munch .body {
+  animation: motion-munch-body 0.7s ease;
+}
+
+.robot.is-motion-heartpop {
+  animation: motion-heartpop 0.78s ease;
+}
+
+.robot.is-motion-startle {
+  animation: motion-startle 0.55s ease;
+}
+
+.robot.is-motion-doze {
+  animation: motion-doze 1.35s ease;
+}
+
+.robot.is-motion-float {
+  animation: motion-float 1.15s ease;
+}
+
+.robot.is-motion-celebrate {
+  animation: motion-celebrate 1.05s ease;
+}
+
+.robot.is-motion-tinyshake {
+  animation: motion-tinyshake 0.48s ease;
+}
+
+.robot.is-motion-sway {
+  animation: motion-sway 0.9s ease;
 }
 
 .face.blink .eye {
@@ -82,6 +131,94 @@
 @keyframes motion-sleepy {
   0%, 100% { transform: translateY(0) scale(1); }
   50% { transform: translateY(14px) scale(0.98); }
+}
+
+@keyframes motion-spin {
+  0% { transform: rotate(0deg) scale(1); }
+  45% { transform: rotate(14deg) scale(1.04); }
+  72% { transform: rotate(-9deg) scale(1.02); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+@keyframes motion-hop {
+  0%, 100% { transform: translateY(0) scale(1); }
+  22% { transform: translateY(-18px) scale(1.03); }
+  44% { transform: translateY(0) scale(.98); }
+  62% { transform: translateY(-10px) scale(1.02); }
+  82% { transform: translateY(0) scale(1); }
+}
+
+@keyframes motion-dance {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  14% { transform: translateY(-5px) rotate(-8deg); }
+  28% { transform: translateY(0) rotate(7deg); }
+  42% { transform: translateY(-6px) rotate(-7deg); }
+  56% { transform: translateY(0) rotate(8deg); }
+  74% { transform: translateY(-4px) rotate(-4deg); }
+}
+
+@keyframes motion-munch-head {
+  0%, 100% { transform: translateY(0) scale(1); }
+  20% { transform: translateY(3px) scaleY(.96); }
+  40% { transform: translateY(0) scale(1); }
+  60% { transform: translateY(3px) scaleY(.96); }
+  80% { transform: translateY(0) scale(1); }
+}
+
+@keyframes motion-munch-body {
+  0%, 100% { transform: scale(1); }
+  35% { transform: scale(1.035); }
+  70% { transform: scale(1.02); }
+}
+
+@keyframes motion-heartpop {
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(1.08) rotate(-2deg); }
+  58% { transform: scale(1.02) rotate(2deg); }
+  78% { transform: scale(1.05); }
+}
+
+@keyframes motion-startle {
+  0%, 100% { transform: translateY(0) scale(1) rotate(0); }
+  20% { transform: translateY(-10px) scale(1.08) rotate(0); }
+  42% { transform: translateX(-5px) rotate(-5deg); }
+  65% { transform: translateX(5px) rotate(5deg); }
+}
+
+@keyframes motion-doze {
+  0%, 100% { transform: translateY(0) rotate(0) scale(1); }
+  35% { transform: translateY(10px) rotate(-3deg) scale(.98); }
+  70% { transform: translateY(6px) rotate(2deg) scale(.99); }
+}
+
+@keyframes motion-float {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-8px); }
+  55% { transform: translateY(5px); }
+  78% { transform: translateY(-4px); }
+}
+
+@keyframes motion-celebrate {
+  0%, 100% { transform: translateY(0) rotate(0) scale(1); }
+  18% { transform: translateY(-18px) rotate(-7deg) scale(1.05); }
+  35% { transform: translateY(0) rotate(7deg) scale(1); }
+  52% { transform: translateY(-12px) rotate(-5deg) scale(1.04); }
+  70% { transform: translateY(0) rotate(5deg) scale(1); }
+}
+
+@keyframes motion-tinyshake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+@keyframes motion-sway {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  28% { transform: rotate(-4deg) translateY(4px); }
+  58% { transform: rotate(4deg) translateY(1px); }
+  82% { transform: rotate(-2deg) translateY(3px); }
 }
 
 @keyframes heart-pulse {
