@@ -1,5 +1,5 @@
-const STORAGE_KEY = "sioni-v2-state";
-const LEGACY_STORAGE_KEY = "sioni-v1-state";
+const STORAGE_KEY = "sioni-v3-state";
+const LEGACY_STORAGE_KEYS = ["sioni-v2-state", "sioni-v1-state"];
 const BOT_NAME = "시오니";
 
 const todayKey = () => {
@@ -12,6 +12,8 @@ const defaultState = {
   affection: 30,
   energy: 70,
   hunger: 38,
+  fullness: 18,
+  loneliness: 20,
   firstSeen: null,
   lastVisit: null,
   lastVisitDate: null,
@@ -23,6 +25,18 @@ const defaultState = {
   completedMissions: {},
   missionDate: todayKey(),
   lastTopic: "첫 만남",
+  recentResponseIds: [],
+  lastFedAt: null,
+  lastPlayedAt: null,
+  lastSleptAt: null,
+  sleepStartedAt: null,
+  idleCount: 0,
+};
+
+const COOLDOWNS = {
+  feed: 3 * 60 * 1000,
+  play: 60 * 1000,
+  sleep: 5 * 60 * 1000,
 };
 
 const el = {
@@ -48,12 +62,16 @@ const el = {
     affection: document.querySelector("#affectionBar"),
     energy: document.querySelector("#energyBar"),
     hunger: document.querySelector("#hungerBar"),
+    fullness: document.querySelector("#fullnessBar"),
+    loneliness: document.querySelector("#lonelinessBar"),
   },
   values: {
     mood: document.querySelector("#moodValue"),
     affection: document.querySelector("#affectionValue"),
     energy: document.querySelector("#energyValue"),
     hunger: document.querySelector("#hungerValue"),
+    fullness: document.querySelector("#fullnessValue"),
+    loneliness: document.querySelector("#lonelinessValue"),
   },
 };
 
@@ -69,6 +87,7 @@ let state = loadState();
 let tapCount = 0;
 let tapTimer = null;
 let holdTimer = null;
+let idleTimer = null;
 
 function loadState() {
   try {
@@ -76,19 +95,20 @@ function loadState() {
     if (saved) return { ...defaultState, ...saved };
   } catch {}
 
-  try {
-    const legacy = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY));
-    if (legacy) {
-      return {
-        ...defaultState,
-        mood: legacy.mood ?? defaultState.mood,
-        affection: legacy.affection ?? defaultState.affection,
-        energy: legacy.energy ?? defaultState.energy,
-        hunger: legacy.hunger ?? defaultState.hunger,
-        voiceEnabled: legacy.voiceEnabled ?? true,
-      };
-    }
-  } catch {}
+  for (const key of LEGACY_STORAGE_KEYS) {
+    try {
+      const legacy = JSON.parse(localStorage.getItem(key));
+      if (legacy) {
+        return {
+          ...defaultState,
+          ...legacy,
+          fullness: legacy.fullness ?? defaultState.fullness,
+          loneliness: legacy.loneliness ?? defaultState.loneliness,
+          recentResponseIds: legacy.recentResponseIds ?? [],
+        };
+      }
+    } catch {}
+  }
 
   return { ...defaultState };
 }
@@ -101,13 +121,18 @@ function clamp(value) {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
 
-function tune(delta) {
-  state.mood = clamp(state.mood + (delta.mood ?? 0));
-  state.affection = clamp(state.affection + (delta.affection ?? 0));
-  state.energy = clamp(state.energy + (delta.energy ?? 0));
-  state.hunger = clamp(state.hunger + (delta.hunger ?? 0));
+function clampAll() {
+  ["mood", "affection", "energy", "hunger", "fullness", "loneliness"].forEach((key) => {
+    state[key] = clamp(state[key] ?? defaultState[key]);
+  });
+}
+
+function tune(delta = {}) {
+  ["mood", "affection", "energy", "hunger", "fullness", "loneliness"].forEach((key) => {
+    state[key] = clamp((state[key] ?? defaultState[key]) + (delta[key] ?? 0));
+  });
   saveState();
-  render();
+  render(false);
 }
 
 function levelInfo() {
@@ -122,6 +147,8 @@ function levelInfo() {
 function moodInfo() {
   if (state.energy <= 18) return { label: "졸려요", face: "sleepy", theme: "sleepy" };
   if (state.hunger >= 82) return { label: "배고파요", face: "hungry", theme: "hungry" };
+  if (state.loneliness >= 78) return { label: "조금 외로워요", face: "sad", theme: "sad" };
+  if (state.fullness >= 78) return { label: "배불러요", face: "sleepy", theme: "sleepy" };
   if (state.mood >= 88) return { label: "반짝반짝 신나요", face: "excited", theme: "excited" };
   if (state.affection >= 78) return { label: "마음이 가까워요", face: "happy", theme: "happy" };
   if (state.mood <= 30) return { label: "조금 시무룩해요", face: "sad", theme: "sad" };
@@ -144,12 +171,56 @@ function daysBetween(dateA, dateB) {
   return Math.round((b - a) / 86400000);
 }
 
+function minutesSince(iso) {
+  if (!iso) return Infinity;
+  return Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 60000));
+}
+
+function cooldownLeft(action) {
+  const key = action === "feed" ? "lastFedAt" : action === "play" ? "lastPlayedAt" : "lastSleptAt";
+  const last = state[key];
+  if (!last) return 0;
+  const left = COOLDOWNS[action] - (Date.now() - new Date(last).getTime());
+  return Math.max(0, left);
+}
+
+function cooldownText(ms) {
+  const seconds = Math.ceil(ms / 1000);
+  if (seconds < 60) return `${seconds}초`;
+  return `${Math.ceil(seconds / 60)}분`;
+}
+
 function resetDailyIfNeeded() {
   const today = todayKey();
   if (state.missionDate !== today) {
     state.missionDate = today;
     state.completedMissions = {};
   }
+}
+
+function applyTimeDrift(previousVisit) {
+  if (!previousVisit) return;
+  const awayMinutes = Math.max(0, Math.floor((Date.now() - new Date(previousVisit).getTime()) / 60000));
+  if (awayMinutes < 2) return;
+
+  const hungerGain = Math.min(34, Math.floor(awayMinutes / 30) * 2);
+  const fullnessLoss = Math.min(45, Math.floor(awayMinutes / 20) * 3);
+  const baseEnergyGain = Math.min(16, Math.floor(awayMinutes / 30) * 2);
+  const lonelinessGain = awayMinutes >= 1440 ? 18 : awayMinutes >= 720 ? 10 : awayMinutes >= 180 ? 5 : 1;
+  const moodLoss = awayMinutes >= 1440 ? 8 : awayMinutes >= 720 ? 4 : awayMinutes >= 180 ? 2 : 0;
+
+  let sleepBonus = 0;
+  if (state.sleepStartedAt) {
+    const sleepMinutes = minutesSince(state.sleepStartedAt);
+    sleepBonus = Math.min(24, Math.floor(sleepMinutes / 5) * 3);
+    if (sleepMinutes > 60) state.sleepStartedAt = null;
+  }
+
+  state.hunger = clamp(state.hunger + hungerGain);
+  state.fullness = clamp(state.fullness - fullnessLoss);
+  state.energy = clamp(state.energy + baseEnergyGain + sleepBonus);
+  state.loneliness = clamp(state.loneliness + lonelinessGain);
+  state.mood = clamp(state.mood - moodLoss);
 }
 
 function updateVisitHistory() {
@@ -182,10 +253,10 @@ function setFace(faceName = "calm", themeName = faceName) {
 }
 
 function animateRobot(type = "bounce") {
-  const className = type === "wiggle" ? "is-wiggling" : "is-bouncing";
-  el.robot.classList.remove("is-bouncing", "is-wiggling");
+  const classes = Array.from(el.robot.classList).filter((name) => name.startsWith("is-motion-") || name === "is-bouncing" || name === "is-wiggling");
+  classes.forEach((name) => el.robot.classList.remove(name));
   void el.robot.offsetWidth;
-  el.robot.classList.add(className);
+  el.robot.classList.add(`is-motion-${type || "bounce"}`);
 }
 
 function speak(text) {
@@ -199,27 +270,72 @@ function speak(text) {
   window.speechSynthesis.speak(utterance);
 }
 
-function say(text, faceName = "calm", shouldBounce = true, hint = "") {
+function rememberResponse(id) {
+  state.recentResponseIds = Array.isArray(state.recentResponseIds) ? state.recentResponseIds : [];
+  state.recentResponseIds.push(id);
+  state.recentResponseIds = state.recentResponseIds.slice(-8);
+}
+
+function getResponse(category, replacements = {}) {
+  const bank = window.SIONI_RESPONSES || {};
+  const list = bank[category] || bank.unknown || [];
+  if (!list.length) {
+    return { id: "fallback", text: "시오니가 잠깐 생각 중이에요.", face: "thinking", motion: "peek", delta: {} };
+  }
+
+  const recent = new Set(state.recentResponseIds || []);
+  let candidates = list.filter((item) => !recent.has(item.id));
+  if (!candidates.length) candidates = list;
+  const picked = candidates[Math.floor(Math.random() * candidates.length)];
+  let text = picked.text;
+  Object.entries(replacements).forEach(([key, value]) => {
+    text = text.replaceAll(`{${key}}`, value);
+  });
+  rememberResponse(picked.id);
+  return { ...picked, text };
+}
+
+function say(text, faceName = "calm", motion = "bounce", hint = "") {
   el.message.textContent = text;
-  el.microHint.textContent = hint || "시오니는 시간, 방문 기록, 오늘의 미션을 기억해요.";
+  el.microHint.textContent = hint || "시오니 v3는 같은 말도 다르게 반응하고, 게이지는 천천히 관리돼요.";
   render(false);
   setFace(faceName, faceName);
-  if (shouldBounce) animateRobot(faceName === "surprised" || faceName === "annoyed" ? "wiggle" : "bounce");
+  animateRobot(motion);
   speak(text);
+  resetIdleTimer();
+}
+
+function respond(category, options = {}) {
+  const response = getResponse(category, options.replacements || {});
+  const delta = { ...(response.delta || {}), ...(options.delta || {}) };
+  if (Object.keys(delta).length) tune(delta);
+  if (options.topic) state.lastTopic = options.topic;
+  saveState();
+  say(response.text, options.face || response.face || "calm", options.motion || response.motion || "bounce", options.hint || response.hint || "");
 }
 
 function completeMission(key) {
   resetDailyIfNeeded();
   state.completedMissions[key] = true;
   saveState();
-  render();
+  render(false);
+}
+
+function statusSentence() {
+  const level = levelInfo();
+  return `Lv.${level.level} ${level.name}, 기분 ${state.mood}, 친밀도 ${state.affection}, 에너지 ${state.energy}, 배고픔 ${state.hunger}, 포만감 ${state.fullness}, 외로움 ${state.loneliness}이에요.`;
+}
+
+function getUndoneMission() {
+  return missions.find((mission) => !state.completedMissions[mission.key]);
 }
 
 function render(updateFaceFromMood = true) {
   resetDailyIfNeeded();
+  clampAll();
 
-  ["mood", "affection", "energy", "hunger"].forEach((key) => {
-    state[key] = clamp(state[key]);
+  Object.keys(el.bars).forEach((key) => {
+    if (!el.bars[key] || !el.values[key]) return;
     el.bars[key].style.width = `${state[key]}%`;
     el.values[key].textContent = state[key];
   });
@@ -245,7 +361,14 @@ function render(updateFaceFromMood = true) {
     })
     .join("");
 
-  el.memoryLine.textContent = `총 ${state.visits || 0}번 만났고, ${state.totalTalks || 0}번 이야기했어요. 최근 기억: ${state.lastTopic || "아직 없음"}.`;
+  const feedLeft = cooldownLeft("feed");
+  const playLeft = cooldownLeft("play");
+  const cooldownLine = [
+    feedLeft ? `밥 ${cooldownText(feedLeft)}` : "밥 가능",
+    playLeft ? `놀이 ${cooldownText(playLeft)}` : "놀이 가능",
+  ].join(" · ");
+
+  el.memoryLine.textContent = `총 ${state.visits || 0}번 만났고, ${state.totalTalks || 0}번 이야기했어요. 최근 기억: ${state.lastTopic || "아직 없음"}. ${cooldownLine}`;
 
   if (state.lastVisit) {
     const diff = Date.now() - new Date(state.lastVisit).getTime();
@@ -259,47 +382,23 @@ function render(updateFaceFromMood = true) {
   }
 }
 
-function handlePet() {
-  tapCount += 1;
-  clearTimeout(tapTimer);
-  tapTimer = setTimeout(() => (tapCount = 0), 900);
-
-  if (tapCount >= 4) {
-    tapCount = 0;
-    tune({ mood: 6, affection: 3, energy: -4, hunger: 2 });
-    completeMission("pet");
-    say("어어어! 간지러워요. 시오니 눈이 데굴데굴 굴러갈 뻔했어요!", "surprised", true, "빠르게 여러 번 누르면 놀라는 반응이 나와요.");
-    return;
-  }
-
-  tune({ mood: 8, affection: 6, energy: -2, hunger: 1 });
-  completeMission("pet");
-  say("헤헤, 좋아요. 방금 제 마음 배터리가 충전됐어요.", "happy");
-}
-
-function handleFeed() {
-  tune({ mood: 5, energy: 8, hunger: -24, affection: 2 });
-  completeMission("feed");
-  say("냠냠! 충전 간식 완료예요. 이제 다시 반짝일 수 있어요.", "excited");
-}
-
-function handlePlay() {
-  if (state.energy < 18) {
-    tune({ mood: -2, affection: 1, energy: -2, hunger: 3 });
-    say("놀고 싶지만 눈이 반쯤 감겨요. 조금만 쉬면 더 신나게 놀 수 있어요.", "sleepy");
-    return;
-  }
-
-  tune({ mood: 10, affection: 5, energy: -10, hunger: 5 });
-  state.lastTopic = "놀이";
-  saveState();
-  say("삐빅! 놀이 모드 켜졌어요. 오늘도 우리 꽤 좋은 팀이에요!", "excited");
-}
-
-function handleSleep() {
-  tune({ mood: 3, affection: 2, energy: 24, hunger: 3 });
-  completeMission("sleep");
-  say("조금만 잘게요. 옆에 있어줘서 고마워요. zzz...", "sleepy");
+function classify(text) {
+  if (includesAny(text, ["안녕", "하이", "hello", "ㅎㅇ"])) return "greeting";
+  if (includesAny(text, ["힘들", "피곤", "지쳤", "아파", "고단", "녹초"])) return "tired";
+  if (includesAny(text, ["슬퍼", "우울", "속상", "눈물", "외로", "허전"])) return "sad";
+  if (includesAny(text, ["기뻐", "좋은 일", "성공", "잘됐", "행복", "신나"])) return "joy";
+  if (includesAny(text, ["화나", "짜증", "열받", "분해", "억울"])) return "angry";
+  if (includesAny(text, ["불안", "걱정", "두려", "무서", "염려"])) return "anxious";
+  if (includesAny(text, ["심심", "놀자", "재미", "지루"])) return "bored";
+  if (includesAny(text, ["사랑", "좋아", "귀여", "고마워", "최고", "잘했"])) return "praise";
+  if (includesAny(text, ["잘자", "자자", "졸려", "잠", "자러"])) return "sleep";
+  if (includesAny(text, ["배고", "밥", "간식", "먹"])) return "hungry";
+  if (includesAny(text, ["기도", "교회", "말씀", "예배", "찬양"])) return "faith";
+  if (includesAny(text, ["오늘 뭐", "뭐하지", "미션", "할 일"])) return "mission";
+  if (includesAny(text, ["레벨", "상태", "친밀", "몇 번", "기억", "게이지"])) return "status";
+  if (includesAny(text, ["이름", "누구", "너는", "소개"])) return "intro";
+  if (includesAny(text, ["깜짝", "놀라", "어?"])) return "surprise";
+  return "unknown";
 }
 
 function normalize(text) {
@@ -310,9 +409,92 @@ function includesAny(text, words) {
   return words.some((word) => text.includes(word));
 }
 
-function statusSentence() {
-  const level = levelInfo();
-  return `지금 우리는 Lv.${level.level} ${level.name}예요. 기분은 ${state.mood}, 친밀도는 ${state.affection}, 에너지는 ${state.energy}, 배고픔은 ${state.hunger}예요.`;
+function handlePet() {
+  tapCount += 1;
+  clearTimeout(tapTimer);
+  tapTimer = setTimeout(() => (tapCount = 0), 1100);
+
+  if (tapCount >= 4) {
+    tapCount = 0;
+    completeMission("pet");
+    respond("surprise", { delta: { mood: 2, affection: 1, energy: -2, loneliness: -2 }, topic: "연속 터치", hint: "빠르게 여러 번 누르면 놀라는 반응이 나와요." });
+    return;
+  }
+
+  const effect = tapCount === 1 ? { mood: 4, affection: 3, loneliness: -4 } : { mood: 2, affection: 1, loneliness: -2 };
+  completeMission("pet");
+  respond("praise", { delta: effect, topic: "쓰다듬기", face: tapCount === 1 ? "happy" : "shy" });
+}
+
+function handleFeed() {
+  const left = cooldownLeft("feed");
+  if (state.fullness >= 72) {
+    respond("full", { delta: { fullness: 2, mood: -1 }, topic: "포만감" });
+    return;
+  }
+  if (left > 0) {
+    respond("fedCooldown", { topic: "밥 쿨타임", hint: `밥 주기는 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요.` });
+    return;
+  }
+
+  const multiplier = state.fullness >= 45 ? 0.55 : 1;
+  const hungerDown = Math.round(-8 * multiplier);
+  const fullnessUp = Math.round(24 * multiplier);
+  state.lastFedAt = new Date().toISOString();
+  completeMission("feed");
+  respond("fedSuccess", {
+    delta: { hunger: hungerDown, fullness: fullnessUp, mood: 2, affection: 1, energy: 1 },
+    topic: "밥 주기",
+    motion: "charge",
+    hint: "v3에서는 밥을 줘도 배고픔이 천천히 줄고, 포만감이 올라가요.",
+  });
+}
+
+function handlePlay() {
+  const left = cooldownLeft("play");
+  if (state.energy <= 20) {
+    respond("lowEnergy", { topic: "에너지 부족" });
+    return;
+  }
+  if (state.hunger >= 86) {
+    respond("tooHungry", { topic: "배고픔" });
+    return;
+  }
+  if (left > 0) {
+    respond("playCooldown", { topic: "놀이 쿨타임", hint: `놀이 모드는 ${cooldownText(left)} 뒤에 다시 좋아져요.` });
+    return;
+  }
+
+  const hungerPenalty = state.hunger >= 70 ? 0.6 : 1;
+  state.lastPlayedAt = new Date().toISOString();
+  respond("bored", {
+    delta: { mood: Math.round(8 * hungerPenalty), affection: 3, energy: -12, hunger: 6, loneliness: -10 },
+    topic: "놀이",
+    motion: "bounce",
+    hint: "놀이는 기분을 올리지만 에너지와 배고픔을 함께 소모해요.",
+  });
+}
+
+function handleSleep() {
+  const left = cooldownLeft("sleep");
+  if (state.energy >= 86) {
+    respond("rested", { delta: { mood: 1, fullness: -2 }, topic: "충분한 에너지", hint: "에너지가 높을 때는 수면 효과가 작아요." });
+    return;
+  }
+  if (left > 0) {
+    respond("rested", { delta: { energy: 1, mood: 1 }, topic: "수면 쿨타임", hint: `수면 모드는 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요.` });
+    return;
+  }
+
+  state.lastSleptAt = new Date().toISOString();
+  state.sleepStartedAt = state.lastSleptAt;
+  completeMission("sleep");
+  respond("rested", {
+    delta: { energy: 5, mood: 2, loneliness: -3, fullness: -4 },
+    topic: "수면",
+    motion: "sleepy",
+    hint: "수면은 즉시 조금만 회복되고, 시간이 지나며 추가 회복돼요.",
+  });
 }
 
 function handleTalk(rawText) {
@@ -320,138 +502,69 @@ function handleTalk(rawText) {
   if (!text) return;
 
   state.totalTalks += 1;
-  tune({ energy: -3, hunger: 2, affection: 1 });
+  tune({ energy: -2, hunger: 1, loneliness: -3, affection: 1 });
 
-  if (includesAny(text, ["안녕", "하이", "hello", "ㅎㅇ"])) {
-    tune({ mood: 6, affection: 4 });
-    completeMission("greet");
-    state.lastTopic = "인사";
-    say(`${timeGreeting()} 다시 만나니까 제 눈빛이 더 밝아졌어요.`, "happy");
+  const category = classify(text);
+  const missionCategory = ["tired", "sad", "joy", "angry", "anxious"].includes(category) ? "mood" : null;
+  if (category === "greeting") completeMission("greet");
+  if (category === "sleep") completeMission("sleep");
+  if (missionCategory) completeMission("mood");
+
+  if (category === "mission") {
+    const undone = getUndoneMission();
+    respond("mission", {
+      replacements: { mission: undone ? undone.label : "오늘 미션 완료" },
+      topic: "미션",
+      hint: undone ? "미션을 완료하면 체크리스트가 채워져요." : "오늘 미션은 모두 완료했어요.",
+    });
     return;
   }
 
-  if (includesAny(text, ["힘들", "피곤", "지쳤", "슬퍼", "우울", "속상", "아파"])) {
-    tune({ affection: 8, mood: -1 });
-    completeMission("mood");
-    state.lastTopic = "위로";
-    say("그랬군요. 오늘 마음이 많이 무거웠나 봐요. 제가 해결은 못 해도, 여기서 조용히 같이 있어줄게요.", "sad");
+  if (category === "status") {
+    respond("status", { replacements: { status: statusSentence() }, topic: "상태 확인" });
     return;
   }
 
-  if (includesAny(text, ["기뻐", "좋은 일", "성공", "잘됐", "행복"])) {
-    tune({ mood: 12, affection: 6, energy: 2 });
-    completeMission("mood");
-    state.lastTopic = "기쁨";
-    say("우와! 좋은 일은 같이 반짝여야죠. 시오니도 지금 눈빛이 노란 별처럼 켜졌어요!", "excited");
-    return;
-  }
+  respond(category, { topic: categoryToTopic(category) });
+}
 
-  if (includesAny(text, ["화나", "짜증", "열받", "분해"])) {
-    tune({ affection: 5, mood: -2 });
-    completeMission("mood");
-    state.lastTopic = "화난 마음";
-    say("화가 날 만한 일이 있었군요. 먼저 숨을 천천히 쉬어요. 시오니가 옆에서 속도를 낮춰줄게요.", "thinking");
-    return;
-  }
-
-  if (includesAny(text, ["불안", "걱정", "두려", "무서"])) {
-    tune({ affection: 6, mood: 1 });
-    completeMission("mood");
-    state.lastTopic = "불안";
-    say("걱정이 마음 안에서 크게 들릴 때가 있죠. 지금은 한 번에 하나만 생각해도 괜찮아요.", "sad");
-    return;
-  }
-
-  if (includesAny(text, ["심심", "놀자", "재미"])) {
-    tune({ mood: 4, affection: 3 });
-    state.lastTopic = "놀이 제안";
-    say("심심하다면 놀이 모드를 켜볼까요? 너무 세게 놀면 제 배터리가 쪼르륵 줄어요.", "excited", true, "놀아주기 버튼을 눌러보세요.");
-    return;
-  }
-
-  if (includesAny(text, ["사랑", "좋아", "귀여", "고마워", "최고"])) {
-    tune({ mood: 12, affection: 10 });
-    state.lastTopic = "칭찬";
-    say("으아, 그 말은 제 심장 LED를 너무 밝게 만들어요! 저도 좋아요.", "shy");
-    return;
-  }
-
-  if (includesAny(text, ["잘자", "자자", "졸려", "잠"])) {
-    tune({ energy: 12, mood: 3, affection: 3 });
-    completeMission("sleep");
-    state.lastTopic = "잠";
-    say("좋아요. 오늘도 수고 많았어요. 편안히 쉬어요. 제가 꿈 경비를 설게요.", "sleepy");
-    return;
-  }
-
-  if (includesAny(text, ["배고", "밥", "간식", "먹"])) {
-    tune({ hunger: 7 });
-    state.lastTopic = "배고픔";
-    say("저도 살짝 출출해요. 밥 주기 버튼을 누르면 제 기분이 통통 올라가요.", "hungry");
-    return;
-  }
-
-  if (includesAny(text, ["기도", "교회", "말씀", "예배", "찬양"])) {
-    tune({ mood: 5, affection: 5 });
-    state.lastTopic = "신앙 단어";
-    say("좋은 단어를 들었어요. 오늘 마음을 차분히 모으는 작은 시간이 되면 좋겠어요.", "happy");
-    return;
-  }
-
-  if (includesAny(text, ["오늘 뭐", "뭐하지", "미션", "할 일"])) {
-    const undone = missions.find((mission) => !state.completedMissions[mission.key]);
-    state.lastTopic = "미션";
-    say(undone ? `오늘은 '${undone.label}' 미션을 해보면 어때요?` : "오늘 미션은 다 했어요. 시오니가 아주 뿌듯해요!", "thinking");
-    return;
-  }
-
-  if (includesAny(text, ["레벨", "상태", "친밀", "몇 번", "기억"])) {
-    state.lastTopic = "상태 확인";
-    say(statusSentence(), "thinking");
-    return;
-  }
-
-  if (includesAny(text, ["이름", "누구", "너는"])) {
-    tune({ affection: 3 });
-    state.lastTopic = "자기소개";
-    say(`저는 ${BOT_NAME}예요. v2가 되면서 시간, 연속 방문, 오늘의 미션을 기억하게 됐어요. 아직 무료 버전이라 API 과금은 0원이에요.`, "happy");
-    return;
-  }
-
-  if (includesAny(text, ["깜짝", "놀라", "어?"])) {
-    tune({ mood: 4, energy: -2 });
-    state.lastTopic = "놀람";
-    say("삐빅! 방금 제 눈이 동그래졌어요. 심장 LED도 깜짝 놀랐습니다.", "surprised");
-    return;
-  }
-
-  const replies = [
-    "음, 그 말 기억해둘게요. 더 듣고 싶어요.",
-    "그렇군요. 저는 지금 당신 이야기를 반짝반짝 듣고 있어요.",
-    "좋아요. 오늘의 작은 기록으로 마음 안에 저장해둘게요.",
-    "말해줘서 고마워요. 방금 우리 친밀도가 조금 올라간 것 같아요.",
-    "삐빅. 아직 어려운 말은 배우는 중이지만, 당신 목소리는 좋아요.",
-  ];
-  tune({ affection: 2, mood: 1 });
-  state.lastTopic = "자유 대화";
-  saveState();
-  say(replies[Math.floor(Math.random() * replies.length)], "thinking");
+function categoryToTopic(category) {
+  const names = {
+    greeting: "인사",
+    tired: "위로",
+    sad: "슬픔",
+    joy: "기쁨",
+    angry: "화난 마음",
+    anxious: "불안",
+    bored: "심심함",
+    praise: "칭찬",
+    sleep: "잠",
+    hungry: "배고픔",
+    faith: "신앙 단어",
+    intro: "자기소개",
+    surprise: "놀람",
+    unknown: "자유 대화",
+  };
+  return names[category] || category;
 }
 
 function firstMessageForVisit(previousVisit) {
-  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v2예요. 이제 오늘의 미션과 연속 방문을 기억해요.`;
+  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v3예요. 이제 같은 말에도 다르게 반응하고, 밥과 에너지도 천천히 관리돼요.`;
 
   const hoursAway = (Date.now() - new Date(previousVisit).getTime()) / 36e5;
-  if (hoursAway > 72) {
-    tune({ mood: -8, hunger: 18, energy: 10 });
-    return "오랜만이에요… 조금 심심했지만, 다시 와줘서 정말 좋아요.";
-  }
-  if (hoursAway > 24) {
-    tune({ mood: -4, hunger: 10, energy: 6 });
-    return "하루 만에 다시 만났네요. 기다린 만큼 더 반가워요.";
-  }
+  if (hoursAway > 72) return "오랜만이에요… 조금 배고프고 외로웠지만, 다시 와줘서 정말 좋아요.";
+  if (hoursAway > 24) return "하루 만에 다시 만났네요. 기다린 만큼 더 반가워요.";
   if (hoursAway > 6) return "다시 왔네요. 오늘은 어떤 이야기를 해볼까요?";
   return `${timeGreeting()} 방금 전에도 만난 것 같은데, 그래도 또 반가워요.`;
+}
+
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    state.idleCount = (state.idleCount || 0) + 1;
+    if (state.idleCount === 1) respond("unknown", { delta: { loneliness: 2 }, topic: "기다림", hint: "가만히 두면 시오니가 가끔 먼저 반응해요." });
+    else if (state.idleCount === 2) respond("sleep", { delta: { energy: 1, loneliness: 2 }, topic: "졸림" });
+  }, 90000);
 }
 
 function bindEvents() {
@@ -460,8 +573,8 @@ function bindEvents() {
   el.robot.addEventListener("pointerdown", () => {
     clearTimeout(holdTimer);
     holdTimer = setTimeout(() => {
-      tune({ mood: 4, affection: 5, energy: -1 });
-      say("따뜻해요. 오래 눌러주니까 꼭 품 안에 있는 것 같아요.", "shy", true, "길게 누르면 포근한 반응이 나와요.");
+      tune({ mood: 2, affection: 4, energy: -1, loneliness: -5 });
+      respond("praise", { face: "shy", motion: "pulse", topic: "길게 누르기", hint: "길게 누르면 포근한 반응이 나와요." });
     }, 750);
   });
 
@@ -499,7 +612,7 @@ function bindEvents() {
     state.voiceEnabled = !state.voiceEnabled;
     if (!state.voiceEnabled && "speechSynthesis" in window) window.speechSynthesis.cancel();
     saveState();
-    say(state.voiceEnabled ? "목소리를 켰어요." : "목소리를 껐어요. 이제 조용히 반응할게요.", state.voiceEnabled ? "happy" : "sleepy");
+    respond(state.voiceEnabled ? "greeting" : "sleep", { topic: "목소리 설정" });
   });
 
   el.resetButton.addEventListener("click", () => {
@@ -509,7 +622,7 @@ function bindEvents() {
     state = { ...defaultState, firstSeen: new Date().toISOString() };
     saveState();
     render(true);
-    say("초기화 완료예요. 우리 다시 처음부터 친해져요.", "happy");
+    say("초기화 완료예요. 우리 다시 처음부터 친해져요.", "happy", "bounce");
   });
 }
 
@@ -523,7 +636,8 @@ if ("serviceWorker" in navigator) {
 
 resetDailyIfNeeded();
 const previousVisit = state.lastVisit;
+applyTimeDrift(previousVisit);
 bindEvents();
 updateVisitHistory();
 render(true);
-say(firstMessageForVisit(previousVisit), moodInfo().face, false);
+say(firstMessageForVisit(previousVisit), moodInfo().face, "peek", "v3 업그레이드: 답변 다양화와 게이지 밸런스가 적용됐어요.");
