@@ -4,19 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#75f5d3" />
-  <meta name="description" content="다양한 대답과 균형 잡힌 돌봄 게이지를 가진 포켓 로봇 시오니 v3" />
-  <title>시오니 v3</title>
+  <meta name="description" content="채팅창 없이 터치와 선택으로 돌보는 포켓 로봇 시오니 v4" />
+  <title>시오니 v4</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="motions.css" />
+  <link rel="stylesheet" href="v4.css" />
 </head>
 <body data-theme="calm">
-  <main class="app-shell" aria-label="시오니 v3">
-    <section class="hero-card">
+  <main class="app-shell v4-shell" aria-label="시오니 v4">
+    <section class="hero-card v4-hero">
       <div class="top-bar">
         <div>
-          <p class="eyebrow">Pocket Robot v3</p>
+          <p class="eyebrow">Pocket Robot v4</p>
           <h1 id="botName">시오니</h1>
           <p class="subtitle" id="timeGreeting">오늘도 같이 있어줄게요.</p>
         </div>
@@ -31,9 +32,10 @@
         <span id="streakBadge" class="soft-badge">연속 1일</span>
       </div>
 
-      <div class="robot-stage" aria-live="polite">
+      <div class="robot-stage v4-stage" aria-live="polite">
         <div class="sparkle sparkle-one"></div>
         <div class="sparkle sparkle-two"></div>
+        <div id="reactionFx" class="reaction-fx" aria-hidden="true"></div>
         <button id="robot" class="robot" type="button" aria-label="시오니 쓰다듬기">
           <span class="lanyard"></span>
           <span class="head">
@@ -54,92 +56,158 @@
         </button>
       </div>
 
-      <div class="speech-card">
-        <p id="message">안녕하세요. 저는 시오니예요. 이제 같은 말에도 다르게 반응해요.</p>
-        <small id="microHint">v3는 답변 다양화, 반복 방지, 쿨타임, 포만감/외로움 게이지를 사용해요.</small>
+      <div class="speech-card v4-speech">
+        <p id="message">안녕하세요. 저는 시오니예요. 이제 채팅창 없이 버튼과 터치로 반응해요.</p>
+        <small id="microHint">v4는 로봇 중심 UI, 감정 버튼, 목소리 모드, 반응 이펙트를 사용해요.</small>
       </div>
 
-      <div class="prompt-chips" aria-label="빠른 말걸기">
-        <button type="button" data-say="안녕 시오니">안녕</button>
-        <button type="button" data-say="나 오늘 힘들어">힘들어</button>
-        <button type="button" data-say="심심해">심심해</button>
-        <button type="button" data-say="오늘 뭐하지?">오늘 뭐하지?</button>
-        <button type="button" data-say="시오니 상태 알려줘">상태</button>
+      <div class="recommend-card">
+        <span>시오니 추천</span>
+        <p id="recommendationText">상태를 살펴보고 추천 행동을 고르는 중이에요.</p>
       </div>
 
-      <form id="talkForm" class="talk-form">
+      <form id="talkForm" class="talk-form v4-hidden-form" aria-hidden="true">
         <label class="sr-only" for="userInput">시오니에게 말하기</label>
-        <input id="userInput" name="message" autocomplete="off" placeholder="예: 나 오늘 기뻐" />
-        <button type="submit">말하기</button>
+        <input id="userInput" name="message" autocomplete="off" tabindex="-1" />
+        <button type="submit" tabindex="-1">말하기</button>
       </form>
-
-      <div class="quick-actions" aria-label="빠른 행동">
-        <button type="button" data-action="pet">쓰다듬기</button>
-        <button type="button" data-action="feed">밥 주기</button>
-        <button type="button" data-action="play">놀아주기</button>
-        <button type="button" data-action="sleep">재우기</button>
-      </div>
     </section>
 
-    <section class="status-card" aria-label="시오니 상태">
-      <div class="status-heading">
-        <div>
-          <strong id="moodLabel">상태 확인 중</strong>
-          <p id="levelLabel">관계 레벨을 계산 중이에요</p>
-        </div>
-        <span id="lastSeen">처음 만났어요</span>
-      </div>
+    <section class="v4-panel-card">
+      <nav class="v4-tabs" aria-label="시오니 메뉴">
+        <button type="button" class="v4-tab is-active" data-tab="home">홈</button>
+        <button type="button" class="v4-tab" data-tab="care">돌보기</button>
+        <button type="button" class="v4-tab" data-tab="mission">미션</button>
+        <button type="button" class="v4-tab" data-tab="settings">설정</button>
+      </nav>
 
-      <div class="meter-list">
-        <div class="meter-row">
-          <span>기분</span>
-          <div class="meter"><i id="moodBar"></i></div>
-          <b id="moodValue">0</b>
+      <section class="v4-tab-panel is-active" data-panel="home" aria-label="홈">
+        <div class="section-title">
+          <span>오늘 나는...</span>
+          <small>말을 치지 말고 마음을 눌러주세요.</small>
         </div>
-        <div class="meter-row">
-          <span>친밀도</span>
-          <div class="meter"><i id="affectionBar"></i></div>
-          <b id="affectionValue">0</b>
+        <div class="emotion-grid prompt-chips" aria-label="감정 선택">
+          <button type="button" data-say="안녕 시오니">😊 안녕</button>
+          <button type="button" data-say="나 오늘 힘들어">😔 힘들어</button>
+          <button type="button" data-say="나 오늘 기뻐">✨ 기뻐</button>
+          <button type="button" data-say="불안해">😟 불안해</button>
+          <button type="button" data-say="심심해">🎈 심심해</button>
+          <button type="button" data-say="시오니 상태 알려줘">📊 상태</button>
         </div>
-        <div class="meter-row">
-          <span>에너지</span>
-          <div class="meter"><i id="energyBar"></i></div>
-          <b id="energyValue">0</b>
-        </div>
-        <div class="meter-row">
-          <span>배고픔</span>
-          <div class="meter danger"><i id="hungerBar"></i></div>
-          <b id="hungerValue">0</b>
-        </div>
-        <div class="meter-row">
-          <span>포만감</span>
-          <div class="meter fullness"><i id="fullnessBar"></i></div>
-          <b id="fullnessValue">0</b>
-        </div>
-        <div class="meter-row">
-          <span>외로움</span>
-          <div class="meter lonely"><i id="lonelinessBar"></i></div>
-          <b id="lonelinessValue">0</b>
-        </div>
-      </div>
+      </section>
 
-      <div class="mini-log">
-        <div class="mini-log-title">
-          <span>오늘의 미션</span>
-          <strong id="missionCount">0/5</strong>
+      <section class="v4-tab-panel" data-panel="care" aria-label="돌보기">
+        <div class="section-title">
+          <span>돌보기</span>
+          <small>게이지는 천천히 변해요. 연타보다 루틴이 좋아요.</small>
         </div>
-        <ul id="missionList" class="mission-list"></ul>
-      </div>
+        <div class="quick-actions v4-care-actions" aria-label="빠른 행동">
+          <button type="button" data-action="pet">💚 쓰담</button>
+          <button type="button" data-action="feed">🍪 간식</button>
+          <button type="button" data-action="play">🎈 놀기</button>
+          <button type="button" data-action="sleep">🌙 쉬기</button>
+        </div>
+      </section>
 
-      <div class="memory-card">
-        <span>시오니의 기억</span>
-        <p id="memoryLine">아직 오늘의 기억을 정리하는 중이에요.</p>
-      </div>
+      <section class="v4-tab-panel" data-panel="mission" aria-label="미션과 상태">
+        <div class="status-heading">
+          <div>
+            <strong id="moodLabel">상태 확인 중</strong>
+            <p id="levelLabel">관계 레벨을 계산 중이에요</p>
+          </div>
+          <span id="lastSeen">처음 만났어요</span>
+        </div>
+
+        <div class="meter-list v4-meters">
+          <div class="meter-row">
+            <span>기분</span>
+            <div class="meter"><i id="moodBar"></i></div>
+            <b id="moodValue">0</b>
+          </div>
+          <div class="meter-row">
+            <span>친밀도</span>
+            <div class="meter"><i id="affectionBar"></i></div>
+            <b id="affectionValue">0</b>
+          </div>
+          <div class="meter-row">
+            <span>에너지</span>
+            <div class="meter"><i id="energyBar"></i></div>
+            <b id="energyValue">0</b>
+          </div>
+          <div class="meter-row">
+            <span>배고픔</span>
+            <div class="meter danger"><i id="hungerBar"></i></div>
+            <b id="hungerValue">0</b>
+          </div>
+          <div class="meter-row">
+            <span>포만감</span>
+            <div class="meter fullness"><i id="fullnessBar"></i></div>
+            <b id="fullnessValue">0</b>
+          </div>
+          <div class="meter-row">
+            <span>외로움</span>
+            <div class="meter lonely"><i id="lonelinessBar"></i></div>
+            <b id="lonelinessValue">0</b>
+          </div>
+        </div>
+
+        <div class="mini-log">
+          <div class="mini-log-title">
+            <span>오늘의 미션</span>
+            <strong id="missionCount">0/5</strong>
+          </div>
+          <ul id="missionList" class="mission-list"></ul>
+        </div>
+
+        <div class="memory-card">
+          <span>시오니의 기억</span>
+          <p id="memoryLine">아직 오늘의 기억을 정리하는 중이에요.</p>
+        </div>
+      </section>
+
+      <section class="v4-tab-panel" data-panel="settings" aria-label="설정">
+        <div class="section-title">
+          <span>목소리 설정</span>
+          <small>기기에서 제공하는 음성 안에서 선택돼요.</small>
+        </div>
+        <div class="voice-grid">
+          <label>
+            <span>목소리 모드</span>
+            <select id="voicePreset">
+              <option value="cute">귀여운 시오니</option>
+              <option value="tiny">아주 작은 시오니</option>
+              <option value="calm">차분한 시오니</option>
+              <option value="sleepy">졸린 시오니</option>
+              <option value="excited">신난 시오니</option>
+            </select>
+          </label>
+          <label>
+            <span>기기 음성</span>
+            <select id="voiceSelect">
+              <option value="">자동 선택</option>
+            </select>
+          </label>
+          <label>
+            <span>음높이 <b id="pitchValue">1.45</b></span>
+            <input id="voicePitch" type="range" min="0.8" max="2" step="0.05" value="1.45" />
+          </label>
+          <label>
+            <span>속도 <b id="rateValue">1.08</b></span>
+            <input id="voiceRate" type="range" min="0.75" max="1.35" step="0.03" value="1.08" />
+          </label>
+          <label>
+            <span>볼륨 <b id="volumeValue">0.9</b></span>
+            <input id="voiceVolume" type="range" min="0.2" max="1" step="0.05" value="0.9" />
+          </label>
+          <button id="voiceTest" type="button" class="v4-wide-button">목소리 테스트</button>
+        </div>
+      </section>
     </section>
   </main>
 
   <script src="responses.js" defer></script>
   <script src="responses-extra.js" defer></script>
+  <script src="v4.js" defer></script>
   <script src="app.js" defer></script>
   <script src="persist.js" defer></script>
 </body>
