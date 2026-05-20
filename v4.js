@@ -264,6 +264,10 @@
     else text.textContent = "상태가 괜찮아요. 오늘의 미션을 하나 눌러보세요.";
   }
 
+  function normalizeVersionText(text) {
+    return text.replace(/v3|v4(?!\.1)/g, "v4.1");
+  }
+
   function observeReactions() {
     const face = $("#face");
     const message = $("#message");
@@ -280,9 +284,8 @@
       new MutationObserver(() => {
         const faceName = currentFace();
         showEffect(effectForFace(faceName));
-        if (message.textContent.includes("v3") || message.textContent.includes("v4")) {
-          message.textContent = message.textContent.replaceAll("v3", "v4.1").replaceAll("v4", "v4.1");
-        }
+        const normalized = normalizeVersionText(message.textContent);
+        if (normalized !== message.textContent) message.textContent = normalized;
       }).observe(message, { childList: true, characterData: true, subtree: true });
     }
   }
