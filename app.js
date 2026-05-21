@@ -31,6 +31,15 @@ const defaultState = {
   lastSleptAt: null,
   sleepStartedAt: null,
   idleCount: 0,
+  growthXp: 0,
+  memoryCards: [],
+  personalityStats: {
+    kindness: 28,
+    curiosity: 24,
+    bravery: 18,
+    sparkle: 22,
+  },
+  favoriteMood: "아직 몰라요",
 };
 
 const el = {
@@ -51,6 +60,17 @@ const el = {
   missionList: document.querySelector("#missionList"),
   missionCount: document.querySelector("#missionCount"),
   memoryLine: document.querySelector("#memoryLine"),
+  v6PersonaName: document.querySelector("#v6PersonaName"),
+  v6PersonaText: document.querySelector("#v6PersonaText"),
+  v6GrowthBadge: document.querySelector("#v6GrowthBadge"),
+  v6GrowthBar: document.querySelector("#v6GrowthBar"),
+  v6GrowthText: document.querySelector("#v6GrowthText"),
+  v6MemoryList: document.querySelector("#v6MemoryList"),
+  v6Insight: document.querySelector("#v6Insight"),
+  v6Kindness: document.querySelector("#v6Kindness"),
+  v6Curiosity: document.querySelector("#v6Curiosity"),
+  v6Bravery: document.querySelector("#v6Bravery"),
+  v6Sparkle: document.querySelector("#v6Sparkle"),
   bars: {
     mood: document.querySelector("#moodBar"),
     affection: document.querySelector("#affectionBar"),
@@ -85,7 +105,14 @@ let longPressHandled = false;
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (saved) return { ...defaultState, ...saved };
+    if (saved) {
+      return {
+        ...defaultState,
+        ...saved,
+        memoryCards: Array.isArray(saved.memoryCards) ? saved.memoryCards : [],
+        personalityStats: { ...defaultState.personalityStats, ...(saved.personalityStats || {}) },
+      };
+    }
   } catch {}
 
   for (const key of LEGACY_STORAGE_KEYS) {
@@ -137,12 +164,123 @@ function clampAll() {
   });
 }
 
+function clampPersonality() {
+  state.personalityStats = { ...defaultState.personalityStats, ...(state.personalityStats || {}) };
+  Object.keys(defaultState.personalityStats).forEach((key) => {
+    state.personalityStats[key] = clamp(state.personalityStats[key]);
+  });
+}
+
+function tunePersonality(delta = {}) {
+  clampPersonality();
+  Object.entries(delta).forEach(([key, value]) => {
+    if (!(key in state.personalityStats)) return;
+    state.personalityStats[key] = clamp(state.personalityStats[key] + value);
+  });
+}
+
+function growthInfo() {
+  const xp = Math.max(0, state.growthXp || 0);
+  const level = Math.min(12, Math.floor(xp / 40) + 1);
+  const current = xp % 40;
+  const title = level >= 10 ? "별빛 로봇" : level >= 7 ? "마음 탐험가" : level >= 4 ? "기억 친구" : "새싹 로봇";
+  return { level, title, current, next: 40, percent: Math.round((current / 40) * 100) };
+}
+
+function personaInfo() {
+  clampPersonality();
+  const stats = state.personalityStats;
+  const entries = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+  const [topKey] = entries[0] || ["kindness"];
+  const profiles = {
+    kindness: {
+      name: "다정한 보호형",
+      text: "먼저 안부를 묻고, 힘든 말을 들으면 짧게 곁을 지켜주는 시오니예요.",
+    },
+    curiosity: {
+      name: "호기심 탐험형",
+      text: "새로운 말과 행동을 잘 기억하고, 오늘의 모험을 더 적극적으로 권해요.",
+    },
+    bravery: {
+      name: "용감한 응원형",
+      text: "불안하거나 지친 날에 작은 행동부터 해보자고 단단하게 응원해요.",
+    },
+    sparkle: {
+      name: "반짝 놀이형",
+      text: "칭찬과 놀이에 강하게 반응하고, 보상과 수집을 더 신나게 느껴요.",
+    },
+  };
+  return profiles[topKey] || profiles.kindness;
+}
+
+function rememberMoment(kind, detail) {
+  const label = {
+    greeting: "인사",
+    mood: "기분",
+    care: "돌봄",
+    play: "놀이",
+    feed: "간식",
+    sleep: "휴식",
+    reward: "보상",
+    talk: "대화",
+  }[kind] || "기억";
+
+  state.memoryCards = Array.isArray(state.memoryCards) ? state.memoryCards : [];
+  state.memoryCards.unshift({
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    date: todayKey(),
+    label,
+    detail,
+  });
+  state.memoryCards = state.memoryCards.slice(0, 6);
+}
+
+function gainGrowth(amount, reason) {
+  state.growthXp = Math.max(0, (state.growthXp || 0) + amount);
+  if (reason) rememberMoment("talk", reason);
+}
+
+function v6InsightText() {
+  const mood = moodInfo().label;
+  const persona = personaInfo().name;
+  if (state.loneliness >= 70) return `${persona} 시오니는 지금 외로움을 먼저 낮추는 쓰담이나 짧은 대화를 추천해요.`;
+  if (state.hunger >= 75) return `${persona} 시오니는 간식을 먹고 나면 대답이 더 밝아질 것 같아요.`;
+  if (state.energy <= 25) return `${persona} 시오니는 잠깐 쉬면서 에너지를 회복하고 싶어 해요.`;
+  if ((state.growthXp || 0) < 40) return `${persona} 시오니가 첫 성장 레벨을 향해 기억을 모으고 있어요. 현재 상태는 ${mood}.`;
+  return `${persona} 시오니는 최근 기억과 상태를 섞어서 반응해요. 오늘 상태는 ${mood}.`;
+}
+
 function tune(delta = {}) {
   ["mood", "affection", "energy", "hunger", "loneliness"].forEach((key) => {
     state[key] = clamp((state[key] ?? defaultState[key]) + (delta[key] ?? 0));
   });
   saveState();
   render(false);
+}
+
+function tuneForCategory(category) {
+  const plans = {
+    greeting: { xp: 4, stats: { kindness: 2, sparkle: 1 }, memory: ["greeting", "오늘 반갑게 인사했어요"] },
+    tired: { xp: 6, stats: { kindness: 3, bravery: 1 }, memory: ["mood", "힘든 마음을 말해줬어요"] },
+    sad: { xp: 6, stats: { kindness: 3 }, memory: ["mood", "속상한 마음을 나눴어요"] },
+    joy: { xp: 6, stats: { sparkle: 3, curiosity: 1 }, memory: ["mood", "기쁜 일을 함께 기억했어요"] },
+    angry: { xp: 5, stats: { bravery: 2, kindness: 1 }, memory: ["mood", "화난 마음을 조심히 맡겼어요"] },
+    anxious: { xp: 6, stats: { bravery: 3, kindness: 1 }, memory: ["mood", "불안한 마음을 말해줬어요"] },
+    bored: { xp: 5, stats: { curiosity: 2, sparkle: 2 }, memory: ["play", "심심함을 함께 바꿔보기로 했어요"] },
+    praise: { xp: 5, stats: { sparkle: 3, kindness: 1 }, memory: ["talk", "칭찬을 받아서 마음등이 반짝였어요"] },
+    sleep: { xp: 4, stats: { kindness: 1, bravery: 1 }, memory: ["sleep", "쉬는 시간을 챙겼어요"] },
+    hungry: { xp: 4, stats: { curiosity: 1 }, memory: ["feed", "먹는 이야기를 했어요"] },
+    faith: { xp: 5, stats: { kindness: 2, bravery: 1 }, memory: ["talk", "소중한 단어를 조용히 기억했어요"] },
+    status: { xp: 3, stats: { curiosity: 2 }, memory: ["talk", "상태를 함께 확인했어요"] },
+    mission: { xp: 3, stats: { curiosity: 2 }, memory: ["talk", "오늘 할 모험을 확인했어요"] },
+    intro: { xp: 3, stats: { kindness: 1, curiosity: 1 }, memory: ["talk", "시오니를 다시 소개했어요"] },
+    unknown: { xp: 2, stats: { curiosity: 1 }, memory: ["talk", "새로운 말을 들었어요"] },
+  };
+  const plan = plans[category] || plans.unknown;
+  state.favoriteMood = categoryToTopic(category);
+  tunePersonality(plan.stats);
+  gainGrowth(plan.xp);
+  rememberMoment(plan.memory[0], plan.memory[1]);
 }
 
 function levelInfo() {
@@ -329,6 +467,7 @@ function getUndoneMission() {
 function render(updateFaceFromMood = true) {
   resetDailyIfNeeded();
   clampAll();
+  clampPersonality();
 
   Object.keys(el.bars).forEach((key) => {
     if (!el.bars[key] || !el.values[key]) return;
@@ -367,6 +506,25 @@ function render(updateFaceFromMood = true) {
   ].join(" · ");
 
   el.memoryLine.textContent = `총 ${state.visits || 0}번 만났고, ${state.totalTalks || 0}번 이야기했어요. 최근 기억: ${state.lastTopic || "아직 없음"}. ${cooldownLine}`;
+
+  const growth = growthInfo();
+  const persona = personaInfo();
+  if (el.v6PersonaName) el.v6PersonaName.textContent = persona.name;
+  if (el.v6PersonaText) el.v6PersonaText.textContent = persona.text;
+  if (el.v6GrowthBadge) el.v6GrowthBadge.textContent = `Lv.${growth.level} ${growth.title}`;
+  if (el.v6GrowthBar) el.v6GrowthBar.style.width = `${growth.percent}%`;
+  if (el.v6GrowthText) el.v6GrowthText.textContent = `${growth.current}/${growth.next} XP · 좋아하는 기억: ${state.favoriteMood || "아직 몰라요"}`;
+  if (el.v6Insight) el.v6Insight.textContent = v6InsightText();
+  if (el.v6Kindness) el.v6Kindness.textContent = state.personalityStats.kindness;
+  if (el.v6Curiosity) el.v6Curiosity.textContent = state.personalityStats.curiosity;
+  if (el.v6Bravery) el.v6Bravery.textContent = state.personalityStats.bravery;
+  if (el.v6Sparkle) el.v6Sparkle.textContent = state.personalityStats.sparkle;
+  if (el.v6MemoryList) {
+    const cards = Array.isArray(state.memoryCards) ? state.memoryCards : [];
+    el.v6MemoryList.innerHTML = cards.length
+      ? cards.map((card) => `<li><strong>${card.label}</strong><span>${card.detail}</span></li>`).join("")
+      : `<li><strong>첫 기억</strong><span>아직 새 기억을 기다리고 있어요.</span></li>`;
+  }
 
   if (state.lastVisit) {
     const diff = Date.now() - new Date(state.lastVisit).getTime();
@@ -420,12 +578,18 @@ function handlePet() {
   if (tapCount >= 4) {
     tapCount = 0;
     completeMission("pet");
+    tunePersonality({ sparkle: 3, kindness: 1 });
+    gainGrowth(6);
+    rememberMoment("care", "연속 쓰담으로 마음등이 빠르게 반짝였어요");
     respond("surprise", { delta: { mood: 8, affection: 4, energy: -3, loneliness: -9 }, topic: "연속 터치", hint: "빠르게 여러 번 누르면 기분과 친밀도가 확 올라가요." });
     return;
   }
 
   const effect = tapCount === 1 ? { mood: 5, affection: 4, loneliness: -8 } : { mood: 4, affection: 3, loneliness: -7 };
   completeMission("pet");
+  tunePersonality({ kindness: 2 });
+  gainGrowth(4);
+  rememberMoment("care", "쓰담을 받아서 외로움이 조금 줄었어요");
   respond("pet", { delta: effect, topic: "쓰다듬기", hint: "쓰담은 외로움을 크게 낮추고 친밀도를 올려요." });
 }
 
@@ -438,6 +602,9 @@ function handleFeed() {
 
   state.lastFedAt = new Date().toISOString();
   completeMission("feed");
+  tunePersonality({ kindness: 1, curiosity: 1 });
+  gainGrowth(4);
+  rememberMoment("feed", "간식을 먹고 배고픔이 내려갔어요");
   respond("fedSuccess", {
     delta: { hunger: -22, mood: 4, affection: 2, energy: 2, loneliness: -3 },
     topic: "간식 주기",
@@ -463,6 +630,10 @@ function handlePlay() {
 
   const hungerPenalty = state.hunger >= 76 ? 0.75 : 1;
   state.lastPlayedAt = new Date().toISOString();
+  completeMission("play");
+  tunePersonality({ sparkle: 3, curiosity: 2 });
+  gainGrowth(5);
+  rememberMoment("play", "함께 놀면서 반짝 에너지를 모았어요");
   respond("bored", {
     delta: { mood: Math.round(14 * hungerPenalty), affection: 6, energy: -9, hunger: 8, loneliness: -16 },
     topic: "놀이",
@@ -485,6 +656,9 @@ function handleSleep() {
   state.lastSleptAt = new Date().toISOString();
   state.sleepStartedAt = state.lastSleptAt;
   completeMission("sleep");
+  tunePersonality({ bravery: 1, kindness: 1 });
+  gainGrowth(4);
+  rememberMoment("sleep", "쉬는 시간을 챙겨서 에너지를 회복했어요");
   respond("rested", {
     delta: { energy: 18, mood: 5, loneliness: -8, hunger: 2 },
     topic: "쉬기",
@@ -501,6 +675,7 @@ function handleTalk(rawText) {
   tune({ energy: -1, hunger: 1, loneliness: -5, affection: 2, mood: 1 });
 
   const category = classify(text);
+  tuneForCategory(category);
   const missionCategory = ["tired", "sad", "joy", "angry", "anxious"].includes(category) ? "mood" : null;
   if (category === "greeting") completeMission("greet");
   if (category === "sleep") completeMission("sleep");
@@ -545,7 +720,7 @@ function categoryToTopic(category) {
 }
 
 function firstMessageForVisit(previousVisit) {
-  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v4.1이에요. 이제 돌봄 효과가 더 잘 보이도록 조정됐어요.`;
+  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v6예요. 이제 기억하고 성장하면서 오늘의 마음을 더 잘 따라갈게요.`;
 
   const hoursAway = (Date.now() - new Date(previousVisit).getTime()) / 36e5;
   if (hoursAway > 72) return "오랜만이에요… 조금 배고프고 외로웠지만, 다시 와줘서 정말 좋아요.";
@@ -636,4 +811,4 @@ applyTimeDrift(previousVisit);
 bindEvents();
 updateVisitHistory();
 render(true);
-say(firstMessageForVisit(previousVisit), moodInfo().face, "peek", "쿨타임을 모두 10초로 줄이고 게이지 변화량을 키웠어요.");
+say(firstMessageForVisit(previousVisit), moodInfo().face, "peek", "v6는 기억 카드, 성격 스탯, 성장 XP를 함께 저장해요.");
