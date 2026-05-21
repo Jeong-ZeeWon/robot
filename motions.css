@@ -89,11 +89,109 @@
   height: 6px !important;
 }
 
+.robot.is-idle-blink .eye {
+  animation: idle-eye-blink 1.3s ease;
+}
+
+.robot.is-idle-look .head {
+  animation: idle-look-head 1.8s ease;
+}
+
+.robot.is-idle-look .eye {
+  animation: idle-look-eye 1.8s ease;
+}
+
+.robot.is-idle-happy {
+  animation: idle-happy-hop 1.55s ease;
+}
+
+.robot.is-idle-happy .heart-light {
+  animation: heart-pulse 1.1s ease;
+}
+
+.robot.is-idle-sleepy {
+  animation: idle-sleepy-sway 2.1s ease;
+}
+
+.robot.is-idle-sleepy .head {
+  animation: idle-sleepy-head 2.1s ease;
+}
+
+.robot.is-idle-lonely {
+  animation: idle-lonely-wait 1.8s ease;
+}
+
+.robot.is-idle-hungry .head {
+  animation: idle-hungry-look 1.7s ease;
+}
+
+.robot.is-idle-hungry .body {
+  animation: motion-munch-body 1.1s ease;
+}
+
+.robot.is-idle-curious {
+  animation: idle-curious-tilt 1.65s ease;
+}
+
 @keyframes motion-bounce {
   0% { transform: translateY(0) scale(1); }
   32% { transform: translateY(-20px) scale(1.03); }
   70% { transform: translateY(5px) scale(0.98); }
   100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes idle-eye-blink {
+  0%, 18%, 42%, 100% { height: 40px; }
+  25%, 34% { height: 5px; transform: translateY(2px); }
+}
+
+@keyframes idle-look-head {
+  0%, 100% { transform: translateX(-50%) rotate(0); }
+  28% { transform: translateX(-54%) rotate(-3deg); }
+  62% { transform: translateX(-46%) rotate(3deg); }
+}
+
+@keyframes idle-look-eye {
+  0%, 100% { transform: translateX(0); }
+  28% { transform: translateX(-7px); }
+  62% { transform: translateX(7px); }
+}
+
+@keyframes idle-happy-hop {
+  0%, 100% { transform: translateY(0) rotate(0) scale(1); }
+  22% { transform: translateY(-12px) rotate(-4deg) scale(1.03); }
+  48% { transform: translateY(0) rotate(4deg) scale(.99); }
+  72% { transform: translateY(-7px) rotate(-2deg) scale(1.02); }
+}
+
+@keyframes idle-sleepy-sway {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  36% { transform: translateY(9px) rotate(-2deg); }
+  72% { transform: translateY(5px) rotate(2deg); }
+}
+
+@keyframes idle-sleepy-head {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  48% { transform: translateX(-50%) translateY(7px); }
+}
+
+@keyframes idle-lonely-wait {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  18% { transform: translateX(-3px) rotate(-1.5deg); }
+  36% { transform: translateX(3px) rotate(1.5deg); }
+  62% { transform: translateX(0) translateY(5px); }
+}
+
+@keyframes idle-hungry-look {
+  0%, 100% { transform: translateX(-50%) rotate(0); }
+  28% { transform: translateX(-43%) rotate(5deg); }
+  58% { transform: translateX(-46%) rotate(3deg); }
+}
+
+@keyframes idle-curious-tilt {
+  0%, 100% { transform: rotate(0) translateY(0); }
+  28% { transform: rotate(-5deg) translateY(-2px); }
+  58% { transform: rotate(4deg) translateY(2px); }
 }
 
 @keyframes motion-wiggle {
