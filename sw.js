@@ -1,5 +1,5 @@
-const CACHE_NAME = "sioni-v6-cache-20260521-1";
-const ASSETS = ["./", "./index.html", "./style.css", "./motions.css", "./v4.css", "./v5.css", "./responses.js", "./responses-extra.js", "./v4.js", "./v5.js", "./v5-motions.js", "./app.js", "./v5-version.js", "./persist.js", "./manifest.json", "./icon.svg"];
+const CACHE_NAME = "sioni-v6-cache-20260521-2";
+const ASSETS = ["./", "./index.html", "./style.css?v=6.0.1", "./motions.css?v=6.0.1", "./v4.css?v=6.0.1", "./v5.css?v=6.0.1", "./responses.js?v=6.0.1", "./responses-extra.js?v=6.0.1", "./v4.js?v=6.0.1", "./v5.js?v=6.0.1", "./v5-motions.js?v=6.0.1", "./app.js?v=6.0.1", "./v5-version.js?v=6.0.1", "./persist.js?v=6.0.1", "./manifest.json?v=6.0.1", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
