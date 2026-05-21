@@ -199,7 +199,7 @@ function personaInfo() {
     },
     curiosity: {
       name: "호기심 탐험형",
-      text: "새로운 말과 행동을 잘 기억하고, 오늘의 모험을 더 적극적으로 권해요.",
+      text: "새로운 말과 행동을 잘 기억하고, 다음에 어떤 반응을 하면 좋을지 살펴봐요.",
     },
     bravery: {
       name: "용감한 응원형",
@@ -272,7 +272,6 @@ function tuneForCategory(category) {
     hungry: { xp: 4, stats: { curiosity: 1 }, memory: ["feed", "먹는 이야기를 했어요"] },
     faith: { xp: 5, stats: { kindness: 2, bravery: 1 }, memory: ["talk", "소중한 단어를 조용히 기억했어요"] },
     status: { xp: 3, stats: { curiosity: 2 }, memory: ["talk", "상태를 함께 확인했어요"] },
-    mission: { xp: 3, stats: { curiosity: 2 }, memory: ["talk", "오늘 할 모험을 확인했어요"] },
     intro: { xp: 3, stats: { kindness: 1, curiosity: 1 }, memory: ["talk", "시오니를 다시 소개했어요"] },
     unknown: { xp: 2, stats: { curiosity: 1 }, memory: ["talk", "새로운 말을 들었어요"] },
   };
@@ -487,14 +486,16 @@ function render(updateFaceFromMood = true) {
 
   if (updateFaceFromMood) setFace(mood.face, mood.theme);
 
-  const completed = missions.filter((mission) => state.completedMissions[mission.key]).length;
-  el.missionCount.textContent = `${completed}/${missions.length}`;
-  el.missionList.innerHTML = missions
-    .map((mission) => {
-      const done = Boolean(state.completedMissions[mission.key]);
-      return `<li class="${done ? "done" : ""}"><span class="check-dot">${done ? "✓" : ""}</span>${mission.label}</li>`;
-    })
-    .join("");
+  if (el.missionCount && el.missionList) {
+    const completed = missions.filter((mission) => state.completedMissions[mission.key]).length;
+    el.missionCount.textContent = `${completed}/${missions.length}`;
+    el.missionList.innerHTML = missions
+      .map((mission) => {
+        const done = Boolean(state.completedMissions[mission.key]);
+        return `<li class="${done ? "done" : ""}"><span class="check-dot">${done ? "✓" : ""}</span>${mission.label}</li>`;
+      })
+      .join("");
+  }
 
   const feedLeft = cooldownLeft(state.lastFedAt);
   const playLeft = cooldownLeft(state.lastPlayedAt);
@@ -550,7 +551,7 @@ function classify(text) {
   if (includesAny(text, ["잘자", "자자", "졸려", "잠", "자러"])) return "sleep";
   if (includesAny(text, ["배고", "밥", "간식", "먹"])) return "hungry";
   if (includesAny(text, ["기도", "교회", "말씀", "예배", "찬양"])) return "faith";
-  if (includesAny(text, ["오늘 뭐", "뭐하지", "미션", "할 일"])) return "mission";
+  if (includesAny(text, ["오늘 뭐", "뭐하지", "할 일"])) return "status";
   if (includesAny(text, ["레벨", "상태", "친밀", "몇 번", "기억", "게이지"])) return "status";
   if (includesAny(text, ["이름", "누구", "너는", "소개"])) return "intro";
   if (includesAny(text, ["깜짝", "놀라", "어?"])) return "surprise";
@@ -680,16 +681,6 @@ function handleTalk(rawText) {
   if (category === "greeting") completeMission("greet");
   if (category === "sleep") completeMission("sleep");
   if (missionCategory) completeMission("mood");
-
-  if (category === "mission") {
-    const undone = getUndoneMission();
-    respond("mission", {
-      replacements: { mission: undone ? undone.label : "오늘 미션 완료" },
-      topic: "미션",
-      hint: undone ? "미션을 완료하면 체크리스트가 채워져요." : "오늘 미션은 모두 완료했어요.",
-    });
-    return;
-  }
 
   if (category === "status") {
     respond("status", { replacements: { status: statusSentence() }, topic: "상태 확인" });
