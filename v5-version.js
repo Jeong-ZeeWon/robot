@@ -2,8 +2,9 @@
   function normalize(text) {
     return text
       .replace(/v3/g, "v5")
-      .replace(/v4\.1/g, "v5")
-      .replace(/v4(?!\.1)/g, "v5");
+      .replace(/v4\.1/g, "v6")
+      .replace(/v5/g, "v6")
+      .replace(/v4(?!\.1)/g, "v6");
   }
 
   function patchTextNode(node) {
@@ -16,9 +17,9 @@
     patchTextNode(document.querySelector("#message"));
     patchTextNode(document.querySelector("#microHint"));
     patchTextNode(document.querySelector("#timeGreeting"));
-    document.title = "시오니 v5";
+    document.title = "시오니 v6";
     const main = document.querySelector("main");
-    if (main) main.setAttribute("aria-label", "시오니 v5");
+    if (main) main.setAttribute("aria-label", "시오니 v6");
   }
 
   function observe(selector) {
