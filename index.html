@@ -6,21 +6,21 @@
   <meta name="theme-color" content="#75f5d3" />
   <meta name="description" content="8살 아이도 즐길 수 있는 기억하고 성장하는 포켓 로봇 시오니 v6" />
   <title>시오니 v6</title>
-  <link rel="manifest" href="manifest.json?v=6.0.2" />
+  <link rel="manifest" href="manifest.json?v=6.0.3" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="style.css?v=6.0.2" />
-  <link rel="stylesheet" href="motions.css?v=6.0.2" />
-  <link rel="stylesheet" href="v4.css?v=6.0.2" />
-  <link rel="stylesheet" href="v5.css?v=6.0.2" />
+  <link rel="stylesheet" href="style.css?v=6.0.3" />
+  <link rel="stylesheet" href="motions.css?v=6.0.3" />
+  <link rel="stylesheet" href="v4.css?v=6.0.3" />
+  <link rel="stylesheet" href="v5.css?v=6.0.3" />
 </head>
 <body data-theme="calm">
   <main class="app-shell v4-shell v5-shell" aria-label="시오니 v6">
     <section class="hero-card v4-hero v5-hero">
       <div class="top-bar">
         <div>
-          <p class="eyebrow">Pocket Robot v6.0.2</p>
+          <p class="eyebrow">Pocket Robot v6.0.3</p>
           <h1 id="botName">시오니</h1>
-          <p class="subtitle" id="timeGreeting">오늘의 별 조각 모험을 시작해요.</p>
+          <p class="subtitle" id="timeGreeting">오늘 하루 어땠어요? 시오니가 들어줄게요.</p>
         </div>
         <div class="top-actions">
           <button id="soundToggle" class="icon-button" type="button" aria-pressed="true" title="효과음 켜기/끄기">🔔</button>
@@ -32,7 +32,6 @@
       <div class="badge-row" aria-label="시오니 관계 정보">
         <span id="levelBadge" class="soft-badge">Lv.1 처음 만난 사이</span>
         <span id="streakBadge" class="soft-badge">연속 1일</span>
-        <span id="starBadge" class="soft-badge v5-star-badge">⭐ 별 0개</span>
       </div>
 
       <div id="sioniRoom" class="v5-room room-basic" aria-label="시오니 방">
@@ -117,14 +116,6 @@
           </div>
         </div>
 
-        <div class="mini-log v5-legacy-mission-hidden" aria-hidden="true">
-          <div class="mini-log-title">
-            <span>기본 미션 기록</span>
-            <strong id="missionCount">0/5</strong>
-          </div>
-          <ul id="missionList" class="mission-list"></ul>
-        </div>
-
         <div class="memory-card v5-memory-compact">
           <span>시오니의 기억</span>
           <p id="memoryLine">아직 오늘의 기억을 정리하는 중이에요.</p>
@@ -146,18 +137,6 @@
         <input id="userInput" name="message" autocomplete="off" tabindex="-1" />
         <button type="submit" tabindex="-1">말하기</button>
       </form>
-    </section>
-
-    <section class="v5-adventure-card" aria-label="오늘의 모험">
-      <div class="section-title v5-title-row">
-        <div>
-          <span>오늘의 모험</span>
-          <small id="adventureStory">시오니가 잃어버린 별 조각을 찾고 있어요.</small>
-        </div>
-        <strong id="adventureReward">보상 ⭐ 1</strong>
-      </div>
-      <ul id="adventureList" class="v5-adventure-list"></ul>
-      <button id="claimAdventure" type="button" class="v5-claim-button" disabled>별 조각 받기</button>
     </section>
 
     <section class="v6-companion-card" aria-label="시오니 v6 성장 기억">
@@ -235,19 +214,6 @@
         </div>
       </section>
 
-      <section class="v4-tab-panel is-active v41-section" data-panel="treasure" aria-label="내 보물">
-        <div class="section-title">
-          <span>내 보물</span>
-          <small>모험을 완료하면 별 조각과 스티커가 쌓여요.</small>
-        </div>
-        <div class="v5-treasure-grid">
-          <div class="v5-treasure-box"><span>⭐</span><strong id="starCount">0</strong><small>별 조각</small></div>
-          <div class="v5-treasure-box"><span>🎖️</span><strong id="badgeCount">0</strong><small>배지</small></div>
-          <div class="v5-treasure-box"><span>🖼️</span><strong id="stickerCount">0</strong><small>스티커</small></div>
-        </div>
-        <div id="stickerBook" class="v5-sticker-book" aria-label="스티커 도감"></div>
-      </section>
-
       <section class="v4-tab-panel is-active v41-section" data-panel="settings" aria-label="설정">
         <div class="section-title">
           <span>설정</span>
@@ -301,14 +267,14 @@
 
   <div id="v5Toast" class="v5-toast" role="status" aria-live="polite"></div>
 
-  <script src="responses.js?v=6.0.2" defer></script>
-  <script src="responses-extra.js?v=6.0.2" defer></script>
-  <script src="v4.js?v=6.0.2" defer></script>
-  <script src="v5.js?v=6.0.2" defer></script>
-  <script src="v5-motions.js?v=6.0.2" defer></script>
-  <script src="app.js?v=6.0.2" defer></script>
-  <script src="idle.js?v=6.0.2" defer></script>
-  <script src="v5-version.js?v=6.0.2" defer></script>
-  <script src="persist.js?v=6.0.2" defer></script>
+  <script src="responses.js?v=6.0.3" defer></script>
+  <script src="responses-extra.js?v=6.0.3" defer></script>
+  <script src="v4.js?v=6.0.3" defer></script>
+  <script src="v5.js?v=6.0.3" defer></script>
+  <script src="v5-motions.js?v=6.0.3" defer></script>
+  <script src="app.js?v=6.0.3" defer></script>
+  <script src="idle.js?v=6.0.3" defer></script>
+  <script src="v5-version.js?v=6.0.3" defer></script>
+  <script src="persist.js?v=6.0.3" defer></script>
 </body>
 </html>
