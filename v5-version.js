@@ -5,7 +5,8 @@
       .replace(/v4\.1/g, "v7")
       .replace(/v6/g, "v7")
       .replace(/v5/g, "v7")
-      .replace(/v4(?!\.1)/g, "v7");
+      .replace(/v4(?!\.1)/g, "v7")
+      .replace(/v7/g, "v8");
   }
 
   function patchTextNode(node) {
@@ -18,9 +19,9 @@
     patchTextNode(document.querySelector("#message"));
     patchTextNode(document.querySelector("#microHint"));
     patchTextNode(document.querySelector("#timeGreeting"));
-    document.title = "시오니 v7";
+    document.title = "시오니 v8";
     const main = document.querySelector("main");
-    if (main) main.setAttribute("aria-label", "시오니 v7");
+    if (main) main.setAttribute("aria-label", "시오니 v8");
   }
 
   function observe(selector) {
@@ -37,6 +38,7 @@
   observe("#message");
   observe("#microHint");
   observe("#timeGreeting");
+  observe("#v6Insight");
   document.addEventListener("DOMContentLoaded", () => {
     patchAll();
     setTimeout(patchAll, 300);

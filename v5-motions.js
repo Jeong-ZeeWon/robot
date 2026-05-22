@@ -1,18 +1,18 @@
 (() => {
   const actionMotionMap = {
-    pet: ["heartpop", "pulse", "sway"],
-    feed: ["munch", "charge", "tinyshake"],
-    play: ["dance", "hop", "spin", "celebrate"],
-    sleep: ["doze", "sleepy", "slow"],
+    pet: ["heartpop", "pulse", "sway", "headnod", "headturn"],
+    feed: ["munch", "charge", "tinyshake", "headnod"],
+    play: ["dance", "hop", "spin", "twirl", "celebrate", "headshake"],
+    sleep: ["doze", "sleepy", "slow", "headnod"],
   };
 
   const moodMotionMap = [
-    { match: ["안녕", "하이"], motions: ["peek", "hop"] },
-    { match: ["힘들", "슬퍼", "우울"], motions: ["sway", "slow", "nod"] },
-    { match: ["기뻐", "좋은", "신나"], motions: ["celebrate", "dance", "hop"] },
-    { match: ["불안", "걱정", "두려"], motions: ["tinyshake", "sway"] },
-    { match: ["심심", "놀자"], motions: ["wiggle", "dance", "spin"] },
-    { match: ["상태", "게이지"], motions: ["peek", "nod"] },
+    { match: ["안녕", "하이"], motions: ["peek", "hop", "headturn"] },
+    { match: ["힘들", "슬퍼", "우울"], motions: ["sway", "slow", "nod", "headnod"] },
+    { match: ["기뻐", "좋은", "신나"], motions: ["celebrate", "dance", "hop", "twirl"] },
+    { match: ["불안", "걱정", "두려"], motions: ["tinyshake", "sway", "headshake"] },
+    { match: ["심심", "놀자"], motions: ["wiggle", "dance", "spin", "twirl", "headshake"] },
+    { match: ["상태", "게이지"], motions: ["peek", "nod", "headturn"] },
   ];
 
   const emojiMap = {
@@ -68,7 +68,7 @@
 
   function moodMotions(text) {
     const found = moodMotionMap.find((item) => item.match.some((word) => text.includes(word)));
-    return found ? found.motions : ["peek", "nod", "float"];
+    return found ? found.motions : ["peek", "nod", "float", "headturn", "headnod"];
   }
 
   function emojiKindFromText(text) {

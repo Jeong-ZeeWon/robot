@@ -47,8 +47,9 @@
           .replaceAll("반짝 스티커", "반짝 표시")
           .replaceAll("작은 미션", "작은 놀이")
           .replaceAll("오늘의 미션", "오늘의 놀이")
-          .replaceAll("v3", "v7")
-          .replaceAll("v6", "v7");
+          .replaceAll("v3", "v8")
+          .replaceAll("v6", "v8")
+          .replaceAll("v7", "v8");
       });
     });
   }
@@ -65,7 +66,7 @@
     const personaName = $("#v6PersonaName");
     const personaText = $("#v6PersonaText");
 
-    if (insight) insight.textContent = `v7 기억 엔진: ${summary}`;
+    if (insight) insight.textContent = `v8 액션 엔진: ${summary}`;
     if (memoryLine) memoryLine.textContent = summary;
     if (personaName) personaName.textContent = "다정한 시오니";
     if (personaText) personaText.textContent = "하나의 말투를 유지하면서, 최근 기억과 현재 게이지에 맞춰 더 조용하거나 더 밝게 반응해요.";
@@ -99,13 +100,13 @@
   }
 
   function patchVisibleVersion() {
-    document.title = "시오니 v7";
+    document.title = "시오니 v8";
     const main = $("main");
-    if (main) main.setAttribute("aria-label", "시오니 v7");
+    if (main) main.setAttribute("aria-label", "시오니 v8");
     const eyebrow = $(".eyebrow");
-    if (eyebrow) eyebrow.textContent = "Pocket Robot v7.0.0";
+    if (eyebrow) eyebrow.textContent = "Pocket Robot v8.0.0";
     const title = $(".v6-title-row span");
-    if (title) title.textContent = "v7 기억 엔진";
+    if (title) title.textContent = "v8 액션 엔진";
     document.querySelectorAll(".v6-stat-grid span").forEach((node, index) => {
       node.textContent = ["대화", "기억", "돌봄", "반응"][index] || node.textContent;
     });

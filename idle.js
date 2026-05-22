@@ -16,6 +16,9 @@
     "is-idle-nibble",
     "is-idle-wave",
     "is-idle-drift",
+    "is-idle-headnod",
+    "is-idle-headshake",
+    "is-idle-turnaround",
   ];
 
   const $ = (selector) => document.querySelector(selector);
@@ -64,6 +67,7 @@
         ["is-idle-sleepy", "sleepy", "시오니가 잠깐 꾸벅꾸벅 졸고 있어요.", "에너지가 낮으면 대기 중 졸린 움직임이 더 자주 나와요."],
         ["is-idle-doze", "sleepy", "시오니가 아주 느리게 고개를 떨궈요.", "시간이 지나 에너지가 낮아지면 졸린 모션이 섞여요."],
         ["is-idle-drift", "sleepy"],
+        ["is-idle-headnod", "sleepy"],
         ["is-idle-blink", "sleepy"],
         ["is-idle-stretch", "sleepy"],
       ];
@@ -74,6 +78,7 @@
         ["is-idle-hungry", "hungry", "시오니가 간식 버튼 쪽을 슬쩍 보고 있어요.", "배고픔이 높으면 대기 중 간식 반응이 늘어나요."],
         ["is-idle-nibble", "hungry", "시오니가 작은 간식 생각을 하는 것 같아요.", "접속한 채 시간이 지나면 배고픔이 서서히 올라가요."],
         ["is-idle-scan", "hungry"],
+        ["is-idle-headshake", "hungry"],
         ["is-idle-blink", "hungry"],
         ["is-idle-look", "hungry"],
       ];
@@ -84,6 +89,7 @@
         ["is-idle-lonely", "sad", "시오니가 조용히 손길을 기다리고 있어요.", "외로움이 높으면 먼저 눈치를 보거나 작게 흔들려요."],
         ["is-idle-wave", "sad", "시오니가 아주 작게 손짓하며 기다려요.", "오래 가만히 있으면 외로움이 조금씩 올라가요."],
         ["is-idle-drift", "sad"],
+        ["is-idle-headnod", "sad"],
         ["is-idle-blink", "sad"],
         ["is-idle-look", "sad"],
       ];
@@ -94,6 +100,7 @@
         ["is-idle-happy", "excited", "시오니가 혼자 반짝반짝 신나 하고 있어요.", "기분과 친밀도가 높으면 대기 중에도 작은 축하 움직임이 나와요."],
         ["is-idle-wave", "happy"],
         ["is-idle-stretch", "happy"],
+        ["is-idle-turnaround", "excited", "시오니가 한 바퀴 빙글 돌며 신나 해요.", "기분이 좋으면 큰 동작도 가끔 나와요."],
         ["is-idle-blink", "happy"],
         ["is-idle-curious", "happy"],
       ];
@@ -104,6 +111,8 @@
       ["is-idle-blink", moodFace()],
       ["is-idle-look", "thinking"],
       ["is-idle-scan", "thinking"],
+      ["is-idle-headnod", "calm"],
+      ["is-idle-headshake", "thinking"],
       ["is-idle-stretch", "calm"],
       ["is-idle-drift", "calm"],
       ["is-idle-curious", "calm", "시오니가 주변을 살피며 다음 이야기를 기다려요.", "아무것도 누르지 않아도 가끔 스스로 움직여요."],
