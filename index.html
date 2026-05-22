@@ -4,21 +4,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#75f5d3" />
-  <meta name="description" content="8살 아이도 즐길 수 있는 기억하고 성장하는 포켓 로봇 시오니 v6" />
-  <title>시오니 v6</title>
-  <link rel="manifest" href="manifest.json?v=6.0.3" />
+  <meta name="description" content="8살 아이도 즐길 수 있는 기억 엔진과 더 자주 움직이는 포켓 로봇 시오니 v7" />
+  <title>시오니 v7</title>
+  <link rel="manifest" href="manifest.json?v=7.0.0" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="style.css?v=6.0.3" />
-  <link rel="stylesheet" href="motions.css?v=6.0.3" />
-  <link rel="stylesheet" href="v4.css?v=6.0.3" />
-  <link rel="stylesheet" href="v5.css?v=6.0.3" />
+  <link rel="stylesheet" href="style.css?v=7.0.0" />
+  <link rel="stylesheet" href="motions.css?v=7.0.0" />
+  <link rel="stylesheet" href="v4.css?v=7.0.0" />
+  <link rel="stylesheet" href="v5.css?v=7.0.0" />
 </head>
 <body data-theme="calm">
-  <main class="app-shell v4-shell v5-shell" aria-label="시오니 v6">
+  <main class="app-shell v4-shell v5-shell" aria-label="시오니 v7">
     <section class="hero-card v4-hero v5-hero">
       <div class="top-bar">
         <div>
-          <p class="eyebrow">Pocket Robot v6.0.3</p>
+          <p class="eyebrow">Pocket Robot v7.0.0</p>
           <h1 id="botName">시오니</h1>
           <p class="subtitle" id="timeGreeting">오늘 하루 어땠어요? 시오니가 들어줄게요.</p>
         </div>
@@ -139,11 +139,11 @@
       </form>
     </section>
 
-    <section class="v6-companion-card" aria-label="시오니 v6 성장 기억">
+    <section class="v6-companion-card" aria-label="시오니 v7 기억 엔진">
       <div class="section-title v6-title-row">
         <div>
-          <span>v6 성장 기억</span>
-          <small id="v6Insight">시오니가 오늘의 상태를 읽고 있어요.</small>
+          <span>v7 기억 엔진</span>
+          <small id="v6Insight">시오니가 대화와 상태를 함께 읽고 있어요.</small>
         </div>
         <strong id="v6GrowthBadge">Lv.1 새싹 로봇</strong>
       </div>
@@ -155,17 +155,17 @@
 
       <div class="v6-persona-card">
         <div>
-          <span>현재 성격</span>
-          <strong id="v6PersonaName">다정한 보호형</strong>
+          <span>기본 말투</span>
+          <strong id="v6PersonaName">다정한 시오니</strong>
         </div>
-        <p id="v6PersonaText">먼저 안부를 묻고, 힘든 말을 들으면 짧게 곁을 지켜주는 시오니예요.</p>
+        <p id="v6PersonaText">여러 성격으로 나뉘지 않고, 하나의 다정한 말투가 기억과 상태에 따라 깊어져요.</p>
       </div>
 
       <div class="v6-stat-grid" aria-label="성격 스탯">
-        <div><span>다정함</span><strong id="v6Kindness">0</strong></div>
-        <div><span>호기심</span><strong id="v6Curiosity">0</strong></div>
-        <div><span>용기</span><strong id="v6Bravery">0</strong></div>
-        <div><span>반짝임</span><strong id="v6Sparkle">0</strong></div>
+        <div><span>대화</span><strong id="v6Kindness">0</strong></div>
+        <div><span>기억</span><strong id="v6Curiosity">0</strong></div>
+        <div><span>돌봄</span><strong id="v6Bravery">0</strong></div>
+        <div><span>반응</span><strong id="v6Sparkle">0</strong></div>
       </div>
 
       <ul id="v6MemoryList" class="v6-memory-list" aria-label="최근 기억">
@@ -267,14 +267,16 @@
 
   <div id="v5Toast" class="v5-toast" role="status" aria-live="polite"></div>
 
-  <script src="responses.js?v=6.0.3" defer></script>
-  <script src="responses-extra.js?v=6.0.3" defer></script>
-  <script src="v4.js?v=6.0.3" defer></script>
-  <script src="v5.js?v=6.0.3" defer></script>
-  <script src="v5-motions.js?v=6.0.3" defer></script>
-  <script src="app.js?v=6.0.3" defer></script>
-  <script src="idle.js?v=6.0.3" defer></script>
-  <script src="v5-version.js?v=6.0.3" defer></script>
-  <script src="persist.js?v=6.0.3" defer></script>
+  <script src="responses.js?v=7.0.0" defer></script>
+  <script src="responses-extra.js?v=7.0.0" defer></script>
+  <script src="memory-engine.js?v=7.0.0" defer></script>
+  <script src="v7.js?v=7.0.0" defer></script>
+  <script src="v4.js?v=7.0.0" defer></script>
+  <script src="v5.js?v=7.0.0" defer></script>
+  <script src="v5-motions.js?v=7.0.0" defer></script>
+  <script src="app.js?v=7.0.0" defer></script>
+  <script src="idle.js?v=7.0.0" defer></script>
+  <script src="v5-version.js?v=7.0.0" defer></script>
+  <script src="persist.js?v=7.0.0" defer></script>
 </body>
 </html>
