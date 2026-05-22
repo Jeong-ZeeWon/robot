@@ -1,5 +1,5 @@
-const CACHE_NAME = "sioni-v6-cache-20260521-4";
-const ASSETS = ["./", "./index.html", "./style.css?v=6.0.3", "./motions.css?v=6.0.3", "./v4.css?v=6.0.3", "./v5.css?v=6.0.3", "./responses.js?v=6.0.3", "./responses-extra.js?v=6.0.3", "./v4.js?v=6.0.3", "./v5.js?v=6.0.3", "./v5-motions.js?v=6.0.3", "./app.js?v=6.0.3", "./idle.js?v=6.0.3", "./v5-version.js?v=6.0.3", "./persist.js?v=6.0.3", "./manifest.json?v=6.0.3", "./icon.svg"];
+const CACHE_NAME = "sioni-v7-cache-20260522-1";
+const ASSETS = ["./", "./index.html", "./style.css?v=7.0.0", "./motions.css?v=7.0.0", "./v4.css?v=7.0.0", "./v5.css?v=7.0.0", "./responses.js?v=7.0.0", "./responses-extra.js?v=7.0.0", "./memory-engine.js?v=7.0.0", "./v7.js?v=7.0.0", "./v4.js?v=7.0.0", "./v5.js?v=7.0.0", "./v5-motions.js?v=7.0.0", "./app.js?v=7.0.0", "./idle.js?v=7.0.0", "./v5-version.js?v=7.0.0", "./persist.js?v=7.0.0", "./manifest.json?v=7.0.0", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
