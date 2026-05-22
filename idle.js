@@ -1,7 +1,7 @@
 (() => {
-  const DELAY_MS = 9000;
-  const INTERVAL_MS = 12000;
-  const CLEAR_MS = 2200;
+  const DELAY_MS = 3200;
+  const INTERVAL_MS = 4800;
+  const CLEAR_MS = 1650;
   const IDLE_CLASSES = [
     "is-idle-blink",
     "is-idle-look",
@@ -57,6 +57,7 @@
       return [
         ["is-idle-sleepy", "sleepy", "시오니가 잠깐 꾸벅꾸벅 졸고 있어요.", "에너지가 낮으면 대기 중 졸린 움직임이 더 자주 나와요."],
         ["is-idle-blink", "sleepy"],
+        ["is-idle-blink", "sleepy"],
         ["is-idle-look", "sleepy"],
       ];
     }
@@ -64,6 +65,7 @@
     if (hunger >= 76) {
       return [
         ["is-idle-hungry", "hungry", "시오니가 간식 버튼 쪽을 슬쩍 보고 있어요.", "배고픔이 높으면 대기 중 간식 반응이 늘어나요."],
+        ["is-idle-blink", "hungry"],
         ["is-idle-look", "hungry"],
         ["is-idle-blink", "hungry"],
       ];
@@ -72,6 +74,7 @@
     if (loneliness >= 68) {
       return [
         ["is-idle-lonely", "sad", "시오니가 조용히 손길을 기다리고 있어요.", "외로움이 높으면 먼저 눈치를 보거나 작게 흔들려요."],
+        ["is-idle-blink", "sad"],
         ["is-idle-look", "sad"],
         ["is-idle-blink", "sad"],
       ];
@@ -80,12 +83,14 @@
     if (mood >= 86 || affection >= 80) {
       return [
         ["is-idle-happy", "excited", "시오니가 혼자 반짝반짝 신나 하고 있어요.", "기분과 친밀도가 높으면 대기 중에도 작은 축하 움직임이 나와요."],
+        ["is-idle-blink", "happy"],
         ["is-idle-curious", "happy"],
         ["is-idle-blink", "happy"],
       ];
     }
 
     return [
+      ["is-idle-blink", moodFace()],
       ["is-idle-blink", moodFace()],
       ["is-idle-look", "thinking"],
       ["is-idle-curious", "calm", "시오니가 주변을 살피며 다음 이야기를 기다려요.", "아무것도 누르지 않아도 가끔 스스로 움직여요."],
@@ -105,12 +110,13 @@
 
     const options = idleOptions();
     const [motion, faceName, message, hint] = options[Math.floor(Math.random() * options.length)];
+    window.SioniV7?.markIdle?.();
     clearIdleMotion(robot);
     setFace(faceName);
     void robot.offsetWidth;
     robot.classList.add(motion);
 
-    if (message && Math.random() < 0.36) {
+    if (message && Math.random() < 0.24) {
       const messageNode = $("#message");
       const hintNode = $("#microHint");
       if (messageNode) messageNode.textContent = message;
@@ -129,4 +135,5 @@
   window.addEventListener("focus", markInteraction);
   window.addEventListener("load", markInteraction);
   setInterval(runIdleReaction, INTERVAL_MS);
+  window.setTimeout(runIdleReaction, DELAY_MS + 600);
 })();
