@@ -1,5 +1,5 @@
-const CACHE_NAME = "sioni-v8-cache-20260522-2";
-const ASSETS = ["./", "./index.html", "./style.css?v=8.0.0", "./motions.css?v=8.0.1", "./v4.css?v=8.0.0", "./v5.css?v=8.0.0", "./responses.js?v=8.0.0", "./responses-extra.js?v=8.0.0", "./memory-engine.js?v=8.0.0", "./v7.js?v=8.0.0", "./v4.js?v=8.0.0", "./v5.js?v=8.0.0", "./v5-motions.js?v=8.0.0", "./app.js?v=8.0.0", "./v7-life.js?v=8.0.0", "./idle.js?v=8.0.0", "./v5-version.js?v=8.0.0", "./persist.js?v=8.0.0", "./manifest.json?v=8.0.0", "./icon.svg"];
+const CACHE_NAME = "sioni-v9-cache-20260523-1";
+const ASSETS = ["./", "./index.html", "./style.css?v=9.0.0", "./motions.css?v=9.0.0", "./v9-face.css?v=9.0.0", "./v4.css?v=9.0.0", "./v5.css?v=9.0.0", "./responses.js?v=9.0.0", "./responses-extra.js?v=9.0.0", "./memory-engine.js?v=9.0.0", "./v7.js?v=9.0.0", "./v4.js?v=9.0.0", "./v5.js?v=9.0.0", "./v5-motions.js?v=9.0.0", "./app.js?v=9.0.0", "./v7-life.js?v=9.0.0", "./idle.js?v=9.0.0", "./v5-version.js?v=9.0.0", "./persist.js?v=9.0.0", "./manifest.json?v=9.0.0", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

@@ -1,0 +1,207 @@
+.face {
+  background:
+    radial-gradient(circle at 50% 28%, rgba(117, 245, 211, 0.1), transparent 42%),
+    linear-gradient(180deg, #202020, #050505);
+  border: 2px solid rgba(255,255,255,0.08);
+  box-shadow: inset 0 0 0 1px rgba(117, 245, 211, 0.14), inset 0 -12px 28px rgba(0,0,0,0.62);
+}
+
+.face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 6px);
+  opacity: 0.22;
+  mix-blend-mode: screen;
+}
+
+.face::after {
+  content: "";
+  position: absolute;
+  inset: 8px 14px;
+  pointer-events: none;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 34%);
+  opacity: 0.34;
+}
+
+.eye {
+  position: relative;
+  transition: width 0.55s ease, height 0.55s ease, transform 0.55s ease, border-radius 0.55s ease, background 0.55s ease, box-shadow 0.55s ease;
+  z-index: 2;
+}
+
+.eye::before {
+  content: "";
+  position: absolute;
+  inset: 6px 5px auto;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.42);
+  opacity: 0.45;
+}
+
+.mouth {
+  transition: width 0.55s ease, height 0.55s ease, border 0.55s ease, transform 0.55s ease, opacity 0.55s ease;
+  z-index: 2;
+}
+
+.face.excited .eye {
+  animation: face-excited-pulse 2.8s ease-in-out infinite;
+}
+
+.face.excited .mouth {
+  width: 34px;
+  height: 16px;
+  border-bottom-color: rgba(255, 235, 117, 0.62);
+  opacity: 0.9;
+}
+
+.face.sad .eye {
+  width: 24px;
+  height: 18px;
+  border-radius: 4px 4px 999px 999px;
+}
+
+.face.sad .left-eye {
+  transform: rotate(14deg) translateY(9px);
+}
+
+.face.sad .right-eye {
+  transform: rotate(-14deg) translateY(9px);
+}
+
+.face.sad::before {
+  background:
+    linear-gradient(90deg, transparent 19px, rgba(113, 209, 255, 0.78) 20px 26px, transparent 27px 106px, rgba(113, 209, 255, 0.78) 107px 113px, transparent 114px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 6px);
+  opacity: 0.62;
+  animation: face-tears-flow 3.4s steps(8, end) infinite;
+}
+
+.face.sad .mouth {
+  bottom: 10px;
+  width: 36px;
+  height: 16px;
+  border-top: 3px solid rgba(113, 209, 255, 0.55);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  opacity: 0.85;
+}
+
+.face.sleepy .eye {
+  animation: face-sleepy-breathe 3.6s ease-in-out infinite;
+}
+
+.face.sleepy .mouth {
+  width: 18px;
+  height: 10px;
+  border: 2px solid rgba(194, 255, 240, 0.36);
+  border-radius: 50%;
+  opacity: 0.65;
+}
+
+.face.shy .eye {
+  animation: face-shy-soft 3s ease-in-out infinite;
+}
+
+.face.surprised .eye {
+  border-radius: 8px;
+}
+
+.face.surprised .mouth {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255,255,255,0.45);
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+.face.thinking .eye {
+  animation: face-thinking-dots 3.2s steps(4, end) infinite;
+}
+
+.face.thinking .mouth {
+  width: 24px;
+  border-bottom-style: dotted;
+  border-bottom-color: rgba(183, 200, 255, 0.52);
+}
+
+.face.hungry .eye {
+  width: 22px;
+  height: 34px;
+  animation: face-hungry-wobble 3.1s ease-in-out infinite;
+}
+
+.face.hungry .mouth {
+  bottom: 11px;
+  width: 24px;
+  height: 10px;
+  border-bottom-color: rgba(255, 164, 92, 0.68);
+  opacity: 0.9;
+}
+
+.face.hungry .mouth::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 8px;
+  width: 7px;
+  height: 22px;
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(180deg, rgba(255, 191, 99, 0.95), rgba(255, 191, 99, 0.12));
+  box-shadow: 0 0 10px rgba(255, 191, 99, 0.72);
+  animation: face-drool-drip 3.3s steps(5, end) infinite;
+}
+
+.face.hungry::before {
+  background:
+    radial-gradient(circle at 101px 56px, rgba(255, 191, 99, 0.68) 0 3px, transparent 4px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 6px);
+  opacity: 0.42;
+}
+
+.face.annoyed .mouth {
+  width: 32px;
+  height: 4px;
+  border-bottom-color: rgba(255, 142, 142, 0.62);
+  transform: translateX(-50%) rotate(-4deg);
+}
+
+@keyframes face-tears-flow {
+  0% { background-position: 0 -46px, 0 0; }
+  100% { background-position: 0 42px, 0 0; }
+}
+
+@keyframes face-drool-drip {
+  0%, 100% { height: 12px; opacity: 0.55; transform: translateY(0); }
+  45% { height: 30px; opacity: 1; transform: translateY(3px); }
+  72% { height: 18px; opacity: 0.35; transform: translateY(10px); }
+}
+
+@keyframes face-hungry-wobble {
+  0%, 100% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(3px) scaleY(.92); }
+  72% { transform: translateY(-1px) scale(1.04); }
+}
+
+@keyframes face-excited-pulse {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  45% { transform: scale(1.08); filter: brightness(1.24); }
+}
+
+@keyframes face-sleepy-breathe {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(4px); opacity: .72; }
+}
+
+@keyframes face-shy-soft {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(2px) scale(.92); }
+}
+
+@keyframes face-thinking-dots {
+  0%, 100% { transform: translateY(-4px) scale(1); }
+  50% { transform: translateY(-1px) scale(.72); }
+}

@@ -6,7 +6,8 @@
       .replace(/v6/g, "v7")
       .replace(/v5/g, "v7")
       .replace(/v4(?!\.1)/g, "v7")
-      .replace(/v7/g, "v8");
+      .replace(/v7/g, "v8")
+      .replace(/v8/g, "v9");
   }
 
   function patchTextNode(node) {
@@ -19,9 +20,11 @@
     patchTextNode(document.querySelector("#message"));
     patchTextNode(document.querySelector("#microHint"));
     patchTextNode(document.querySelector("#timeGreeting"));
-    document.title = "시오니 v8";
+    patchTextNode(document.querySelector(".eyebrow"));
+    patchTextNode(document.querySelector(".v6-title-row span"));
+    document.title = "시오니 v9";
     const main = document.querySelector("main");
-    if (main) main.setAttribute("aria-label", "시오니 v8");
+    if (main) main.setAttribute("aria-label", "시오니 v9");
   }
 
   function observe(selector) {
@@ -39,6 +42,8 @@
   observe("#microHint");
   observe("#timeGreeting");
   observe("#v6Insight");
+  observe(".eyebrow");
+  observe(".v6-title-row span");
   document.addEventListener("DOMContentLoaded", () => {
     patchAll();
     setTimeout(patchAll, 300);
