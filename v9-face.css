@@ -169,6 +169,212 @@
   transform: translateX(-50%) rotate(-4deg);
 }
 
+.face.calm-soft .eye {
+  height: 28px;
+  opacity: 0.88;
+}
+
+.face.calm-soft .mouth {
+  width: 28px;
+  border-bottom-color: rgba(194, 255, 240, 0.45);
+}
+
+.face.calm-scan::before {
+  background:
+    linear-gradient(90deg, transparent 16px, rgba(117, 245, 211, 0.34) 17px 19px, transparent 20px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.1) 0 1px, transparent 1px 5px);
+  animation: face-soft-scan 3.8s steps(7, end) infinite;
+}
+
+.face.calm-scan .eye {
+  width: 26px;
+  height: 32px;
+}
+
+.face.calm-dim .eye {
+  width: 22px;
+  height: 24px;
+  filter: brightness(0.78);
+}
+
+.face.calm-dim::after {
+  background:
+    radial-gradient(circle at 32px 55px, rgba(117, 245, 211, 0.16) 0 4px, transparent 5px),
+    radial-gradient(circle at 104px 55px, rgba(117, 245, 211, 0.16) 0 4px, transparent 5px);
+}
+
+.face.happy-smile .eye {
+  height: 24px;
+  border-radius: 999px 999px 10px 10px;
+  transform: translateY(3px);
+}
+
+.face.happy-smile .mouth {
+  width: 42px;
+  height: 20px;
+  border-bottom-color: rgba(255, 235, 117, 0.65);
+}
+
+.face.happy-spark::after {
+  background:
+    radial-gradient(circle at 24px 22px, rgba(255, 235, 117, 0.9) 0 2px, transparent 3px),
+    radial-gradient(circle at 112px 30px, rgba(117, 245, 211, 0.85) 0 2px, transparent 3px),
+    radial-gradient(circle at 98px 68px, rgba(255, 255, 255, 0.65) 0 1px, transparent 2px);
+  animation: face-pixel-twinkle 2.6s steps(4, end) infinite;
+}
+
+.face.happy-heart::after {
+  background:
+    radial-gradient(circle at 26px 58px, rgba(255, 126, 173, 0.8) 0 4px, transparent 5px),
+    radial-gradient(circle at 112px 58px, rgba(255, 126, 173, 0.8) 0 4px, transparent 5px),
+    linear-gradient(135deg, rgba(255,255,255,0.12), transparent 34%);
+}
+
+.face.happy-heart .mouth {
+  width: 38px;
+  border-bottom-color: rgba(255, 126, 173, 0.65);
+}
+
+.face.excited-star::after {
+  background:
+    conic-gradient(from 45deg at 27px 28px, transparent 0 12%, rgba(255, 235, 117, 0.8) 12% 20%, transparent 20% 37%, rgba(255, 235, 117, 0.8) 37% 45%, transparent 45%),
+    conic-gradient(from 45deg at 111px 28px, transparent 0 12%, rgba(117, 245, 211, 0.8) 12% 20%, transparent 20% 37%, rgba(117, 245, 211, 0.8) 37% 45%, transparent 45%);
+  animation: face-pixel-twinkle 1.9s steps(4, end) infinite;
+}
+
+.face.excited-flash::before {
+  background:
+    linear-gradient(90deg, transparent 0 24px, rgba(255, 255, 255, 0.26) 25px 32px, transparent 33px 86px, rgba(255, 255, 255, 0.22) 87px 95px, transparent 96px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 6px);
+  animation: face-flash-bars 1.8s steps(4, end) infinite;
+}
+
+.face.excited-wide .eye {
+  width: 30px;
+  height: 36px;
+}
+
+.face.excited-wide .mouth {
+  width: 46px;
+  height: 20px;
+}
+
+.face.sad-tear::before {
+  animation-duration: 2.7s;
+}
+
+.face.sad-rain::before {
+  background:
+    linear-gradient(90deg, transparent 15px, rgba(113, 209, 255, 0.85) 16px 20px, transparent 21px 45px, rgba(113, 209, 255, 0.62) 46px 49px, transparent 50px 89px, rgba(113, 209, 255, 0.82) 90px 95px, transparent 96px 118px, rgba(113, 209, 255, 0.54) 119px 122px, transparent 123px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 6px);
+  animation: face-tears-flow 2.4s steps(10, end) infinite;
+}
+
+.face.sad-small .eye {
+  width: 18px;
+  height: 14px;
+  opacity: 0.8;
+}
+
+.face.sad-small .mouth {
+  width: 24px;
+  opacity: 0.7;
+}
+
+.face.sleepy-doze .eye {
+  height: 8px;
+  border-radius: 999px;
+  transform: translateY(8px);
+}
+
+.face.sleepy-doze::after {
+  content: "Z";
+  inset: 13px 20px auto auto;
+  color: rgba(194, 255, 240, 0.65);
+  font: 800 16px/1 system-ui, sans-serif;
+  animation: face-z-float 3.4s ease-in-out infinite;
+}
+
+.face.sleepy-z::after {
+  content: "Z z";
+  inset: 9px 17px auto auto;
+  color: rgba(194, 255, 240, 0.7);
+  font: 800 13px/1 system-ui, sans-serif;
+  letter-spacing: 1px;
+  animation: face-z-float 2.8s ease-in-out infinite;
+}
+
+.face.sleepy-low .eye {
+  transform: translateY(10px) scaleY(0.55);
+}
+
+.face.sleepy-low .mouth {
+  transform: translateX(-50%) translateY(4px);
+}
+
+.face.hungry-drool .mouth::after {
+  height: 32px;
+  animation-duration: 2.5s;
+}
+
+.face.hungry-bite .mouth {
+  width: 34px;
+  height: 14px;
+  border-bottom-style: dashed;
+}
+
+.face.hungry-bite::after {
+  background:
+    radial-gradient(circle at 34px 23px, rgba(255, 191, 99, 0.8) 0 3px, transparent 4px),
+    radial-gradient(circle at 100px 25px, rgba(255, 191, 99, 0.75) 0 3px, transparent 4px);
+}
+
+.face.hungry-empty .eye {
+  width: 18px;
+  height: 28px;
+  opacity: 0.82;
+}
+
+.face.hungry-empty::before {
+  background:
+    linear-gradient(90deg, transparent 22px, rgba(255, 191, 99, 0.34) 23px 26px, transparent 27px 109px, rgba(255, 191, 99, 0.34) 110px 113px, transparent 114px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 6px);
+}
+
+.face.thinking-dots::after {
+  background:
+    radial-gradient(circle at 42px 22px, rgba(183, 200, 255, 0.72) 0 3px, transparent 4px),
+    radial-gradient(circle at 55px 18px, rgba(183, 200, 255, 0.5) 0 2px, transparent 3px),
+    radial-gradient(circle at 68px 22px, rgba(183, 200, 255, 0.72) 0 3px, transparent 4px);
+  animation: face-thinking-bubbles 2.6s steps(4, end) infinite;
+}
+
+.face.thinking-scan::before {
+  background:
+    linear-gradient(180deg, transparent 0 38%, rgba(183, 200, 255, 0.42) 39% 45%, transparent 46%),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 6px);
+  animation: face-soft-scan 2.8s steps(6, end) infinite;
+}
+
+.face.shy::after {
+  background:
+    radial-gradient(circle at 24px 59px, rgba(255, 126, 173, 0.58) 0 7px, transparent 8px),
+    radial-gradient(circle at 113px 59px, rgba(255, 126, 173, 0.58) 0 7px, transparent 8px);
+}
+
+.face.surprised::before {
+  background:
+    radial-gradient(circle at 68px 18px, rgba(255, 255, 255, 0.65) 0 2px, transparent 3px),
+    linear-gradient(90deg, transparent 13px, rgba(255,255,255,0.18) 14px 18px, transparent 19px 116px, rgba(255,255,255,0.18) 117px 121px, transparent 122px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 6px);
+}
+
+.face.annoyed::before {
+  background:
+    linear-gradient(115deg, transparent 17px, rgba(255, 142, 142, 0.68) 18px 22px, transparent 23px 96px, rgba(255, 142, 142, 0.68) 97px 101px, transparent 102px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 6px);
+}
+
 @keyframes face-tears-flow {
   0% { background-position: 0 -46px, 0 0; }
   100% { background-position: 0 42px, 0 0; }
@@ -204,4 +410,29 @@
 @keyframes face-thinking-dots {
   0%, 100% { transform: translateY(-4px) scale(1); }
   50% { transform: translateY(-1px) scale(.72); }
+}
+
+@keyframes face-soft-scan {
+  0% { background-position: -28px 0, 0 0; }
+  100% { background-position: 36px 0, 0 0; }
+}
+
+@keyframes face-pixel-twinkle {
+  0%, 100% { opacity: 0.25; filter: brightness(0.8); }
+  50% { opacity: 0.9; filter: brightness(1.3); }
+}
+
+@keyframes face-flash-bars {
+  0%, 100% { opacity: 0.24; transform: translateX(-8px); }
+  50% { opacity: 0.72; transform: translateX(8px); }
+}
+
+@keyframes face-z-float {
+  0%, 100% { opacity: 0.35; transform: translateY(7px) scale(0.84); }
+  45% { opacity: 0.82; transform: translateY(-2px) scale(1); }
+}
+
+@keyframes face-thinking-bubbles {
+  0%, 100% { opacity: 0.32; transform: translateY(5px); }
+  50% { opacity: 0.9; transform: translateY(-2px); }
 }
