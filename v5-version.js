@@ -1,9 +1,10 @@
 (() => {
   function normalize(text) {
     return text
-      .replace(/Pocket Robot v?\d+(?:\.\d+)*/gi, "10살 포켓 로봇")
-      .replace(/시오니 v?\d+(?:\.\d+)*/g, "10살 시오니")
-      .replace(/v\d+(?:\.\d+)*/gi, "10살");
+      .replace(/Pocket Robot v?\d+(?:\.\d+)*/gi, "11살 포켓 로봇 AI")
+      .replace(/시오니 v?\d+(?:\.\d+)*/g, "11살 시오니")
+      .replace(/10살/g, "11살")
+      .replace(/v\d+(?:\.\d+)*/gi, "11살");
   }
 
   function patchTextNode(node) {
@@ -18,9 +19,9 @@
     patchTextNode(document.querySelector("#timeGreeting"));
     patchTextNode(document.querySelector(".eyebrow"));
     patchTextNode(document.querySelector(".v6-title-row span"));
-    document.title = "10살 시오니";
+    document.title = "11살 시오니";
     const main = document.querySelector("main");
-    if (main) main.setAttribute("aria-label", "10살 시오니");
+    if (main) main.setAttribute("aria-label", "11살 시오니");
   }
 
   function observe(selector) {
