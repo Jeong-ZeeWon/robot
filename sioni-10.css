@@ -1,0 +1,116 @@
+body {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(127, 255, 227, 0.28), transparent 38%),
+    linear-gradient(180deg, #f7fffd 0%, #eef8ff 44%, #f8fbff 100%);
+}
+
+.hero-card {
+  border-color: rgba(22, 57, 68, 0.08);
+  box-shadow: 0 24px 70px rgba(36, 94, 112, 0.14);
+}
+
+.eyebrow {
+  color: #159879;
+  letter-spacing: 0.08em;
+}
+
+.subtitle {
+  color: #536575;
+  line-height: 1.45;
+}
+
+.badge-row {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.soft-badge {
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(21, 152, 121, 0.16);
+  color: #147860;
+}
+
+.v5-room {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.72), rgba(242, 251, 255, 0.84)),
+    radial-gradient(circle at 50% 26%, rgba(127,255,227,0.34), transparent 38%);
+  border-color: rgba(41, 83, 100, 0.1);
+}
+
+.v5-orbit-controls button {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(41, 83, 100, 0.09);
+  box-shadow: 0 12px 26px rgba(34, 86, 104, 0.12);
+}
+
+.v5-orbit-controls button:active {
+  transform: translateY(2px) scale(0.96);
+}
+
+.v5-status-card,
+.speech-card,
+.recommend-card,
+.v6-companion-card {
+  border-color: rgba(41, 83, 100, 0.1);
+  box-shadow: 0 18px 48px rgba(34, 86, 104, 0.1);
+}
+
+.speech-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.94), rgba(246, 252, 255, 0.92));
+}
+
+#message {
+  font-size: clamp(1.05rem, 3.7vw, 1.28rem);
+  line-height: 1.45;
+}
+
+#microHint {
+  color: #6d7e8a;
+}
+
+.v6-companion-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.95), rgba(244, 255, 251, 0.92));
+}
+
+.v6-title-row span {
+  color: #132331;
+}
+
+.v6-title-row small,
+.v6-growth-text,
+.v6-persona-card p {
+  color: #637482;
+}
+
+.v6-stat-grid div {
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.v6-memory-list li {
+  background: rgba(255, 255, 255, 0.74);
+}
+
+@media (max-width: 520px) {
+  .hero-card {
+    padding: 22px 18px;
+  }
+
+  .top-bar {
+    gap: 14px;
+  }
+
+  .top-actions {
+    gap: 8px;
+  }
+
+  .v5-room {
+    min-height: 390px;
+  }
+
+  .v5-orbit-controls button {
+    width: 50px;
+    min-height: 56px;
+  }
+}
