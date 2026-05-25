@@ -11,13 +11,13 @@
       hint,
     }));
 
-  const shortHint = "11살 시오니는 기억, 상태, 표정을 묶어서 더 빠르게 반응해요.";
+  const shortHint = "12살 시오니는 기억, 상태, 표정을 묶어서 더 빠르게 반응해요.";
   const careHint = "돌봄을 받으면 짧은 말과 먹기, 끄덕임, 고개 움직임으로 바로 표현해요.";
   const responses = window.SIONI_RESPONSES || {};
 
   Object.assign(responses, {
     greeting: build("greeting", "happy", ["peek", "headturn", "nod"], { mood: 4, affection: 3, loneliness: -4 }, [
-      "안녕! 나 11살 시오니야.",
+      "안녕! 나 12살 시오니야.",
       "한 살 더 컸어.",
       "삐빅, AI 감각 켜짐.",
       "오늘도 네 상태부터 볼게.",
@@ -122,7 +122,7 @@
     ], shortHint),
 
     intro: build("intro", "happy", ["nod", "headturn", "peek"], { mood: 3, affection: 3 }, [
-      "나는 11살 시오니야.",
+      "나는 12살 시오니야.",
       "화면 안에서 움직이는 AI 로봇 친구야.",
       "말, 표정, 기억을 같이 써.",
       "아직은 로컬 반응이지만 점점 똑똑해질 거야.",
@@ -135,7 +135,7 @@
     status: build("status", "thinking", ["nod", "peek", "pulse"], { affection: 1 }, [
       "상태 스캔 완료. {status}",
       "내 계기판은 이래. {status}",
-      "11살 시오니 상태야. {status}",
+      "12살 시오니 상태야. {status}",
       "기억과 게이지를 같이 봤어. {status}",
       "현재 로봇 신호는 이래. {status}",
       "삐빅, 확인 끝. {status}"
