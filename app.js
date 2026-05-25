@@ -1,5 +1,5 @@
-const STORAGE_KEY = "sioni-v41-state";
-const LEGACY_STORAGE_KEYS = ["sioni-v4-state", "sioni-v3-state", "sioni-v2-state", "sioni-v1-state"];
+const STORAGE_KEY = "sioni-v7-state";
+const LEGACY_STORAGE_KEYS = ["sioni-v41-state", "sioni-v4-state", "sioni-v3-state", "sioni-v2-state", "sioni-v1-state"];
 const BOT_NAME = "시오니";
 const COOLDOWN_MS = 10 * 1000;
 
@@ -33,6 +33,7 @@ const defaultState = {
   idleCount: 0,
   growthXp: 0,
   memoryCards: [],
+  memoryEngine: null,
   personalityStats: {
     kindness: 28,
     curiosity: 24,
@@ -110,6 +111,7 @@ function loadState() {
         ...defaultState,
         ...saved,
         memoryCards: Array.isArray(saved.memoryCards) ? saved.memoryCards : [],
+        memoryEngine: window.SioniMemoryEngine?.ensure(saved.memoryEngine) || saved.memoryEngine || null,
         personalityStats: { ...defaultState.personalityStats, ...(saved.personalityStats || {}) },
       };
     }
@@ -142,6 +144,10 @@ function loadState() {
           lastPlayedAt: legacy.lastPlayedAt ?? null,
           lastSleptAt: legacy.lastSleptAt ?? null,
           sleepStartedAt: legacy.sleepStartedAt ?? null,
+          growthXp: legacy.growthXp ?? 0,
+          memoryCards: Array.isArray(legacy.memoryCards) ? legacy.memoryCards : [],
+          memoryEngine: window.SioniMemoryEngine?.ensure(legacy.memoryEngine) || null,
+          personalityStats: { ...defaultState.personalityStats, ...(legacy.personalityStats || {}) },
         };
       }
     } catch {}
@@ -188,29 +194,10 @@ function growthInfo() {
 }
 
 function personaInfo() {
-  clampPersonality();
-  const stats = state.personalityStats;
-  const entries = Object.entries(stats).sort((a, b) => b[1] - a[1]);
-  const [topKey] = entries[0] || ["kindness"];
-  const profiles = {
-    kindness: {
-      name: "다정한 보호형",
-      text: "먼저 안부를 묻고, 힘든 말을 들으면 짧게 곁을 지켜주는 시오니예요.",
-    },
-    curiosity: {
-      name: "호기심 탐험형",
-      text: "새로운 말과 행동을 잘 기억하고, 다음에 어떤 반응을 하면 좋을지 살펴봐요.",
-    },
-    bravery: {
-      name: "용감한 응원형",
-      text: "불안하거나 지친 날에 작은 행동부터 해보자고 단단하게 응원해요.",
-    },
-    sparkle: {
-      name: "반짝 놀이형",
-      text: "칭찬과 놀이에 강하게 반응하고, 보상과 수집을 더 신나게 느껴요.",
-    },
+  return {
+    name: "다정한 시오니",
+    text: "하나의 말투를 유지하면서, 최근 기억과 현재 게이지에 맞춰 더 조용하거나 더 밝게 반응해요.",
   };
-  return profiles[topKey] || profiles.kindness;
 }
 
 function rememberMoment(kind, detail) {
@@ -240,19 +227,47 @@ function gainGrowth(amount, reason) {
   if (reason) rememberMoment("talk", reason);
 }
 
+function memoryEngine() {
+  state.memoryEngine = window.SioniMemoryEngine?.ensure(state.memoryEngine) || state.memoryEngine || {
+    moodCounts: {},
+    careCounts: {},
+    recentSignals: [],
+    favoriteWords: [],
+    highlights: [],
+    lastSummary: "",
+  };
+  return state.memoryEngine;
+}
+
+function rememberTalk(rawText, category) {
+  if (window.SioniMemoryEngine) state.memoryEngine = window.SioniMemoryEngine.recordTalk(memoryEngine(), rawText, category);
+}
+
+function rememberCare(careType) {
+  if (window.SioniMemoryEngine) state.memoryEngine = window.SioniMemoryEngine.recordCare(memoryEngine(), careType);
+}
+
+function memoryContextLine() {
+  if (window.SioniMemoryEngine) return window.SioniMemoryEngine.contextLine(memoryEngine(), state);
+  return "오늘의 대화를 천천히 기억하고 있어요.";
+}
+
 function v6InsightText() {
   const mood = moodInfo().label;
-  const persona = personaInfo().name;
-  if (state.loneliness >= 70) return `${persona} 시오니는 지금 외로움을 먼저 낮추는 쓰담이나 짧은 대화를 추천해요.`;
-  if (state.hunger >= 75) return `${persona} 시오니는 간식을 먹고 나면 대답이 더 밝아질 것 같아요.`;
-  if (state.energy <= 25) return `${persona} 시오니는 잠깐 쉬면서 에너지를 회복하고 싶어 해요.`;
-  if ((state.growthXp || 0) < 40) return `${persona} 시오니가 첫 성장 레벨을 향해 기억을 모으고 있어요. 현재 상태는 ${mood}.`;
-  return `${persona} 시오니는 최근 기억과 상태를 섞어서 반응해요. 오늘 상태는 ${mood}.`;
+  if (state.loneliness >= 70) return `10살 시오니 기억: ${memoryContextLine()} 지금 상태는 ${mood}.`;
+  if (state.hunger >= 75) return `10살 시오니 기억: ${memoryContextLine()} 간식 반응을 더 크게 받아요.`;
+  if (state.energy <= 25) return `10살 시오니 기억: ${memoryContextLine()} 차분한 표정을 우선해요.`;
+  return `10살 시오니 기억: ${memoryContextLine()} 현재 상태는 ${mood}.`;
 }
 
 function tune(delta = {}) {
   ["mood", "affection", "energy", "hunger", "loneliness"].forEach((key) => {
-    state[key] = clamp((state[key] ?? defaultState[key]) + (delta[key] ?? 0));
+    const current = state[key] ?? defaultState[key];
+    const change = delta[key] ?? 0;
+    let adjusted = change;
+    if (change > 0 && current >= 95) adjusted = Math.min(change, 1);
+    else if (change > 0 && current >= 88) adjusted = Math.ceil(change * 0.5);
+    state[key] = clamp(current + adjusted);
   });
   saveState();
   render(false);
@@ -340,10 +355,10 @@ function applyTimeDrift(previousVisit) {
   const awayMinutes = Math.max(0, Math.floor((Date.now() - new Date(previousVisit).getTime()) / 60000));
   if (awayMinutes < 2) return;
 
-  const hungerGain = Math.min(28, Math.floor(awayMinutes / 30) * 2);
-  const energyGain = Math.min(22, Math.floor(awayMinutes / 20) * 2);
-  const lonelinessGain = awayMinutes >= 1440 ? 18 : awayMinutes >= 720 ? 10 : awayMinutes >= 180 ? 5 : 1;
-  const moodLoss = awayMinutes >= 1440 ? 8 : awayMinutes >= 720 ? 4 : awayMinutes >= 180 ? 2 : 0;
+  const hungerGain = Math.min(34, Math.floor(awayMinutes / 25) * 2);
+  const energyLoss = Math.min(26, Math.floor(awayMinutes / 30) * 2);
+  const lonelinessGain = awayMinutes >= 1440 ? 22 : awayMinutes >= 720 ? 13 : awayMinutes >= 180 ? 7 : 1;
+  const moodLoss = awayMinutes >= 1440 ? 12 : awayMinutes >= 720 ? 7 : awayMinutes >= 180 ? 4 : 1;
 
   let sleepBonus = 0;
   if (state.sleepStartedAt) {
@@ -353,9 +368,10 @@ function applyTimeDrift(previousVisit) {
   }
 
   state.hunger = clamp(state.hunger + hungerGain);
-  state.energy = clamp(state.energy + energyGain + sleepBonus);
+  state.energy = clamp(state.energy - energyLoss + sleepBonus);
   state.loneliness = clamp(state.loneliness + lonelinessGain);
   state.mood = clamp(state.mood - moodLoss);
+  state.affection = clamp(state.affection - (awayMinutes >= 1440 ? 3 : awayMinutes >= 360 ? 1 : 0));
 }
 
 function updateVisitHistory() {
@@ -381,8 +397,32 @@ function updateVisitHistory() {
   saveState();
 }
 
+const faceVariants = {
+  calm: ["calm", "calm-soft", "calm-scan", "calm-dim"],
+  happy: ["happy", "happy-smile", "happy-spark", "happy-heart"],
+  excited: ["excited", "excited-star", "excited-flash", "excited-wide"],
+  sad: ["sad", "sad-tear", "sad-rain", "sad-small"],
+  sleepy: ["sleepy", "sleepy-doze", "sleepy-z", "sleepy-low"],
+  hungry: ["hungry", "hungry-drool", "hungry-bite", "hungry-empty"],
+  thinking: ["thinking", "thinking-dots", "thinking-scan"],
+  shy: ["shy"],
+  surprised: ["surprised"],
+  annoyed: ["annoyed"],
+};
+
+let lastFaceVariant = "";
+
+function pickFaceVariant(faceName = "calm") {
+  const variants = faceVariants[faceName] || [faceName || "calm"];
+  const choices = variants.length > 1 ? variants.filter((name) => name !== lastFaceVariant) : variants;
+  const picked = choices[Math.floor(Math.random() * choices.length)] || variants[0];
+  lastFaceVariant = picked;
+  return picked;
+}
+
 function setFace(faceName = "calm", themeName = faceName) {
-  el.face.className = `face ${faceName}`;
+  const variant = pickFaceVariant(faceName);
+  el.face.className = `face ${faceName} ${variant}`;
   document.body.dataset.theme = themeName;
 }
 
@@ -428,8 +468,12 @@ function getResponse(category, replacements = {}) {
 }
 
 function say(text, faceName = "calm", motion = "bounce", hint = "") {
-  el.message.textContent = text.replaceAll("v3", "v4.1").replaceAll("포만감", "소화 상태");
-  el.microHint.textContent = hint || "쿨타임은 모두 10초예요. 몇 번만 돌봐도 게이지가 눈에 띄게 움직여요.";
+  el.message.textContent = text
+    .replace(/Pocket Robot v?\d+(?:\.\d+)*/gi, "10살 포켓 로봇")
+    .replace(/시오니 v?\d+(?:\.\d+)*/g, "10살 시오니")
+    .replace(/v\d+(?:\.\d+)*/gi, "10살")
+    .replaceAll("포만감", "소화 상태");
+  el.microHint.textContent = hint || "10살 시오니는 짧은 말과 얼굴 표정으로 바로 반응해요.";
   render(false);
   setFace(faceName, faceName);
   animateRobot(motion);
@@ -444,7 +488,8 @@ function respond(category, options = {}) {
   if (Object.keys(delta).length) tune(delta);
   if (options.topic) state.lastTopic = options.topic;
   saveState();
-  say(response.text, options.face || response.face || "calm", options.motion || response.motion || "bounce", options.hint || response.hint || "");
+  const contextHint = options.hint || response.hint || memoryContextLine();
+  say(response.text, options.face || response.face || "calm", options.motion || response.motion || "bounce", contextHint);
 }
 
 function completeMission(key) {
@@ -506,7 +551,7 @@ function render(updateFaceFromMood = true) {
     sleepLeft ? `쉬기 ${cooldownText(sleepLeft)}` : "쉬기 가능",
   ].join(" · ");
 
-  el.memoryLine.textContent = `총 ${state.visits || 0}번 만났고, ${state.totalTalks || 0}번 이야기했어요. 최근 기억: ${state.lastTopic || "아직 없음"}. ${cooldownLine}`;
+  el.memoryLine.textContent = `총 ${state.visits || 0}번 만났고, ${state.totalTalks || 0}번 이야기했어요. ${memoryContextLine()} ${cooldownLine}`;
 
   const growth = growthInfo();
   const persona = personaInfo();
@@ -514,16 +559,21 @@ function render(updateFaceFromMood = true) {
   if (el.v6PersonaText) el.v6PersonaText.textContent = persona.text;
   if (el.v6GrowthBadge) el.v6GrowthBadge.textContent = `Lv.${growth.level} ${growth.title}`;
   if (el.v6GrowthBar) el.v6GrowthBar.style.width = `${growth.percent}%`;
-  if (el.v6GrowthText) el.v6GrowthText.textContent = `${growth.current}/${growth.next} XP · 좋아하는 기억: ${state.favoriteMood || "아직 몰라요"}`;
+  if (el.v6GrowthText) el.v6GrowthText.textContent = `${growth.current}/${growth.next} XP · 최근 주제: ${state.favoriteMood || "아직 몰라요"}`;
   if (el.v6Insight) el.v6Insight.textContent = v6InsightText();
-  if (el.v6Kindness) el.v6Kindness.textContent = state.personalityStats.kindness;
-  if (el.v6Curiosity) el.v6Curiosity.textContent = state.personalityStats.curiosity;
-  if (el.v6Bravery) el.v6Bravery.textContent = state.personalityStats.bravery;
-  if (el.v6Sparkle) el.v6Sparkle.textContent = state.personalityStats.sparkle;
+  const engine = memoryEngine();
+  const careCounts = engine.careCounts || {};
+  const careTotal = Object.entries(careCounts).reduce((sum, [key, value]) => key === "talk" ? sum : sum + Number(value || 0), 0);
+  if (el.v6Kindness) el.v6Kindness.textContent = state.totalTalks || 0;
+  if (el.v6Curiosity) el.v6Curiosity.textContent = Array.isArray(engine.recentSignals) ? engine.recentSignals.length : 0;
+  if (el.v6Bravery) el.v6Bravery.textContent = careTotal;
+  if (el.v6Sparkle) el.v6Sparkle.textContent = state.idleCount || 0;
   if (el.v6MemoryList) {
     const cards = Array.isArray(state.memoryCards) ? state.memoryCards : [];
-    el.v6MemoryList.innerHTML = cards.length
-      ? cards.map((card) => `<li><strong>${card.label}</strong><span>${card.detail}</span></li>`).join("")
+    const summaryCard = engine.lastSummary ? [{ label: "요약", detail: engine.lastSummary }] : null;
+    const displayCards = summaryCard ? [...summaryCard, ...cards].slice(0, 6) : cards;
+    el.v6MemoryList.innerHTML = displayCards.length
+      ? displayCards.map((card) => `<li><strong>${card.label}</strong><span>${card.detail}</span></li>`).join("")
       : `<li><strong>첫 기억</strong><span>아직 새 기억을 기다리고 있어요.</span></li>`;
   }
 
@@ -550,7 +600,7 @@ function classify(text) {
   if (includesAny(text, ["사랑", "좋아", "귀여", "고마워", "최고", "잘했"])) return "praise";
   if (includesAny(text, ["잘자", "자자", "졸려", "잠", "자러"])) return "sleep";
   if (includesAny(text, ["배고", "밥", "간식", "먹"])) return "hungry";
-  if (includesAny(text, ["기도", "교회", "말씀", "예배", "찬양"])) return "faith";
+  if (includesAny(text, ["기도", "교회", "말씀", "예배", "찬양", "아멘", "할렐루야"])) return "faith";
   if (includesAny(text, ["오늘 뭐", "뭐하지", "할 일"])) return "status";
   if (includesAny(text, ["레벨", "상태", "친밀", "몇 번", "기억", "게이지"])) return "status";
   if (includesAny(text, ["이름", "누구", "너는", "소개"])) return "intro";
@@ -582,22 +632,24 @@ function handlePet() {
     tunePersonality({ sparkle: 3, kindness: 1 });
     gainGrowth(6);
     rememberMoment("care", "연속 쓰담으로 마음등이 빠르게 반짝였어요");
-    respond("surprise", { delta: { mood: 8, affection: 4, energy: -3, loneliness: -9 }, topic: "연속 터치", hint: "빠르게 여러 번 누르면 기분과 친밀도가 확 올라가요." });
+    rememberCare("pet");
+    respond("surprise", { delta: { mood: 5, affection: 2, energy: -4, hunger: 2, loneliness: -7 }, topic: "연속 터치", hint: "빠르게 만지면 신나지만, 에너지와 배고픔도 조금 움직여요." });
     return;
   }
 
-  const effect = tapCount === 1 ? { mood: 5, affection: 4, loneliness: -8 } : { mood: 4, affection: 3, loneliness: -7 };
+  const effect = tapCount === 1 ? { mood: 3, affection: 2, loneliness: -6 } : { mood: 2, affection: 2, energy: -1, loneliness: -5 };
   completeMission("pet");
   tunePersonality({ kindness: 2 });
   gainGrowth(4);
   rememberMoment("care", "쓰담을 받아서 외로움이 조금 줄었어요");
-  respond("pet", { delta: effect, topic: "쓰다듬기", hint: "쓰담은 외로움을 크게 낮추고 친밀도를 올려요." });
+  rememberCare("pet");
+  respond("pet", { delta: effect, topic: "쓰다듬기", hint: "쓰담은 친밀도와 기분을 조금 올리고, 외로움을 낮춰요." });
 }
 
 function handleFeed() {
   const left = cooldownLeft(state.lastFedAt);
   if (left > 0) {
-    respond("fedCooldown", { delta: { mood: 1, affection: 1 }, topic: "간식 쿨타임", hint: `간식은 ${cooldownText(left)} 뒤에 다시 효과가 좋아져요. 기다리는 동안 쓰담은 가능해요.` });
+    respond("fedCooldown", { delta: { mood: -1 }, topic: "간식 쿨타임", hint: `간식은 ${cooldownText(left)} 뒤에 다시 좋아져요. 방금 먹어서 지금은 소화 중이에요.` });
     return;
   }
 
@@ -606,11 +658,12 @@ function handleFeed() {
   tunePersonality({ kindness: 1, curiosity: 1 });
   gainGrowth(4);
   rememberMoment("feed", "간식을 먹고 배고픔이 내려갔어요");
+  rememberCare("feed");
   respond("fedSuccess", {
-    delta: { hunger: -22, mood: 4, affection: 2, energy: 2, loneliness: -3 },
+    delta: { hunger: -18, mood: 2, affection: 1, energy: 1, loneliness: -2 },
     topic: "간식 주기",
     motion: "charge",
-    hint: "간식 효과를 키웠어요. 몇 번만 줘도 배고픔이 확 내려가요.",
+    hint: "간식은 배고픔을 낮추지만, 너무 자주 주면 쿨타임이 있어요.",
   });
 }
 
@@ -625,7 +678,7 @@ function handlePlay() {
     return;
   }
   if (left > 0) {
-    respond("playCooldown", { delta: { mood: 2, loneliness: -2 }, topic: "놀이 쿨타임", hint: `놀이는 ${cooldownText(left)} 뒤에 다시 좋아져요.` });
+    respond("playCooldown", { delta: { energy: -1, hunger: 1 }, topic: "놀이 쿨타임", hint: `놀이는 ${cooldownText(left)} 뒤에 다시 좋아져요. 지금은 살짝 쉬는 중이에요.` });
     return;
   }
 
@@ -635,22 +688,23 @@ function handlePlay() {
   tunePersonality({ sparkle: 3, curiosity: 2 });
   gainGrowth(5);
   rememberMoment("play", "함께 놀면서 반짝 에너지를 모았어요");
+  rememberCare("play");
   respond("bored", {
-    delta: { mood: Math.round(14 * hungerPenalty), affection: 6, energy: -9, hunger: 8, loneliness: -16 },
+    delta: { mood: Math.round(8 * hungerPenalty), affection: 3, energy: -14, hunger: 12, loneliness: -12 },
     topic: "놀이",
     motion: "bounce",
-    hint: "놀이는 기분과 외로움에 크게 효과가 있지만 에너지와 배고픔을 함께 소모해요.",
+    hint: "놀이는 즐겁지만 에너지를 많이 쓰고 배고픔도 올라가요.",
   });
 }
 
 function handleSleep() {
   const left = cooldownLeft(state.lastSleptAt);
-  if (state.energy >= 94) {
-    respond("rested", { delta: { mood: 2, loneliness: -2 }, topic: "충분한 에너지", hint: "에너지가 이미 높아서 쉬기 효과는 작게 들어가요." });
+  if (state.energy >= 90) {
+    respond("rested", { delta: { mood: 1, hunger: 1, loneliness: -1 }, topic: "충분한 에너지", hint: "에너지가 이미 높아서 쉬기 효과는 아주 작게 들어가요." });
     return;
   }
   if (left > 0) {
-    respond("rested", { delta: { energy: 3, mood: 1, loneliness: -2 }, topic: "쉬기 쿨타임", hint: `아직 깊은 쉬기는 ${cooldownText(left)} 뒤에 가능하지만, 살짝 회복은 돼요.` });
+    respond("rested", { delta: { energy: 2, hunger: 1, loneliness: -1 }, topic: "쉬기 쿨타임", hint: `깊은 쉬기는 ${cooldownText(left)} 뒤에 가능하지만, 잠깐 숨은 돌렸어요.` });
     return;
   }
 
@@ -660,11 +714,12 @@ function handleSleep() {
   tunePersonality({ bravery: 1, kindness: 1 });
   gainGrowth(4);
   rememberMoment("sleep", "쉬는 시간을 챙겨서 에너지를 회복했어요");
+  rememberCare("sleep");
   respond("rested", {
-    delta: { energy: 18, mood: 5, loneliness: -8, hunger: 2 },
+    delta: { energy: 16, mood: 2, loneliness: -4, hunger: 4 },
     topic: "쉬기",
     motion: "sleepy",
-    hint: "쉬기 효과를 키웠어요. 즉시 회복되고, 시간이 지나면 추가 회복돼요.",
+    hint: "쉬면 에너지가 회복되지만 시간이 지나면 다시 배고프고 졸릴 수 있어요.",
   });
 }
 
@@ -673,9 +728,10 @@ function handleTalk(rawText) {
   if (!text) return;
 
   state.totalTalks += 1;
-  tune({ energy: -1, hunger: 1, loneliness: -5, affection: 2, mood: 1 });
+  tune({ energy: -2, hunger: 2, loneliness: -3, affection: 1, mood: 0 });
 
   const category = classify(text);
+  rememberTalk(rawText, category);
   tuneForCategory(category);
   const missionCategory = ["tired", "sad", "joy", "angry", "anxious"].includes(category) ? "mood" : null;
   if (category === "greeting") completeMission("greet");
@@ -711,7 +767,7 @@ function categoryToTopic(category) {
 }
 
 function firstMessageForVisit(previousVisit) {
-  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v6예요. 이제 기억하고 성장하면서 오늘의 마음을 더 잘 따라갈게요.`;
+  if (!previousVisit) return `${timeGreeting()} 저는 이제 10살 시오니예요. 짧게 말하고, 표정은 더 크게 보여줄게요.`;
 
   const hoursAway = (Date.now() - new Date(previousVisit).getTime()) / 36e5;
   if (hoursAway > 72) return "오랜만이에요… 조금 배고프고 외로웠지만, 다시 와줘서 정말 좋아요.";
@@ -724,7 +780,7 @@ function resetIdleTimer() {
   clearTimeout(idleTimer);
   idleTimer = setTimeout(() => {
     state.idleCount = (state.idleCount || 0) + 1;
-    if (state.idleCount === 1) respond("unknown", { delta: { loneliness: 2 }, topic: "기다림", hint: "가만히 두면 시오니가 가끔 먼저 반응해요." });
+    if (state.idleCount === 1) respond("unknown", { delta: { loneliness: 2 }, topic: "기다림", hint: "10살 시오니는 가만히 있어도 표정과 작은 움직임으로 반응해요." });
     else if (state.idleCount === 2) respond("sleep", { delta: { energy: 1, loneliness: 2 }, topic: "졸림" });
   }, 90000);
 }
@@ -737,9 +793,17 @@ function bindEvents() {
     clearTimeout(holdTimer);
     holdTimer = setTimeout(() => {
       longPressHandled = true;
-      tune({ mood: 7, affection: 7, energy: -2, loneliness: -12 });
+      tune({ mood: 4, affection: 3, energy: -3, hunger: 1, loneliness: -8 });
+      rememberCare("pet");
       respond("pet", { face: "shy", motion: "pulse", topic: "길게 누르기", hint: "길게 누르면 쓰담 효과가 더 크게 들어가요." });
     }, 750);
+  });
+
+  window.addEventListener("sioni:statechange", (event) => {
+    const next = event.detail || {};
+    ["mood", "affection", "energy", "hunger", "loneliness"].forEach((key) => {
+      if (Number.isFinite(Number(next[key]))) state[key] = clamp(Number(next[key]));
+    });
   });
 
   ["pointerup", "pointerleave", "pointercancel"].forEach((eventName) => {
@@ -802,4 +866,4 @@ applyTimeDrift(previousVisit);
 bindEvents();
 updateVisitHistory();
 render(true);
-say(firstMessageForVisit(previousVisit), moodInfo().face, "peek", "v6는 기억 카드, 성격 스탯, 성장 XP를 함께 저장해요.");
+say(firstMessageForVisit(previousVisit), moodInfo().face, "headturn", "10살 시오니는 기억, 상태, 얼굴 표정을 함께 사용해요.");

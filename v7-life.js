@@ -55,11 +55,17 @@
   function applyTimeFlow(state, elapsedMinutes) {
     const units = Math.max(1, Math.min(MAX_CATCHUP_MINUTES, elapsedMinutes) / 0.5);
     const next = { ...state };
-    next.hunger = clamp((next.hunger ?? DEFAULT_STATE.hunger) + units * 0.9);
-    next.energy = clamp((next.energy ?? DEFAULT_STATE.energy) - units * 0.45);
-    next.loneliness = clamp((next.loneliness ?? DEFAULT_STATE.loneliness) + units * 0.35);
+    next.hunger = clamp((next.hunger ?? DEFAULT_STATE.hunger) + units * 0.75);
+    next.energy = clamp((next.energy ?? DEFAULT_STATE.energy) - units * 0.55);
+    next.loneliness = clamp((next.loneliness ?? DEFAULT_STATE.loneliness) + units * 0.3);
+    if (next.affection >= 80) next.affection = clamp(next.affection - units * 0.08);
 
-    const strain = (next.hunger >= 72 ? 0.45 : 0) + (next.energy <= 28 ? 0.45 : 0) + (next.loneliness >= 65 ? 0.35 : 0);
+    const strain =
+      0.08 +
+      (next.hunger >= 65 ? 0.3 : 0) +
+      (next.energy <= 45 ? 0.25 : 0) +
+      (next.loneliness >= 55 ? 0.25 : 0) +
+      (next.mood >= 92 ? 0.2 : 0);
     next.mood = clamp((next.mood ?? DEFAULT_STATE.mood) - units * strain);
     next.affection = clamp(next.affection ?? DEFAULT_STATE.affection);
     return next;

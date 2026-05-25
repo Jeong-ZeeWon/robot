@@ -1,5 +1,5 @@
-const CACHE_NAME = "sioni-age11-cache-20260525-1";
-const ASSETS = ["./", "./index.html", "./style.css?v=11.0.2", "./motions.css?v=11.0.2", "./v9-face.css?v=11.0.2", "./sioni-10.css?v=11.0.2", "./sioni-11.css?v=11.0.2", "./v4.css?v=11.0.2", "./v5.css?v=11.0.2", "./responses.js?v=11.0.2", "./responses-extra.js?v=11.0.2", "./sioni-10-lines.js?v=11.0.2", "./sioni-11-lines.js?v=11.0.2", "./memory-engine.js?v=11.0.2", "./v7.js?v=11.0.2", "./v4.js?v=11.0.2", "./v5.js?v=11.0.2", "./v5-motions.js?v=11.0.2", "./app.js?v=11.0.2", "./v7-life.js?v=11.0.2", "./idle.js?v=11.0.2", "./v5-version.js?v=11.0.2", "./v9-face-engine.js?v=11.0.2", "./persist.js?v=11.0.2", "./manifest.json?v=11.0.2", "./icon.svg"];
+const CACHE_NAME = "sioni-age11-cache-20260525-2";
+const ASSETS = ["./", "./index.html", "./style.css?v=11.0.3", "./motions.css?v=11.0.3", "./v9-face.css?v=11.0.3", "./sioni-10.css?v=11.0.3", "./sioni-11.css?v=11.0.3", "./v4.css?v=11.0.3", "./v5.css?v=11.0.3", "./responses.js?v=11.0.3", "./responses-extra.js?v=11.0.3", "./sioni-10-lines.js?v=11.0.3", "./sioni-11-lines.js?v=11.0.3", "./memory-engine.js?v=11.0.3", "./v7.js?v=11.0.3", "./v4.js?v=11.0.3", "./v5.js?v=11.0.3", "./v5-motions.js?v=11.0.3", "./app.js?v=11.0.3", "./v7-life.js?v=11.0.3", "./idle.js?v=11.0.3", "./v5-version.js?v=11.0.3", "./v9-face-engine.js?v=11.0.3", "./persist.js?v=11.0.3", "./manifest.json?v=11.0.3", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
