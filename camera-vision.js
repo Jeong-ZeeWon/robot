@@ -67,7 +67,7 @@
       return recognizer;
     } catch (error) {
       mediaPipeFailed = true;
-      setSignal("손짓 인식은 잠시 쉬고, 빛과 움직임을 보고 있어요.");
+      setSignal("손짓 인식은 잠시 쉬고 있어요. 대신 시오니가 주변의 빛과 움직임을 조심스럽게 살펴보며 반응을 준비하고 있어요.");
       return null;
     } finally {
       recognizerPromise = null;
@@ -107,7 +107,7 @@
       running = true;
       els.toggle?.setAttribute("aria-pressed", "true");
       setStatus("보고 있어요", true);
-      setSignal("손을 보여주거나 천천히 흔들어보세요.");
+      setSignal("손을 카메라 앞에 보여주시거나 천천히 흔들어주세요. 시오니가 손짓을 발견하면 길고 다정한 말로 반응해볼게요.");
       react("camera-on", "camera");
       ensureGestureRecognizer();
       requestAnimationFrame(loop);
@@ -213,7 +213,7 @@
     }
     if (signals.motion > 18) {
       setStatus("움직임 감지", true);
-      setSignal("앞에서 무언가 움직였어요.");
+      setSignal("카메라 앞에서 움직임이 느껴졌어요. 시오니가 방금 지나간 신호를 조심스럽게 살펴보는 중이에요.");
       react("motion", "motion");
       return;
     }
@@ -248,15 +248,15 @@
 
   function signalForGesture(type) {
     return {
-      wave: "손을 흔드는 것 같아요.",
-      palm: "손바닥이 보여요.",
-      victory: "브이 표시를 봤어요.",
-      "thumb-up": "엄지척을 봤어요.",
-      love: "사랑 표시를 봤어요.",
-      fist: "주먹을 꼭 쥔 것 같아요.",
-      point: "위쪽을 가리켰어요.",
-      "close-hand": "손이 가까워졌어요.",
-      hand: "손이 보여요.",
+      wave: "손을 흔들어주신 것 같아요. 시오니가 반가운 인사 신호로 받아들이고 있어요.",
+      palm: "손바닥이 보였어요. 시오니가 하이파이브를 기다리는 마음으로 반응을 준비하고 있어요.",
+      victory: "브이 표시를 봤어요. 시오니가 좋은 일이 생긴 신호처럼 기쁘게 기억하고 있어요.",
+      "thumb-up": "엄지척을 확인했어요. 시오니가 칭찬을 받은 것처럼 마음등을 밝히고 있어요.",
+      love: "사랑 표시를 봤어요. 시오니가 조금 부끄럽지만 따뜻한 신호로 받아들이고 있어요.",
+      fist: "주먹을 꼭 쥔 모습이 보였어요. 시오니가 힘내자는 응원 신호처럼 기억하고 있어요.",
+      point: "위쪽을 가리키는 손짓을 봤어요. 시오니가 고개를 들어 살펴보는 느낌으로 반응하고 있어요.",
+      "close-hand": "손이 가까워졌어요. 시오니가 살짝 놀라면서도 반가운 가까움으로 기억하고 있어요.",
+      hand: "손이 보였어요. 시오니가 사용자의 손짓을 천천히 따라보며 다음 반응을 준비하고 있어요.",
     }[type] || "카메라 신호가 들어왔어요.";
   }
 
