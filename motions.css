@@ -353,10 +353,10 @@
 }
 
 @keyframes idle-wave-arm {
-  0%, 100% { transform: rotate(-12deg); }
-  24% { transform: rotate(-28deg) translateY(-4px); }
-  48% { transform: rotate(-8deg) translateY(2px); }
-  72% { transform: rotate(-24deg) translateY(-3px); }
+  0%, 100% { transform: rotate(13deg); }
+  24% { transform: rotate(38deg) translateY(-6px); }
+  48% { transform: rotate(20deg) translateY(-2px); }
+  72% { transform: rotate(42deg) translateY(-5px); }
 }
 
 @keyframes idle-wave-body {

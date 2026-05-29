@@ -1,23 +1,19 @@
 (() => {
   const actionMotionMap = {
-    pet: ["heartpop", "pulse", "sway", "headnod", "headturn"],
-    feed: ["munch", "charge", "tinyshake", "headnod"],
-    play: ["dance", "hop", "spin", "twirl", "celebrate", "headshake"],
+    pet: ["heartpop", "pulse", "reach", "headnod", "headturn"],
+    feed: ["munch", "charge", "reach", "headnod"],
+    play: ["dance", "hop", "spin", "twirl", "reach", "shrug"],
     sleep: ["doze", "sleepy", "slow", "headnod"],
-    study: ["headnod", "peek", "nod", "slow"],
-    exercise: ["hop", "bounce", "wiggle", "pop"],
-    music: ["wiggle", "sway", "twirl", "tippy"],
-    outdoor: ["bounce", "headturn", "peek", "reach"],
   };
 
   const moodMotionMap = [
-    { match: ["안녕", "하이"], motions: ["peek", "hop", "headturn"] },
-    { match: ["힘들", "슬퍼", "우울"], motions: ["sway", "slow", "nod", "headnod"] },
-    { match: ["기뻐", "좋은", "신나"], motions: ["celebrate", "dance", "hop", "twirl"] },
-    { match: ["불안", "걱정", "두려"], motions: ["tinyshake", "sway", "headshake"] },
-    { match: ["심심", "놀자"], motions: ["wiggle", "dance", "spin", "twirl", "headshake"] },
-    { match: ["상태", "게이지"], motions: ["peek", "nod", "headturn"] },
-    { match: ["고마워", "감사", "고맙"], motions: ["glow", "pulse", "nod", "bow"] },
+    { match: ["안녕", "하이"], motions: ["peek", "hop", "reach", "headturn"] },
+    { match: ["힘들", "슬퍼", "우울"], motions: ["sway", "slow", "shrug", "headnod"] },
+    { match: ["기뻐", "좋은", "신나"], motions: ["celebrate", "dance", "reach", "twirl"] },
+    { match: ["불안", "걱정", "두려"], motions: ["tinyshake", "sway", "shrug", "headshake"] },
+    { match: ["심심", "놀자"], motions: ["wiggle", "dance", "shrug", "twirl", "headshake"] },
+    { match: ["상태", "게이지"], motions: ["peek", "nod", "reach", "headturn"] },
+    { match: ["고마워", "감사", "고맙"], motions: ["glow", "pulse", "reach", "bow"] },
   ];
 
   const emojiMap = {
@@ -79,7 +75,7 @@
 
   function moodMotions(text) {
     const found = moodMotionMap.find((item) => item.match.some((word) => text.includes(word)));
-    return found ? found.motions : ["peek", "nod", "float", "headturn", "headnod"];
+    return found ? found.motions : ["peek", "nod", "reach", "shrug", "headturn", "headnod"];
   }
 
   function emojiKindFromText(text) {
