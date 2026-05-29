@@ -119,23 +119,22 @@ button {
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 .app-version {
   display: inline-flex;
   align-items: center;
-  padding: 1px 7px;
+  vertical-align: middle;
+  padding: 2px 9px;
+  margin-left: 8px;
   border-radius: 999px;
-  background: rgba(117,245,211,0.15);
-  border: 1px solid rgba(117,245,211,0.35);
-  color: #1fa88a;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  text-transform: none;
+  background: rgba(117,245,211,0.18);
+  border: 1.5px solid rgba(117,245,211,0.45);
+  color: #1a9a80;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
 }
 
 h1 {

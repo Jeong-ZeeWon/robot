@@ -20,7 +20,6 @@
     patchTextNode(document.querySelector("#message"));
     patchTextNode(document.querySelector("#microHint"));
     patchTextNode(document.querySelector("#timeGreeting"));
-    patchTextNode(document.querySelector(".eyebrow"));
     patchTextNode(document.querySelector(".v6-title-row span"));
     document.title = "시오니 v13";
     const main = document.querySelector("main");
@@ -42,7 +41,6 @@
   observe("#microHint");
   observe("#timeGreeting");
   observe("#v6Insight");
-  observe(".eyebrow");
   observe(".v6-title-row span");
   document.addEventListener("DOMContentLoaded", () => {
     patchAll();
