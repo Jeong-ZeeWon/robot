@@ -2,16 +2,6 @@
   touch-action: manipulation;
 }
 
-.v13-activity-actions button strong {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 2px;
-}
-
-.v13-activity-actions button small {
-  color: #7a6a58;
-  font-size: 11px;
-}
 
 .camera-button[aria-pressed="true"] {
   background: linear-gradient(135deg, #e9fff8, #fff7cf);

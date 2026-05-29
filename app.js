@@ -741,33 +741,6 @@ function handleSleep() {
   });
 }
 
-function handleStudy() {
-  tunePersonality({ curiosity: 2, bravery: 1 });
-  gainGrowth(5);
-  rememberMoment("talk", "공부 중에 시오니의 응원을 받았어요");
-  respond("study", { delta: { mood: 4, affection: 2, energy: -1, loneliness: -3 }, topic: "공부" });
-}
-
-function handleExercise() {
-  tunePersonality({ bravery: 2, sparkle: 2 });
-  gainGrowth(6);
-  rememberMoment("care", "운동 중에 시오니와 함께했어요");
-  respond("exercise", { delta: { mood: 6, affection: 2, energy: -2, loneliness: -3 }, topic: "운동" });
-}
-
-function handleMusic() {
-  tunePersonality({ sparkle: 3, curiosity: 1 });
-  gainGrowth(4);
-  rememberMoment("play", "음악을 들으며 시오니와 리듬을 탳어요");
-  respond("music", { delta: { mood: 5, affection: 2, energy: -1, loneliness: -4 }, topic: "음악" });
-}
-
-function handleOutdoor() {
-  tunePersonality({ bravery: 2, curiosity: 2 });
-  gainGrowth(5);
-  rememberMoment("play", "외출하며 시오니와 함께 걸었어요");
-  respond("outdoor", { delta: { mood: 5, affection: 2, loneliness: -5 }, topic: "외출" });
-}
 
 function handleTalk(rawText) {
   const text = normalize(rawText);
@@ -896,10 +869,6 @@ function bindEvents() {
       if (action === "feed") handleFeed();
       if (action === "play") handlePlay();
       if (action === "sleep") handleSleep();
-      if (action === "study") handleStudy();
-      if (action === "exercise") handleExercise();
-      if (action === "music") handleMusic();
-      if (action === "outdoor") handleOutdoor();
     });
   });
 
