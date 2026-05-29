@@ -937,10 +937,15 @@ function bindEvents() {
   });
 }
 
+// 오프라인 캐시를 제거하고 즉시 업데이트되도록, 기존 서비스워커를 등록 해제하고
+// 남아 있는 캐시를 비웁니다. (이전 버전에서 설치된 서비스워커 정리)
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
-  });
+  navigator.serviceWorker.getRegistrations()
+    .then((registrations) => registrations.forEach((registration) => registration.unregister()))
+    .catch(() => {});
+}
+if (window.caches) {
+  caches.keys().then((keys) => keys.forEach((key) => caches.delete(key))).catch(() => {});
 }
 
 resetDailyIfNeeded();

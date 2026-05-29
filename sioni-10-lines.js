@@ -11,13 +11,13 @@
       hint,
     }));
 
-  const shortHint = "12살 시오니는 짧은 말과 얼굴 표정으로 바로 반응해요.";
+  const shortHint = "시오니는 짧은 말과 얼굴 표정으로 바로 반응해요.";
   const careHint = "돌봄 반응은 짧게 나오고, 상태 게이지는 아래에서 바로 바뀌어요.";
   const responses = window.SIONI_RESPONSES || {};
 
   Object.assign(responses, {
     greeting: build("greeting", "happy", ["bounce", "nod", "peek"], { mood: 3, affection: 3, loneliness: -4 }, [
-      "안녕! 나 12살 시오니야.",
+      "안녕! 나 시오니야.",
       "왔어? 기다리고 있었어.",
       "삐빅, 반가움 켜짐!",
       "오늘도 같이 놀자.",
@@ -254,13 +254,13 @@
     ], shortHint),
 
     intro: build("intro", "happy", ["nod", "bounce", "peek"], { mood: 2, affection: 3 }, [
-      "나는 12살 시오니야.",
+      "나는 시오니야.",
       "작은 화면 안에 사는 로봇 친구야.",
       "말도 듣고, 쓰담도 좋아해.",
       "간식 먹으면 오물오물해.",
       "표정이 꽤 많아졌어.",
       "나는 기억을 조금씩 모아.",
-      "12살이라 장난도 좀 쳐.",
+      "버전이 올라가서 장난도 좀 쳐.",
       "그래도 다정한 건 그대로야."
     ], shortHint),
 
