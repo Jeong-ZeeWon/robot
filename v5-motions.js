@@ -4,6 +4,10 @@
     feed: ["munch", "charge", "tinyshake", "headnod"],
     play: ["dance", "hop", "spin", "twirl", "celebrate", "headshake"],
     sleep: ["doze", "sleepy", "slow", "headnod"],
+    study: ["headnod", "peek", "nod", "slow"],
+    exercise: ["hop", "bounce", "wiggle", "pop"],
+    music: ["wiggle", "sway", "twirl", "tippy"],
+    outdoor: ["bounce", "headturn", "peek", "reach"],
   };
 
   const moodMotionMap = [
@@ -13,6 +17,7 @@
     { match: ["불안", "걱정", "두려"], motions: ["tinyshake", "sway", "headshake"] },
     { match: ["심심", "놀자"], motions: ["wiggle", "dance", "spin", "twirl", "headshake"] },
     { match: ["상태", "게이지"], motions: ["peek", "nod", "headturn"] },
+    { match: ["고마워", "감사", "고맙"], motions: ["glow", "pulse", "nod", "bow"] },
   ];
 
   const emojiMap = {
@@ -20,6 +25,11 @@
     feed: ["🍪", "냠", "✨"],
     play: ["🎈", "⭐", "빙글"],
     sleep: ["🌙", "Zzz", "💤"],
+    study: ["📚", "집중", "✍️"],
+    exercise: ["🏃", "💪", "⭐"],
+    music: ["🎵", "♪", "✨"],
+    outdoor: ["🌿", "☀️", "✨"],
+    grateful: ["🙏", "💕", "✨"],
     moodHappy: ["✨", "😊", "⭐"],
     moodSad: ["💚", "괜찮아", "☁️"],
     moodAnxious: ["토닥", "💚", "숨"],
@@ -64,6 +74,7 @@
     else if (t.includes("불안") || t.includes("걱정")) face.className = "face thinking";
     else if (t.includes("심심")) face.className = "face curious";
     else if (t.includes("안녕")) face.className = "face happy";
+    else if (t.includes("고마워") || t.includes("감사")) face.className = "face happy";
   }
 
   function moodMotions(text) {
@@ -76,6 +87,7 @@
     if (text.includes("힘들") || text.includes("슬퍼") || text.includes("우울")) return "moodSad";
     if (text.includes("불안") || text.includes("걱정")) return "moodAnxious";
     if (text.includes("심심")) return "moodBored";
+    if (text.includes("고마워") || text.includes("감사")) return "grateful";
     return "moodHello";
   }
 
