@@ -102,6 +102,38 @@
   animation: motion-sway 0.9s ease;
 }
 
+.robot.is-motion-shiver {
+  animation: motion-shiver 0.7s ease;
+}
+
+.robot.is-motion-bow {
+  animation: motion-bow 1.0s ease;
+}
+
+.robot.is-motion-squeeze {
+  animation: motion-squeeze 0.7s ease;
+}
+
+.robot.is-motion-pop {
+  animation: motion-pop 0.65s cubic-bezier(.2,.8,.2,1.15);
+}
+
+.robot.is-motion-tippy {
+  animation: motion-tippy 0.85s ease;
+}
+
+.robot.is-motion-reach .arm-right {
+  animation: motion-reach-arm 0.9s ease;
+}
+
+.robot.is-motion-shrug .arm-left {
+  animation: motion-shrug-left 0.82s ease;
+}
+
+.robot.is-motion-shrug .arm-right {
+  animation: motion-shrug-right 0.82s ease;
+}
+
 .face.blink .eye {
   height: 6px !important;
 }
@@ -514,6 +546,65 @@
   82% { transform: rotate(-2deg) translateY(3px); }
 }
 
+@keyframes motion-shiver {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  10% { transform: translateX(-5px) rotate(-2.5deg); }
+  20% { transform: translateX(5px) rotate(2.5deg); }
+  30% { transform: translateX(-5px) rotate(-2deg); }
+  40% { transform: translateX(5px) rotate(2deg); }
+  50% { transform: translateX(-3px) rotate(-1.5deg); }
+  60% { transform: translateX(3px) rotate(1.5deg); }
+  75% { transform: translateX(-2px) rotate(-1deg); }
+  90% { transform: translateX(2px) rotate(1deg); }
+}
+
+@keyframes motion-bow {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  35% { transform: translateY(14px) rotate(9deg) scaleY(0.93); }
+  65% { transform: translateY(7px) rotate(4deg) scaleY(0.97); }
+}
+
+@keyframes motion-squeeze {
+  0%, 100% { transform: scale(1); }
+  18% { transform: scaleX(0.87) scaleY(1.14); }
+  42% { transform: scaleX(1.07) scaleY(0.95); }
+  62% { transform: scaleX(0.97) scaleY(1.04); }
+  80% { transform: scaleX(1.02) scaleY(0.99); }
+}
+
+@keyframes motion-pop {
+  0% { transform: scale(1) translateY(0); }
+  25% { transform: scale(1.14) translateY(-10px); }
+  50% { transform: scale(0.95) translateY(4px); }
+  70% { transform: scale(1.05) translateY(-3px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+@keyframes motion-tippy {
+  0%, 100% { transform: rotate(0) translateX(0); }
+  28% { transform: rotate(-9deg) translateX(-6px); }
+  62% { transform: rotate(7deg) translateX(4px); }
+  84% { transform: rotate(-3deg) translateX(-2px); }
+}
+
+@keyframes motion-reach-arm {
+  0%, 100% { transform: rotate(13deg); }
+  30% { transform: rotate(50deg) translateY(-8px) translateX(6px); }
+  60% { transform: rotate(30deg) translateY(-3px); }
+}
+
+@keyframes motion-shrug-left {
+  0%, 100% { transform: rotate(-13deg); }
+  35% { transform: rotate(-32deg) translateY(-9px); }
+  65% { transform: rotate(-22deg) translateY(-4px); }
+}
+
+@keyframes motion-shrug-right {
+  0%, 100% { transform: rotate(13deg); }
+  35% { transform: rotate(32deg) translateY(-9px); }
+  65% { transform: rotate(22deg) translateY(-4px); }
+}
+
 @keyframes heart-pulse {
   0%, 100% { transform: translateX(-50%) rotate(45deg) scale(1); opacity: 0.9; }
   35% { transform: translateX(-50%) rotate(45deg) scale(1.6); opacity: 1; }
@@ -521,6 +612,6 @@
 }
 
 @keyframes body-glow {
-  0%, 100% { filter: drop-shadow(0 0 0 rgba(117, 245, 211, 0)); }
-  50% { filter: drop-shadow(0 0 18px rgba(117, 245, 211, 0.65)); }
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(117,245,211,0)); }
+  50% { filter: drop-shadow(0 0 18px rgba(117,245,211,0.62)); }
 }
