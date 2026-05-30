@@ -87,6 +87,44 @@
     return "moodHello";
   }
 
+  const feedItems  = ["🍪", "🛢️", "🧁", "🍫"];
+  const playItems  = ["⚽", "🏀", "🎾", "🏐"];
+
+  function spawnProp(room, type, emoji, delayS) {
+    const el = document.createElement("span");
+    el.className = `robot-prop robot-prop-${type}`;
+    el.textContent = emoji;
+    if (delayS) el.style.animationDelay = `${delayS}s`;
+    room.appendChild(el);
+    setTimeout(() => el.remove(), 2600);
+  }
+
+  function showProp(action) {
+    const room = $("#sioniRoom");
+    if (!room) return;
+    if (action === "feed") {
+      spawnProp(room, "feed", pick(feedItems), 0);
+    } else if (action === "play") {
+      spawnProp(room, "play", pick(playItems), 0);
+    } else if (action === "sleep") {
+      spawnProp(room, "sleep", "🌙", 0);
+      spawnProp(room, "sleepz", "💤", 0.35);
+      spawnProp(room, "sleepz", "💤", 0.75);
+    } else if (action === "pet") {
+      const hearts = ["💚", "💕", "✨"];
+      for (let i = 0; i < 3; i++) {
+        const el = document.createElement("span");
+        el.className = "robot-prop robot-prop-pet";
+        el.textContent = hearts[i % hearts.length];
+        el.style.left = `${28 + Math.random() * 44}%`;
+        el.style.setProperty("--rot", `${-15 + Math.random() * 30}deg`);
+        el.style.animationDelay = `${i * 0.16}s`;
+        room.appendChild(el);
+        setTimeout(() => el.remove(), 2600);
+      }
+    }
+  }
+
   function burst(kind = "pet") {
     const room = $("#sioniRoom");
     if (!room) return;
@@ -114,6 +152,7 @@
         setTimeout(() => {
           runMotion(pick(motions));
           burst(action);
+          showProp(action);
         }, 40);
       });
     });
