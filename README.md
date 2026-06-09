@@ -1,12 +1,21 @@
-# 시오니 v13
+# 시오니 v14
 
-8살 아이도 쉽게 즐길 수 있는 무료 포켓 로봇 웹앱입니다. 화면에는 나이 대신 버전으로 `시오니 v13`이라고 표현합니다.
+8살 아이도 쉽게 즐길 수 있는 무료 포켓 로봇 웹앱입니다. 화면에는 나이 대신 버전으로 `시오니 v14`라고 표현하고, v14부터는 앱 안에서 감정 코어와 행동 모드가 더 선명하게 드러납니다.
 
 실행 주소:
 
 ```txt
 https://jeong-zeewon.github.io/robot/
 ```
+
+## 핵심 변화 (v14)
+
+- v14.1: 로봇 반응 애니메이션 품질 개선
+- 예비동작, 착지 스쿼시, 파츠 지연, 반응 오라, 행동별 파티클 링 추가
+- `시오니 감정 코어` 섹션 추가
+- 곁에/관찰/장난/휴식 모드에 따라 호기심, 신뢰, 활기 상태 변화
+- 화면 표정과 모션을 현재 반응 흐름으로 요약
+- `window.SioniAppCore` API 추가: `setMode`, `fromReaction`, `getSnapshot`
 
 ## 핵심 변화 (v13)
 
@@ -40,6 +49,7 @@ v5.css                로봇 방, 상태 카드, 기억 카드
 sioni-10.css          UI 보정
 sioni-11.css          UI 보정
 sioni-v13.css         v13 카메라/활동 UI
+app-core.css          감정 코어 UI
 motions.css           로봇 동작 애니메이션
 v9-face.css           40종 얼굴 표정 스타일
 v9-face-engine.js     문맥 기반 얼굴 표정 엔진
@@ -49,6 +59,7 @@ sioni-10-lines.js     짧은 반응 말투
 sioni-11-lines.js     짧은 반응 말투
 v5-motions.js         버튼/기분별 동작·이모지 매핑
 app.js                상태, 게이지, 대화 흐름, 활동 핸들러
+app-core.js           앱 반응 흐름을 읽는 감정 코어
 camera-vision.js      카메라, 손짓, 밝기, 움직임 감지
 idle.js               대기 중 상태 기반 반응
 memory-engine.js      기억 요약

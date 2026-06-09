@@ -254,10 +254,10 @@ function memoryContextLine() {
 
 function v6InsightText() {
   const mood = moodInfo().label;
-  if (state.loneliness >= 70) return `시오니 v13 기억: ${memoryContextLine()} 지금 상태는 ${mood}.`;
-  if (state.hunger >= 75) return `시오니 v13 기억: ${memoryContextLine()} 간식 반응을 더 크게 받아요.`;
-  if (state.energy <= 25) return `시오니 v13 기억: ${memoryContextLine()} 차분한 표정을 우선해요.`;
-  return `시오니 v13 기억: ${memoryContextLine()} 현재 상태는 ${mood}.`;
+  if (state.loneliness >= 70) return `시오니 v14 기억: ${memoryContextLine()} 지금 상태는 ${mood}.`;
+  if (state.hunger >= 75) return `시오니 v14 기억: ${memoryContextLine()} 간식 반응을 더 크게 받아요.`;
+  if (state.energy <= 25) return `시오니 v14 기억: ${memoryContextLine()} 차분한 표정을 우선해요.`;
+  return `시오니 v14 기억: ${memoryContextLine()} 현재 상태는 ${mood}.`;
 }
 
 function tune(delta = {}) {
@@ -475,10 +475,11 @@ function getResponse(category, replacements = {}) {
 
 function say(text, faceName = "calm", motion = "bounce", hint = "") {
   el.message.textContent = text.replaceAll("포만감", "소화 상태");
-  el.microHint.textContent = hint || "시오니 v13은 모든 반응을 조금 더 길고 다정한 존댓말로 전해요.";
+  el.microHint.textContent = hint || "시오니 v14는 모든 반응을 조금 더 길고 다정한 존댓말로 전해요.";
   render(false);
   setFace(faceName, faceName);
   animateRobot(motion);
+  window.SioniAppCore?.fromReaction?.({ text: el.message.textContent, face: faceName, motion });
   speak(el.message.textContent);
   resetIdleTimer();
 }
@@ -792,7 +793,7 @@ function categoryToTopic(category) {
 }
 
 function firstMessageForVisit(previousVisit) {
-  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v13이에요. 모든 반응을 조금 더 길고 다정한 존댓말로 전해드릴게요.`;
+  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v14예요. 모든 반응을 조금 더 길고 다정한 존댓말로 전해드릴게요.`;
 
   const hoursAway = (Date.now() - new Date(previousVisit).getTime()) / 36e5;
   if (hoursAway > 72) return "오랜만이에요… 조금 배고프고 외로웠지만, 다시 와줘서 정말 좋아요.";
@@ -805,7 +806,7 @@ function resetIdleTimer() {
   clearTimeout(idleTimer);
   idleTimer = setTimeout(() => {
     state.idleCount = (state.idleCount || 0) + 1;
-    if (state.idleCount === 1) respond("unknown", { delta: { loneliness: 2 }, topic: "기다림", hint: "시오니 v13은 가만히 있어도 길고 다정한 존댓말로 반응해요." });
+    if (state.idleCount === 1) respond("unknown", { delta: { loneliness: 2 }, topic: "기다림", hint: "시오니 v14는 가만히 있어도 길고 다정한 존댓말로 반응해요." });
     else if (state.idleCount === 2) respond("sleep", { delta: { energy: 1, loneliness: 2 }, topic: "졸림" });
   }, 90000);
 }
@@ -855,7 +856,7 @@ function bindEvents() {
     tune(reaction.delta || {});
     rememberMoment("talk", reaction.memory);
     saveState();
-    say(reaction.text, reaction.face, reaction.motion, "시오니 v13은 카메라 신호도 길고 다정한 존댓말로 기억해요.");
+    say(reaction.text, reaction.face, reaction.motion, "시오니 v14는 카메라 신호도 길고 다정한 존댓말로 기억해요.");
   });
 
   ["pointerup", "pointerleave", "pointercancel"].forEach((eventName) => {
@@ -923,4 +924,4 @@ applyTimeDrift(previousVisit);
 bindEvents();
 updateVisitHistory();
 render(true);
-say(firstMessageForVisit(previousVisit), moodInfo().face, "headturn", "시오니 v13은 기억, 상태, 얼굴 표정을 함께 사용하면서 모든 반응을 길고 다정한 존댓말로 전해요.");
+say(firstMessageForVisit(previousVisit), moodInfo().face, "headturn", "시오니 v14는 기억, 상태, 얼굴 표정, 감정 코어를 함께 사용하면서 모든 반응을 길고 다정한 존댓말로 전해요.");

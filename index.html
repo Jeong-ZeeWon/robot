@@ -4,26 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#75f5d3" />
-  <meta name="description" content="말, 터치, 활동, 카메라에 반응하는 포켓 로봇 시오니 v13" />
-  <title>시오니 v13</title>
-  <link rel="manifest" href="manifest.json?v=13.3.2" />
+  <meta name="description" content="말, 터치, 활동, 카메라, 감정 코어에 반응하는 포켓 로봇 시오니 v14" />
+  <title>시오니 v14</title>
+  <link rel="manifest" href="manifest.json?v=14.1.0" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="style.css?v=13.3.2" />
-  <link rel="stylesheet" href="motions.css?v=13.3.2" />
-  <link rel="stylesheet" href="v9-face.css?v=13.3.2" />
-  <link rel="stylesheet" href="v4.css?v=13.3.2" />
-  <link rel="stylesheet" href="v5.css?v=13.3.2" />
-  <link rel="stylesheet" href="sioni-10.css?v=13.3.2" />
-  <link rel="stylesheet" href="sioni-11.css?v=13.3.2" />
-  <link rel="stylesheet" href="sioni-v13.css?v=13.3.2" />
+  <link rel="stylesheet" href="style.css?v=14.1.0" />
+  <link rel="stylesheet" href="motions.css?v=14.1.0" />
+  <link rel="stylesheet" href="v9-face.css?v=14.1.0" />
+  <link rel="stylesheet" href="v4.css?v=14.1.0" />
+  <link rel="stylesheet" href="v5.css?v=14.1.0" />
+  <link rel="stylesheet" href="sioni-10.css?v=14.1.0" />
+  <link rel="stylesheet" href="sioni-11.css?v=14.1.0" />
+  <link rel="stylesheet" href="sioni-v13.css?v=14.1.0" />
+  <link rel="stylesheet" href="app-core.css?v=14.1.0" />
 </head>
 <body data-theme="calm">
-  <main class="app-shell v4-shell v5-shell" aria-label="시오니 v13">
+  <main class="app-shell v4-shell v5-shell" aria-label="시오니 v14">
     <section class="hero-card v4-hero v5-hero">
       <div class="top-bar">
         <div>
           <p class="eyebrow">포켓 로봇 AI</p>
-          <h1 id="botName">시오니 <span class="app-version">v13.3</span></h1>
+          <h1 id="botName">시오니 <span class="app-version">v14.1</span></h1>
           <p class="subtitle" id="timeGreeting">오늘 하루 어떠셨나요? 시오니가 천천히 들어드릴게요.</p>
         </div>
         <div class="top-actions">
@@ -138,6 +139,34 @@
         <p id="recommendationText">상태를 살펴보고 추천 행동을 고르는 중이에요.</p>
       </div>
 
+      <section class="app-core-card" aria-label="시오니 감정 코어">
+        <div class="app-core-head">
+          <div>
+            <span>시오니 감정 코어</span>
+            <strong id="appCoreMode">곁에 있기</strong>
+          </div>
+          <b id="appCoreSignal">차분</b>
+        </div>
+
+        <div class="app-core-modes" role="group" aria-label="시오니 행동 모드">
+          <button type="button" data-app-mode="companion" aria-pressed="true"><span>🤝</span><small>곁에</small></button>
+          <button type="button" data-app-mode="curious" aria-pressed="false"><span>👀</span><small>관찰</small></button>
+          <button type="button" data-app-mode="playful" aria-pressed="false"><span>⚡</span><small>장난</small></button>
+          <button type="button" data-app-mode="rest" aria-pressed="false"><span>🌙</span><small>휴식</small></button>
+        </div>
+
+        <div class="app-core-grid" aria-label="시오니 코어 상태">
+          <div><span>호기심</span><strong id="appCuriosity">0</strong></div>
+          <div><span>신뢰</span><strong id="appTrust">0</strong></div>
+          <div><span>활기</span><strong id="appArousal">0</strong></div>
+        </div>
+
+        <div class="app-core-output">
+          <span id="appMoodLine">지금 반응 흐름을 읽는 중이에요.</span>
+          <p id="appCoreSignalLine">차분한 표정과 부드러운 말투를 준비하고 있어요.</p>
+        </div>
+      </section>
+
       <form id="talkForm" class="talk-form v4-hidden-form" aria-hidden="true">
         <label class="sr-only" for="userInput">시오니에게 말하기</label>
         <input id="userInput" name="message" autocomplete="off" tabindex="-1" />
@@ -145,7 +174,7 @@
       </form>
     </section>
 
-    <section class="camera-card" aria-label="시오니 v13 카메라 반응">
+    <section class="camera-card" aria-label="시오니 v14 카메라 반응">
       <div class="camera-copy">
         <span>카메라 감각</span>
         <strong id="cameraStatus">잠잠해요</strong>
@@ -157,11 +186,11 @@
       <p id="cameraSignal">손짓과 빛을 기다리는 중이에요.</p>
     </section>
 
-    <section class="v6-companion-card" aria-label="시오니 v13 표정과 기억">
+    <section class="v6-companion-card" aria-label="시오니 v14 표정과 기억">
       <div class="section-title v6-title-row">
         <div>
           <span>시오니의 얼굴과 기억</span>
-          <small id="v6Insight">시오니 v13이 말, 기억, 상태, 카메라 신호를 함께 읽고 있어요.</small>
+          <small id="v6Insight">시오니 v14가 말, 기억, 상태, 카메라 신호를 함께 읽고 있어요.</small>
         </div>
         <strong id="v6GrowthBadge">Lv.1 새싹 로봇</strong>
       </div>
@@ -287,21 +316,22 @@
 
   <div id="v5Toast" class="v5-toast" role="status" aria-live="polite"></div>
 
-  <script src="responses.js?v=13.3.2" defer></script>
-  <script src="responses-extra.js?v=13.3.2" defer></script>
-  <script src="sioni-10-lines.js?v=13.3.2" defer></script>
-  <script src="sioni-11-lines.js?v=13.3.2" defer></script>
-  <script src="memory-engine.js?v=13.3.2" defer></script>
-  <script src="v7.js?v=13.3.2" defer></script>
-  <script src="v4.js?v=13.3.2" defer></script>
-  <script src="v5.js?v=13.3.2" defer></script>
-  <script src="v5-motions.js?v=13.3.2" defer></script>
-  <script src="app.js?v=13.3.2" defer></script>
-  <script src="v7-life.js?v=13.3.2" defer></script>
-  <script src="idle.js?v=13.3.2" defer></script>
-  <script src="v5-version.js?v=13.3.2" defer></script>
-  <script src="v9-face-engine.js?v=13.3.2" defer></script>
-  <script src="camera-vision.js?v=13.3.2" defer></script>
-  <script src="persist.js?v=13.3.2" defer></script>
+  <script src="responses.js?v=14.1.0" defer></script>
+  <script src="responses-extra.js?v=14.1.0" defer></script>
+  <script src="sioni-10-lines.js?v=14.1.0" defer></script>
+  <script src="sioni-11-lines.js?v=14.1.0" defer></script>
+  <script src="memory-engine.js?v=14.1.0" defer></script>
+  <script src="v7.js?v=14.1.0" defer></script>
+  <script src="v4.js?v=14.1.0" defer></script>
+  <script src="v5.js?v=14.1.0" defer></script>
+  <script src="v5-motions.js?v=14.1.0" defer></script>
+  <script src="app-core.js?v=14.1.0" defer></script>
+  <script src="app.js?v=14.1.0" defer></script>
+  <script src="v7-life.js?v=14.1.0" defer></script>
+  <script src="idle.js?v=14.1.0" defer></script>
+  <script src="v5-version.js?v=14.1.0" defer></script>
+  <script src="v9-face-engine.js?v=14.1.0" defer></script>
+  <script src="camera-vision.js?v=14.1.0" defer></script>
+  <script src="persist.js?v=14.1.0" defer></script>
 </body>
 </html>

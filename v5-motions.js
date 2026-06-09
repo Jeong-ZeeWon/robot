@@ -129,7 +129,7 @@
     const room = $("#sioniRoom");
     if (!room) return;
     const wrap = document.createElement("div");
-    wrap.className = "v5-mini-fx";
+    wrap.className = `v5-mini-fx fx-${kind}`;
     const items = emojiMap[kind] || ["✨", "⭐", "💚"];
     for (let i = 0; i < 6; i += 1) {
       const span = document.createElement("span");
