@@ -71,9 +71,9 @@
   }
 
   function chooseDefaultVoice(voices) {
-    const korean = voices.filter((voice) => /ko|Korean|한국/i.test(`${voice.lang} ${voice.name}`));
-    const preferred = korean.find((voice) => /Yuna|유나|Siri|Sora|Nara|여성/i.test(voice.name));
-    return preferred || korean[0] || voices[0] || null;
+    const english = voices.filter((voice) => /^en|English|US|UK|Samantha|Jenny|Aria/i.test(`${voice.lang} ${voice.name}`));
+    const preferred = english.find((voice) => /Samantha|Jenny|Aria|Siri|Female|Natural/i.test(voice.name));
+    return preferred || english[0] || voices[0] || null;
   }
 
   function currentFace() {
@@ -103,7 +103,7 @@
     if (selected) utterance.voice = selected;
 
     const shift = emotionShiftFor(emotion);
-    utterance.lang = "ko-KR";
+    utterance.lang = "en-US";
     utterance.pitch = Math.max(0.7, Math.min(1.5, Number(settings.pitch) + shift.pitch));
     utterance.rate = Math.max(0.65, Math.min(1.25, Number(settings.rate) + shift.rate));
     utterance.volume = Math.max(0.1, Math.min(1, Number(settings.volume) + shift.volume));
@@ -205,7 +205,7 @@
       updateNumberLabels();
     });
     if (test) test.addEventListener("click", () => {
-      speakWithSioniVoice("안녕하세요. 저는 시오니예요. 이제 너무 높은 목소리 대신 부드러운 톤으로 말해요.", settings.preset === "sleepy" ? "sleepy" : "happy");
+      speakWithSioniVoice("Hello. I am Sioni. I now speak in a soft English voice.", settings.preset === "sleepy" ? "sleepy" : "happy");
       showEffect("heart");
     });
 

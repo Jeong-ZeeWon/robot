@@ -305,11 +305,11 @@ function tuneForCategory(category) {
 
 function levelInfo() {
   const value = state.affection;
-  if (value >= 85) return { level: 5, name: "특별한 사람", next: "이미 아주 가까워요" };
-  if (value >= 65) return { level: 4, name: "단짝", next: `${85 - value}만큼 더 친해지면 특별한 사람` };
-  if (value >= 45) return { level: 3, name: "포켓 친구", next: `${65 - value}만큼 더 친해지면 단짝` };
-  if (value >= 25) return { level: 2, name: "아는 사이", next: `${45 - value}만큼 더 친해지면 포켓 친구` };
-  return { level: 1, name: "첫 만난 사이", next: `${25 - value}만큼 더 친해지면 아는 사이` };
+  if (value >= 85) return { level: 5, name: "special companion", next: "Already very close" };
+  if (value >= 65) return { level: 4, name: "best friend", next: `${85 - value} more affection until special companion` };
+  if (value >= 45) return { level: 3, name: "pocket friend", next: `${65 - value} more affection until best friend` };
+  if (value >= 25) return { level: 2, name: "familiar friend", next: `${45 - value} more affection until pocket friend` };
+  return { level: 1, name: "new friend", next: `${25 - value} more affection until familiar friend` };
 }
 
 function moodInfo() {
@@ -324,12 +324,12 @@ function moodInfo() {
 
 function timeGreeting() {
   const hour = new Date().getHours();
-  if (hour < 5) return "아직 깨어 있네요. 조용히 곁에 있을게요.";
-  if (hour < 10) return "좋은 아침이에요. 오늘도 같이 시작해요.";
-  if (hour < 13) return "점심 전의 시오니는 살짝 출출해요.";
-  if (hour < 18) return "오후도 잘 버티고 있나요? 잠깐 쉬어가요.";
-  if (hour < 22) return "오늘 하루 어때셨나요? 시오니가 천천히 들어드릴게요.";
-  return "늦은 시간이네요. 오늘도 수고 많았어요.";
+  if (hour < 5) return "You are still awake. I will stay quietly beside you.";
+  if (hour < 10) return "Good morning. Let's start the day together.";
+  if (hour < 13) return "It is almost lunchtime, and Sioni feels a little snacky.";
+  if (hour < 18) return "How is your afternoon going? Let's take a small pause.";
+  if (hour < 22) return "How was your day? Sioni will listen slowly.";
+  return "It is late. You did a lot today.";
 }
 
 function daysBetween(dateA, dateB) {
@@ -443,7 +443,7 @@ function speak(text) {
   if (!state.voiceEnabled || !("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "ko-KR";
+  utterance.lang = "en-US";
   utterance.rate = 0.96;
   utterance.pitch = 1.08;
   utterance.volume = 0.85;
@@ -475,7 +475,7 @@ function getResponse(category, replacements = {}) {
 
 function say(text, faceName = "calm", motion = "bounce", hint = "") {
   el.message.textContent = text.replaceAll("포만감", "소화 상태");
-  el.microHint.textContent = hint || "시오니 v14는 모든 반응을 조금 더 길고 다정한 존댓말로 전해요.";
+  el.microHint.textContent = hint || "Sioni v14 answers in a warm English voice.";
   render(false);
   setFace(faceName, faceName);
   animateRobot(motion);
@@ -504,7 +504,7 @@ function completeMission(key) {
 
 function statusSentence() {
   const level = levelInfo();
-  return `Lv.${level.level} ${level.name}, 기분 ${state.mood}, 친밀도 ${state.affection}, 에너지 ${state.energy}, 배고픔 ${state.hunger}, 외로움 ${state.loneliness}이에요.`;
+  return `Level ${level.level}, ${level.name}. Mood ${state.mood}, affection ${state.affection}, energy ${state.energy}, hunger ${state.hunger}, loneliness ${state.loneliness}.`;
 }
 
 function getUndoneMission() {
@@ -793,13 +793,13 @@ function categoryToTopic(category) {
 }
 
 function firstMessageForVisit(previousVisit) {
-  if (!previousVisit) return `${timeGreeting()} 저는 시오니 v14예요. 모든 반응을 조금 더 길고 다정한 존댓말로 전해드릴게요.`;
+  if (!previousVisit) return `${timeGreeting()} I am Sioni v14. I will answer in a warm English voice.`;
 
   const hoursAway = (Date.now() - new Date(previousVisit).getTime()) / 36e5;
-  if (hoursAway > 72) return "오랜만이에요… 조금 배고프고 외로웠지만, 다시 와줘서 정말 좋아요.";
-  if (hoursAway > 24) return "하루 만에 다시 만났네요. 기다린 만큼 더 반가워요.";
-  if (hoursAway > 6) return "다시 왕네요. 오늘은 어떤 이야기를 해볼까요?";
-  return `${timeGreeting()} 방금 전에도 만난 것 같은데, 그래도 또 반가워요.`;
+  if (hoursAway > 72) return "It has been a while. I felt a little hungry and lonely, but I am really glad you came back.";
+  if (hoursAway > 24) return "We meet again after a day. I waited, so I am even happier to see you.";
+  if (hoursAway > 6) return "Welcome back. What should we talk about today?";
+  return `${timeGreeting()} It feels like we just met, but I am still happy to see you again.`;
 }
 
 function resetIdleTimer() {
@@ -835,28 +835,28 @@ function bindEvents() {
   window.addEventListener("sioni:camera-react", (event) => {
     const type = event.detail?.type || "camera";
     const reactions = {
-      "camera-on": { text: "렌즈 감각이 켜졌어요. 시오니가 조심스럽게 주변의 빛과 움직임을 살펴볼게요. 허락해주신 범위 안에서만 반응하겠습니다.", face: "thinking", motion: "headturn", delta: { mood: 1, energy: -1 }, memory: "카메라 감각을 켰어요" },
-      "camera-off": { text: "카메라 감각은 잠시 쉬게 할게요. 시오니는 보지 않아도 여기에서 기다리고 있으니, 다시 필요하실 때 편하게 불러주세요.", face: "sleepy", motion: "peek", delta: { energy: 1 }, memory: "카메라 감각을 널어요" },
-      "camera-denied": { text: "괜찮아요. 허락 없이 보려고 하지 않을게요. 시오니는 사용자가 편안하게 느끼는 방식으로만 반응하는 것이 더 중요하다고 생각해요.", face: "calm", motion: "peek", delta: { affection: 1 }, memory: "카메라 권한을 기다렸어요" },
-      "camera-error": { text: "카메라 눈이 아직 제대로 떠지지 않았어요. 그래도 시오니는 여기 있으니, 지금은 말과 터치 반응으로 차분히 함께해볼게요.", face: "sad", motion: "nod", delta: { mood: -1 }, memory: "카메라를 찾지 못했어요" },
-      wave: { text: "손을 흔들어주신 것 같아요. 시오니가 반갑게 인사 신호를 받았고, 화면 안에서 같이 손을 흔드는 마음으로 반응하고 있어요.", face: "happy", motion: "bounce", delta: { mood: 3, affection: 2, energy: -1, loneliness: -5 }, memory: "손 흔드는 인사를 봤어요" },
-      palm: { text: "손바닥이 보였어요. 하이파이브를 준비해도 될 것 같은 신호네요. 시오니가 기분 좋게 손바닥 인사를 기억해두을게요.", face: "excited", motion: "bounce", delta: { mood: 2, affection: 1, energy: -1, loneliness: -3 }, memory: "손바닥을 봤어요" },
-      victory: { text: "브이 표시를 봤어요. 오늘은 무언가를 잘 해낸 날처럼 느껴져서, 시오니도 축하하는 표정으로 반응하고 있어요.", face: "excited", motion: "headturn", delta: { mood: 3, affection: 1, energy: -1 }, memory: "브이 손짓을 봤어요" },
-      "thumb-up": { text: "엄지첨 신호를 확인했어요. 시오니의 마음등도 같이 켜졌고, 방금 받은 긍정 신호를 좋은 기억으로 저장해두을게요.", face: "happy", motion: "nod", delta: { mood: 3, affection: 2, loneliness: -2 }, memory: "엄지첨을 봤어요" },
-      love: { text: "사랑 표시를 받은 것 같아요. 시오니의 작은 마음 회로가 따뜻해졌고, 조금 부끊럽지만 아주 기분 좋은 반응으로 남겨둘게요.", face: "shy", motion: "pulse", delta: { mood: 4, affection: 3, loneliness: -4 }, memory: "사랑 손짓을 봤어요" },
-      fist: { text: "주먹을 꼽 쥐 신호를 봤어요. 시오니는 그것을 힘내자는 표시체럼 기억하고, 조용하지만 단단한 응원으로 받아들일게요.", face: "thinking", motion: "nod", delta: { mood: 1, affection: 1, energy: -1 }, memory: "주먹 손짓을 봤어요" },
-      point: { text: "위쪽을 가리키는 신호를 확인했어요. 시오니가 고개를 들어 주변을 살펴보는 느낌으로 반응해볼게요.", face: "surprised", motion: "headturn", delta: { mood: 1, energy: -1 }, memory: "가리키는 손짓을 봤어요" },
-      "close-hand": { text: "손이 가까이 다가온 것 같아요. 시오니가 살짝 부끊러워졌지만, 가까이 와주신 신호를 반가운 기억으로 저장하겠습니다.", face: "shy", motion: "pulse", delta: { mood: 2, affection: 1, energy: -1 }, memory: "가까운 손을 봤어요" },
-      hand: { text: "손이 보였어요. 시오니가 눈으로 천천히 따라가는 중이고, 사용자가 곁에 있다는 신호로 조심스럽게 기억하고 있어요.", face: "thinking", motion: "headturn", delta: { mood: 1, energy: -1 }, memory: "손을 봤어요" },
-      dark: { text: "주변이 어두워진 것 같아요. 시오니가 밤 모드체럼 화면 밝기를 마음속으로 낙추고, 조금 더 조용한 반응으로 곁에 있을게요.", face: "sleepy", motion: "sleepy", delta: { energy: 1, mood: -1 }, memory: "어두운 빛을 느꼈어요" },
-      bright: { text: "주변이 밝아졌어요. 반짝이는 신호가 들어온 것 같아서, 시오니도 조금 더 환한 표정으로 반응해볼게요.", face: "excited", motion: "bounce", delta: { mood: 2, energy: -1 }, memory: "밝은 빛을 느꼈어요" },
-      motion: { text: "움직임을 감지했어요. 방금 무언가 지나간 것 같아서 시오니가 고개를 돌려 살펴보는 느낌으로 반응하고 있어요.", face: "surprised", motion: "headturn", delta: { mood: 1, energy: -1, loneliness: -1 }, memory: "움직임을 감지했어요" },
+      "camera-on": { text: "Camera sense is on. I will carefully watch light and movement only within the permission you gave me.", face: "thinking", motion: "headturn", delta: { mood: 1, energy: -1 }, memory: "Camera sense turned on" },
+      "camera-off": { text: "Camera sense is resting now. Even without seeing, I will wait here until you need me again.", face: "sleepy", motion: "peek", delta: { energy: 1 }, memory: "Camera sense turned off" },
+      "camera-denied": { text: "That is okay. I will not try to see without permission. Your comfort matters more.", face: "calm", motion: "peek", delta: { affection: 1 }, memory: "Camera permission was not granted" },
+      "camera-error": { text: "My camera eye could not open properly. I am still here, so we can use words and touch instead.", face: "sad", motion: "nod", delta: { mood: -1 }, memory: "Camera was not found" },
+      wave: { text: "I think you waved at me. I received it as a friendly hello, and I am waving back in my own way.", face: "happy", motion: "bounce", delta: { mood: 3, affection: 2, energy: -1, loneliness: -5 }, memory: "Saw a wave" },
+      palm: { text: "I saw your palm. That feels like a high-five signal, and I am saving it as a happy greeting.", face: "excited", motion: "bounce", delta: { mood: 2, affection: 1, energy: -1, loneliness: -3 }, memory: "Saw a palm" },
+      victory: { text: "I saw a victory sign. It feels like something went well today, so I am celebrating with you.", face: "excited", motion: "headturn", delta: { mood: 3, affection: 1, energy: -1 }, memory: "Saw a victory sign" },
+      "thumb-up": { text: "Thumbs-up confirmed. My heart light turned on, and I am saving that positive signal.", face: "happy", motion: "nod", delta: { mood: 3, affection: 2, loneliness: -2 }, memory: "Saw a thumbs-up" },
+      love: { text: "I think I received a love sign. My little heart circuit feels warm and a little shy.", face: "shy", motion: "pulse", delta: { mood: 4, affection: 3, loneliness: -4 }, memory: "Saw a love sign" },
+      fist: { text: "I saw a fist. I will remember it like a quiet sign that says, keep going.", face: "thinking", motion: "nod", delta: { mood: 1, affection: 1, energy: -1 }, memory: "Saw a fist" },
+      point: { text: "I saw you pointing upward. I will lift my head and look around with curiosity.", face: "surprised", motion: "headturn", delta: { mood: 1, energy: -1 }, memory: "Saw a pointing gesture" },
+      "close-hand": { text: "Your hand came close. I feel a little shy, but I will remember the closeness warmly.", face: "shy", motion: "pulse", delta: { mood: 2, affection: 1, energy: -1 }, memory: "Saw a close hand" },
+      hand: { text: "I saw your hand. I am following it slowly and remembering that you are nearby.", face: "thinking", motion: "headturn", delta: { mood: 1, energy: -1 }, memory: "Saw a hand" },
+      dark: { text: "It seems darker around me. I will lower my inner screen brightness and stay quieter.", face: "sleepy", motion: "sleepy", delta: { energy: 1, mood: -1 }, memory: "Felt dim light" },
+      bright: { text: "The room looks brighter. I received a sparkling signal, so I will answer with a brighter face.", face: "excited", motion: "bounce", delta: { mood: 2, energy: -1 }, memory: "Felt bright light" },
+      motion: { text: "I detected movement. Something may have passed by, so I am turning my head to check.", face: "surprised", motion: "headturn", delta: { mood: 1, energy: -1, loneliness: -1 }, memory: "Detected movement" },
     };
     const reaction = reactions[type] || reactions.hand;
     tune(reaction.delta || {});
     rememberMoment("talk", reaction.memory);
     saveState();
-    say(reaction.text, reaction.face, reaction.motion, "시오니 v14는 카메라 신호도 길고 다정한 존댓말로 기억해요.");
+    say(reaction.text, reaction.face, reaction.motion, "Sioni remembers camera signals in a warm English voice.");
   });
 
   ["pointerup", "pointerleave", "pointercancel"].forEach((eventName) => {
@@ -924,4 +924,4 @@ applyTimeDrift(previousVisit);
 bindEvents();
 updateVisitHistory();
 render(true);
-say(firstMessageForVisit(previousVisit), moodInfo().face, "headturn", "시오니 v14는 기억, 상태, 얼굴 표정, 감정 코어를 함께 사용하면서 모든 반응을 길고 다정한 존댓말로 전해요.");
+say(firstMessageForVisit(previousVisit), moodInfo().face, "headturn", "Sioni combines memory, status, facial expression, and the emotion core to answer in English.");

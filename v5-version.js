@@ -1,8 +1,8 @@
 (() => {
-  // 나이 표현을 버전 표기로 통일합니다. 남아 있던 "12살" 텍스트를 v13 기준으로 정리해요.
+  // Keep old age labels normalized while preserving the current version label.
   function normalize(text) {
     return text
-      .replace(/Pocket Robot v?\d+(?:\.\d+)*/gi, "포켓 로봇 AI")
+      .replace(/Pocket Robot v?\d+(?:\.\d+)*/gi, "Pocket Robot AI")
       .replace(/12살 포켓 로봇 ?AI/g, "포켓 로봇 AI")
       .replace(/12살 시오니/g, "시오니")
       .replace(/12살이 되면서/g, "버전이 올라가면서")
@@ -21,9 +21,9 @@
     patchTextNode(document.querySelector("#microHint"));
     patchTextNode(document.querySelector("#timeGreeting"));
     patchTextNode(document.querySelector(".v6-title-row span"));
-    document.title = "시오니 v13";
+    document.title = "시오니 v14";
     const main = document.querySelector("main");
-    if (main) main.setAttribute("aria-label", "시오니 v13");
+    if (main) main.setAttribute("aria-label", "시오니 v14");
   }
 
   function observe(selector) {
