@@ -5,6 +5,7 @@
 ## Sioni 2.0
 
 - 표정과 동작이 살아 있는 CSS 캐릭터 시스템
+- 오로라·진주 유리·금빛 보상·청록 에너지로 구성된 Sioni Prism 디자인 시스템
 - 3개 세계, 12개 스토리 미션과 미션별 고유 이야기 3장면
 - 이야기 → 단어 → 듣기 → 말하기 → 문장 조립 → 그림 찾기 → 역할 대화 → 보상의 8단계 학습 루프
 - 안테나·머리·얼굴·가슴·손·몸통을 구분하는 24개 터치 반응
@@ -34,6 +35,7 @@ api/worker.js           어린이 안전 AI 프록시
 wrangler.toml           Cloudflare Workers 설정
 docs/SIONI_MASTER_PLAN.md
 docs/SIONI_TUTOR_ENGINE.md
+docs/SIONI_PRISM_DESIGN_SYSTEM.md
 ```
 
 ## 로컬 실행
