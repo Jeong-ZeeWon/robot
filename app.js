@@ -94,6 +94,95 @@
     }
   ];
 
+  const MISSION_CONTENT = {
+    breakfast: {
+      story: [["🌅","Good morning, Sioni!","아침 햇살이 시오니의 방에 들어왔어요."],["😋","My tummy is hungry.","시오니의 배에서 꼬르륵 소리가 났어요."],["🥞","I like pancakes!","시오니가 가장 좋아하는 아침을 찾았어요!"]],
+      wordIcons:["🥞","🥛","🍎"], role:["시오니가 아침 메뉴를 물어봐요.","What do you like for breakfast?",["I like pancakes.","I like apples.","I like milk."]]
+    },
+    hello: {
+      story: [["🌳","Someone is behind the tree.","나무 뒤에서 작은 소리가 들려요."],["👀","Hello? Who are you?","시오니가 살며시 다가가 물었어요."],["👋","Hi! I am Momo.","새 친구 모모가 웃으며 인사했어요."]],
+      wordIcons:["👋","🤝","📛"], role:["처음 만난 친구에게 인사해요.","Hi! What is your name?",["Hi! I am Jiwon.","Hello! Nice to meet you.","Hi! I am your friend."]]
+    },
+    colors: {
+      story: [["🎨","Oh no! The colors are gone.","무지개 공방의 색이 모두 사라졌어요."],["🔎","Let's find yellow.","노란색 물건을 찾아 공방을 밝혀요."],["🌈","The rainbow is back!","색을 모두 찾자 무지개가 돌아왔어요!"]],
+      wordIcons:["🟡","🟣","🟢"], role:["시오니가 색깔을 묻고 있어요.","What color do you like?",["I like yellow.","I like purple.","I like green."]]
+    },
+    feelings: {
+      story: [["🌦️","My heart has weather.","마음에도 날씨가 있다는 걸 발견했어요."],["😴","Sometimes I feel sleepy.","졸리고 흐린 마음도 괜찮아요."],["😊","Today, I feel happy.","마음을 말하자 얼굴이 환하게 빛났어요."]],
+      wordIcons:["😊","😢","😴"], role:["시오니가 오늘의 마음을 물어봐요.","How do you feel today?",["I feel happy.","I feel okay.","I feel sleepy."]]
+    },
+    animals: {
+      story: [["🐾","Look! Tiny footprints!","숲길에 작은 발자국이 나타났어요."],["🌿","They go behind the bush.","발자국은 수풀 뒤로 이어져요."],["🦊","I see a little fox!","귀여운 여우가 얼굴을 쏙 내밀었어요."]],
+      wordIcons:["🦊","🐰","🐻"], role:["숲 안내원에게 본 동물을 말해요.","What animal did you see?",["I saw a fox.","I saw a rabbit.","I saw a bear."]]
+    },
+    picnic: {
+      story: [["🧺","The picnic basket is empty.","소풍 바구니가 텅 비어 있어요."],["🍎","We need a red snack.","빨간 간식을 하나 찾아야 해요."],["🌳","Now we can have a picnic!","간식을 담고 나무 아래에 앉았어요."]],
+      wordIcons:["🍎","🧃","🥪"], role:["친구에게 간식을 정중하게 부탁해요.","What would you like?",["An apple, please.","Juice, please.","A sandwich, please."]]
+    },
+    weather: {
+      story: [["📮","A letter came from the sky.","하늘 우체국에서 편지가 왔어요."],["☁️","The clouds need a name.","구름의 오늘 모습을 영어로 알려줘야 해요."],["🌂","It is cloudy today.","날씨 도장을 찍어 편지를 보냈어요."]],
+      wordIcons:["☁️","☀️","🌧️"], role:["날씨 방송을 시작해요.","How is the weather today?",["It is cloudy.","It is sunny.","It is rainy."]]
+    },
+    movement: {
+      story: [["🎵","The forest drum is playing.","숲속 북에서 신나는 박자가 들려요."],["🐰","The rabbit can jump.","토끼가 높이 뛰며 우리를 불러요."],["🕺","Everybody can dance!","동물 친구들이 모두 함께 춤춰요."]],
+      wordIcons:["🦘","🏃","💃"], role:["동물 체조 선생님이 동작을 말해요.","What can you do?",["I can jump.","I can run.","I can dance."]]
+    },
+    moon: {
+      story: [["🚀","Three, two, one, go!","시오니의 로켓이 밤하늘로 출발해요."],["✨","I see many stars.","창밖에서 수많은 별이 반짝여요."],["🌙","Hello, big moon!","크고 둥근 달에 무사히 도착했어요."]],
+      wordIcons:["🌙","⭐","🚀"], role:["우주 관제소에 보이는 것을 알려줘요.","What can you see?",["I can see the moon.","I can see stars.","I can see a rocket."]]
+    },
+    alien: {
+      story: [["📡","Beep, beep! A new signal!","낯선 신호가 로켓에 도착했어요."],["👽","A little alien is waving.","작은 외계인이 손을 흔들고 있어요."],["🖐️","This is my new friend.","하이파이브를 하고 새 친구가 되었어요."]],
+      wordIcons:["👇","✨","🤝"], role:["새 친구를 다른 친구에게 소개해요.","Who is this?",["This is my friend.","This is my new friend.","This is Momo."]]
+    },
+    numbers: {
+      story: [["💫","Star pieces are falling!","반짝이는 별 조각이 우주에 흩어졌어요."],["🔭","Let's count them slowly.","망원경으로 하나씩 천천히 세어요."],["⭐⭐⭐⭐⭐","I see five stars.","별 다섯 개를 모두 찾아냈어요!"]],
+      wordIcons:["3️⃣","4️⃣","5️⃣"], role:["시오니에게 찾은 별의 수를 알려줘요.","How many stars do you see?",["I see three stars.","I see four stars.","I see five stars."]]
+    },
+    home: {
+      story: [["🌍","Our blue home is waiting.","멀리 파란 지구가 보여요."],["👋","It is time to say goodbye.","우주 친구들과 인사할 시간이 되었어요."],["🏠","See you again, friends!","다시 만나자고 약속하고 집으로 돌아왔어요."]],
+      wordIcons:["👀","🔁","🫶"], role:["우주 친구에게 따뜻하게 작별 인사해요.","Are you ready to go home?",["See you again!","Goodbye, my friend!","Yes, I am ready."]]
+    }
+  };
+
+  const ROBOT_REACTIONS = {
+    head: [
+      ["Your hand is warm!","손이 따뜻하다!","happy","shy"],["Head pat received!","머리 쓰담쓰담 받았어!","happy","jump"],
+      ["My thinking cap is on!","생각 모자가 켜졌어!","thinking","nod"],["Hee-hee, one more pat!","히히, 한 번 더 쓰다듬어 줘!","happy","dance"]
+    ],
+    antenna: [
+      ["Beep! English signal found!","삐빅! 영어 신호를 찾았어!","surprised","jump"],["Your signal is super strong!","너의 신호가 아주 강해!","happy","wave"],
+      ["Ting! A new word arrived.","띵! 새 단어가 도착했어.","curious","nod"],["Antenna tickle alert!","안테나 간지럼 경보!","surprised","dance"]
+    ],
+    face: [
+      ["Boop! You found my nose.","콕! 내 코를 찾았네.","surprised","shy"],["Can you make this face?","이 표정을 따라 할 수 있어?","happy","jump"],
+      ["My cheeks are glowing!","내 볼이 발그레 빛나!","happy","shy"],["Blink, blink! I see you.","깜빡깜빡! 네가 보여.","curious","wave"]
+    ],
+    heart: [
+      ["My friendship star is shining!","우정의 별이 반짝이고 있어!","happy","highfive"],["You charged my brave heart!","네가 내 용기 마음을 충전했어!","happy","jump"],
+      ["This star remembers our English.","이 별은 우리가 말한 영어를 기억해.","calm","nod"],["A sparkle for you!","너에게 반짝이 하나!","happy","dance"]
+    ],
+    hand: [
+      ["High five, brave speaker!","용감한 말하기에 하이파이브!","happy","highfive"],["Let's shake hands, friend!","친구야, 악수하자!","happy","wave"],
+      ["Up high, down low!","위로 높이, 아래로 낮게!","surprised","highfive"],["We make a great team!","우리는 정말 멋진 팀이야!","happy","jump"]
+    ],
+    body: [
+      ["My robot belly says beep!","내 로봇 배에서 삐빅 소리가 나!","surprised","jump"],["System check: friendship full!","시스템 확인: 우정 가득!","happy","dance"],
+      ["That tickles my circuits!","회로가 간질간질해!","happy","shy"],["Ready for our next adventure!","다음 모험 준비 완료!","happy","wave"]
+    ]
+  };
+
+  const ROBOT_ACTIONS = {
+    wave:[["Hello, hello, hello!","안녕, 안녕, 반가워!"],["Big wave for my friend!","내 친구에게 크게 인사!"]],
+    highfive:[["High five! We did it!","하이파이브! 우리가 해냈어!"],["Up high! You are brave!","높이! 넌 정말 용감해!"]],
+    dance:[["One, two, robot groove!","하나, 둘, 로봇 댄스!"],["Dance and say, “I am happy!”","춤추며 ‘I am happy!’라고 해봐!"]],
+    jump:[["Three, two, one—jump!","셋, 둘, 하나—점프!"],["To the moon and back!","달까지 갔다가 돌아오기!"]],
+    joke:[["Why did the robot cross the road? To recharge!","로봇이 길을 건넌 이유는? 충전하러!"],["My favorite snack is a byte!","내가 좋아하는 간식은 컴퓨터 바이트!"]],
+    charge:[["Charging… ten, twenty, one hundred!","충전 중… 열, 스물, 백 퍼센트!"],["English power is full!","영어 에너지가 가득 찼어!"]],
+    secret:[["Secret: mistakes help us grow.","비밀인데, 실수할수록 더 자란대."],["You are my adventure buddy.","넌 나의 모험 단짝이야."]],
+    quiz:[["Quick quiz! Say one color!","깜짝 퀴즈! 색깔 하나를 영어로 말해봐!"],["Can you name an animal?","동물 하나를 영어로 말할 수 있어?"]]
+  };
+
   const BADGES = [
     { id: "hello", icon: "🌱", name: "첫 영어", desc: "첫 활동 완료", test: s => s.completedMissions.length >= 1 },
     { id: "listener", icon: "🎧", name: "귀 쫑긋", desc: "5번 듣기", test: s => s.listens >= 5 },
@@ -267,7 +356,7 @@
     $("#missionPhrase").textContent = mission.phrase;
     $("#missionArt span").textContent = mission.art;
     $("#missionArt").style.background = `linear-gradient(155deg,${mission.color},#ffad73)`;
-    $("#missionProgressLabel").textContent = `${done.length} / 4`;
+    $("#missionProgressLabel").textContent = `${done.length} / 8`;
     $$(".segmented-progress i").forEach((bar, index) => bar.classList.toggle("is-done", index < done.length));
     $("#missionButtonHint").textContent = done.length ? "이어서 다음 활동" : "첫 활동부터 시작";
     $("#missionButtonText").textContent = done.length ? "모험 이어하기" : "모험 시작하기";
@@ -358,14 +447,14 @@
   function openMission(index = state.currentMission) {
     currentMissionIndex = index;
     const done = missionDoneSteps(index);
-    missionStep = Math.min(done.length, 3);
+    missionStep = Math.min(done.length, 7);
     renderMissionPlayer();
     $("#missionDialog").showModal();
   }
 
   function renderMissionPlayer() {
     const mission = MISSIONS[currentMissionIndex];
-    const stepNames = ["듣기", "말하기", "찾기", "보상"];
+    const stepNames = ["이야기", "단어", "듣기", "말하기", "문장", "찾기", "대화", "보상"];
     $("#missionPlayer").innerHTML = `
       <div class="mission-shell">
         <aside class="mission-story-side">
@@ -374,7 +463,7 @@
           <span class="side-robot">${mission.art}</span>
         </aside>
         <section class="mission-main">
-          <div class="mission-stepper">${[0,1,2,3].map(index => `<i class="${index < missionStep ? "is-done" : index === missionStep ? "is-active" : ""}"></i>`).join("")}</div>
+          <div class="mission-stepper">${Array.from({length:8},(_,index) => `<i class="${index < missionStep ? "is-done" : index === missionStep ? "is-active" : ""}"></i>`).join("")}</div>
           <div id="missionStepContent" class="mission-content"></div>
         </section>
       </div>`;
@@ -383,25 +472,50 @@
 
   function renderMissionStep() {
     const mission = MISSIONS[currentMissionIndex];
+    const extra = MISSION_CONTENT[mission.id];
     const content = $("#missionStepContent");
     if (missionStep === 0) {
       content.innerHTML = `
-        <small class="step-kicker">STEP 1 · LISTEN</small><h2>시오니의 말을 들어 봐!</h2><p>귀를 쫑긋하고 영어 리듬을 느껴 봐.</p>
+        <small class="step-kicker">STEP 1 · STORY</small><h2>오늘의 이야기를 만나 봐!</h2><p>그림을 보며 장면 속 영어를 상상해 보세요.</p>
+        <div class="story-pages">${extra.story.map(([icon,en,ko]) => `<button class="story-page" type="button" data-story-line="${escapeHtml(en)}"><span>${icon}</span><b>${en}</b><small>${state.koreanHelp ? ko : ""}</small></button>`).join("")}</div>
+        <button class="mission-next" type="button" data-mission-next>이야기를 만났어요 · 다음으로</button>`;
+    } else if (missionStep === 1) {
+      content.innerHTML = `
+        <small class="step-kicker">STEP 2 · NEW WORDS</small><h2>오늘의 단어 세 친구</h2><p>카드를 눌러 소리를 모두 들어 보세요.</p>
+        <div class="word-cards">${mission.words.map((word,index) => `<button class="word-card" type="button" data-word="${escapeHtml(word)}"><span>${extra.wordIcons[index]}</span><b>${word}</b><small>눌러서 듣기</small></button>`).join("")}</div>
+        <span class="big-translation" id="wordFeedback">0 / 3 단어를 들었어요</span>
+        <button class="mission-next" type="button" data-mission-next disabled>세 단어를 알았어요 · 다음으로</button>`;
+    } else if (missionStep === 2) {
+      content.innerHTML = `
+        <small class="step-kicker">STEP 3 · LISTEN</small><h2>핵심 문장을 귀에 담아 봐!</h2><p>한 번은 뜻을 생각하고, 한 번은 리듬을 따라 들어요.</p>
         <button class="listen-orb" type="button" data-listen-phrase aria-label="${mission.phrase} 듣기">👂</button>
         <strong class="big-phrase">${mission.phrase}</strong><span class="big-translation">${state.koreanHelp ? mission.ko : ""}</span>
         <button class="mission-next" type="button" data-mission-next disabled>들었어요 · 다음으로</button>`;
-    } else if (missionStep === 1) {
+    } else if (missionStep === 3) {
       content.innerHTML = `
-        <small class="step-kicker">STEP 2 · SPEAK</small><h2>이제 네 목소리로 말해 봐!</h2><p>완벽하지 않아도 괜찮아. 용기가 가장 중요해.</p>
+        <small class="step-kicker">STEP 4 · SPEAK</small><h2>이제 네 목소리로 말해 봐!</h2><p>작게 말하고, 보통으로 말하고, 신나게 말해도 좋아요.</p>
         <div class="speak-orb"><i class="sound-ring"></i><button type="button" data-record-phrase aria-label="영어 말하기">🎙️</button></div>
         <strong class="big-phrase">${mission.phrase}</strong><span class="big-translation" id="speechFeedback">버튼을 누르고 말해 보세요</span>
         <button class="mission-next" type="button" data-mission-next>말했어요 · 다음으로</button>`;
-    } else if (missionStep === 2) {
+    } else if (missionStep === 4) {
+      const tokens = mission.phrase.replace(/[.!?]/g,"").split(" ").sort(() => Math.random() - .5);
       content.innerHTML = `
-        <small class="step-kicker">STEP 3 · FIND IT</small><h2>${mission.question}</h2><p>맞는 그림을 골라 보세요.</p>
+        <small class="step-kicker">STEP 5 · BUILD A SENTENCE</small><h2>흩어진 말을 문장으로 모아 줘!</h2><p>낱말을 영어 순서대로 눌러 보세요.</p>
+        <div id="builtSentence" class="built-sentence">여기에 문장이 만들어져요</div>
+        <div class="phrase-builder">${tokens.map(word => `<button class="phrase-token" type="button" data-token="${escapeHtml(word)}">${word}</button>`).join("")}</div>
+        <button class="mission-next" type="button" data-mission-next disabled>문장을 완성했어요 · 다음으로</button>`;
+    } else if (missionStep === 5) {
+      content.innerHTML = `
+        <small class="step-kicker">STEP 6 · FIND IT</small><h2>${mission.question}</h2><p>들었던 이야기에서 맞는 그림을 찾아보세요.</p>
         <div class="choice-grid">${mission.choices.map(([emoji, word]) => `<button type="button" data-answer="${emoji}">${emoji}<small>${word}</small></button>`).join("")}</div>
         <span class="big-translation" id="quizFeedback">천천히 생각해도 좋아요.</span>
-        <button class="mission-next" type="button" data-mission-next disabled>정답이에요 · 보상 보기</button>`;
+        <button class="mission-next" type="button" data-mission-next disabled>정답이에요 · 대화하기</button>`;
+    } else if (missionStep === 6) {
+      content.innerHTML = `
+        <small class="step-kicker">STEP 7 · MINI ROLE PLAY</small><h2>이야기 속 주인공이 되어 봐!</h2><p>${extra.role[0]}</p>
+        <div class="role-card"><span>🤖</span><div><b>${extra.role[1]}</b><small>시오니의 질문을 듣고 대답을 골라 말해 보세요.</small></div></div>
+        <div class="role-replies">${extra.role[2].map(line => `<button type="button" data-role-line="${escapeHtml(line)}">${line} 🔊</button>`).join("")}</div>
+        <button class="mission-next" type="button" data-mission-next disabled>대화를 해냈어요 · 보상 보기</button>`;
     } else {
       const alreadyDone = state.completedMissions.includes(mission.id);
       content.innerHTML = `
@@ -434,8 +548,67 @@
 
   function nextMissionStep() {
     markMissionStep(missionStep);
-    missionStep = Math.min(3, missionStep + 1);
+    missionStep = Math.min(7, missionStep + 1);
     renderMissionPlayer();
+  }
+
+  function playStoryLine(button) {
+    button.classList.add("is-played");
+    speak(button.dataset.storyLine);
+  }
+
+  function playWord(button) {
+    if (!button.classList.contains("is-played")) {
+      button.classList.add("is-played");
+      state.listens++;
+      state.stars++;
+      saveState();
+    }
+    speak(button.dataset.word);
+    const played = $$(".word-card.is-played", $("#missionPlayer")).length;
+    $("#wordFeedback").textContent = `${played} / 3 단어를 들었어요`;
+    if (played === 3) {
+      markMissionStep(1);
+      $("[data-mission-next]", $("#missionPlayer")).disabled = false;
+    }
+  }
+
+  function addPhraseToken(button) {
+    if (button.classList.contains("is-used")) return;
+    button.classList.add("is-used");
+    const sentence = $("#builtSentence");
+    const words = JSON.parse(sentence.dataset.words || "[]");
+    words.push(button.dataset.token);
+    sentence.dataset.words = JSON.stringify(words);
+    sentence.textContent = words.join(" ");
+    const target = MISSIONS[currentMissionIndex].phrase.replace(/[.!?]/g, "").trim().toLowerCase();
+    const attempt = words.join(" ").trim().toLowerCase();
+    if (attempt === target) {
+      sentence.classList.add("is-right");
+      sentence.textContent = `${words.join(" ")} ✓`;
+      state.quizzes++;
+      state.stars += 2;
+      markMissionStep(4);
+      saveState();
+      $("[data-mission-next]", $("#missionPlayer")).disabled = false;
+      speak(MISSIONS[currentMissionIndex].phrase);
+    } else if (!target.startsWith(attempt)) {
+      sentence.textContent = "순서를 다시 생각해 볼까? ↺";
+      sentence.dataset.words = "[]";
+      $$(".phrase-token", $("#missionPlayer")).forEach(token => token.classList.remove("is-used"));
+      setTimeout(() => { if (sentence.dataset.words === "[]") sentence.textContent = "여기에 문장이 만들어져요"; }, 900);
+    }
+  }
+
+  function playRoleLine(button) {
+    $$(".role-replies button", $("#missionPlayer")).forEach(item => item.classList.remove("is-picked"));
+    button.classList.add("is-picked");
+    speak(button.dataset.roleLine);
+    state.speaks++;
+    state.stars += 2;
+    markMissionStep(6);
+    saveState();
+    $("[data-mission-next]", $("#missionPlayer")).disabled = false;
   }
 
   function listenMission(button) {
@@ -443,7 +616,7 @@
     button.classList.add("is-playing");
     state.listens++;
     state.stars++;
-    markMissionStep(0);
+    markMissionStep(2);
     saveState();
     const next = $("[data-mission-next]", $("#missionPlayer"));
     if (next) next.disabled = false;
@@ -479,7 +652,7 @@
       wrap.classList.remove("is-listening");
       state.speaks++;
       state.stars += 2;
-      markMissionStep(1);
+      markMissionStep(3);
       saveState();
       feedback.textContent = transcript ? `“${transcript}” — 멋진 용기야!` : "말해 줘서 고마워! 목소리에 별 두 개!";
       setRobot("happy", "highfive");
@@ -496,7 +669,7 @@
       $("[data-mission-next]", $("#missionPlayer")).disabled = false;
       state.quizzes++;
       state.stars += 2;
-      markMissionStep(2);
+      markMissionStep(5);
       saveState();
       speak(`Yes! ${button.querySelector("small").textContent}!`);
     } else {
@@ -715,6 +888,37 @@
       </section>`;
   }
 
+  function showRobotLine(line) {
+    const [english, korean, mood = "happy", action = "wave"] = line;
+    $("#greetingTitle").textContent = english;
+    $("#greetingKorean").textContent = korean;
+    setRobot(mood, action);
+    sparkle(action === "highfive" ? "★" : action === "shy" ? "♥" : "✦");
+    speak(english);
+  }
+
+  function reactToRobotTouch(event, robot) {
+    const box = robot.getBoundingClientRect();
+    const x = (event.clientX - box.left) / box.width;
+    const y = (event.clientY - box.top) / box.height;
+    let zone = "body";
+    if (y < .18) zone = "antenna";
+    else if (y < .51 && x > .25 && x < .75) zone = y < .35 ? "head" : "face";
+    else if (y > .52 && y < .82 && x > .37 && x < .63) zone = "heart";
+    else if (y > .48 && (x < .36 || x > .64)) zone = "hand";
+    const lines = ROBOT_REACTIONS[zone];
+    const line = lines[Math.floor(Math.random() * lines.length)];
+    showRobotLine(line);
+  }
+
+  function performRobotAction(actionName) {
+    const lines = ROBOT_ACTIONS[actionName] || ROBOT_ACTIONS.wave;
+    const copy = lines[Math.floor(Math.random() * lines.length)];
+    const actionMap = { wave:"wave", highfive:"highfive", dance:"dance", jump:"jump", joke:"shy", charge:"jump", secret:"shy", quiz:"wave" };
+    const moodMap = { joke:"surprised", charge:"happy", secret:"calm", quiz:"curious" };
+    showRobotLine([copy[0], copy[1], moodMap[actionName] || "happy", actionMap[actionName]]);
+  }
+
   function bindEvents() {
     document.addEventListener("click", event => {
       const go = event.target.closest("[data-go],[data-nav]");
@@ -731,15 +935,10 @@
         speak(item.en);
       }
 
-      if (event.target.closest("#robot")) {
-        setRobot("happy", "shy");
-        sparkle("♥");
-        const lines = [["That tickles!", "간지러워!"], ["You are my best buddy!", "넌 정말 좋은 친구야!"], ["My heart is sparkling!", "내 마음의 별이 반짝여!"]];
-        const line = lines[Math.floor(Math.random() * lines.length)];
-        $("#greetingTitle").textContent = line[0];
-        $("#greetingKorean").textContent = line[1];
-        speak(line[0]);
-      }
+      const robotTouch = event.target.closest("#robot");
+      if (robotTouch) reactToRobotTouch(event, robotTouch);
+      const robotAction = event.target.closest("[data-robot-action]");
+      if (robotAction) performRobotAction(robotAction.dataset.robotAction);
 
       if (event.target.closest("#greetingSpeak")) speak($("#greetingTitle").textContent);
       if (event.target.closest("#startMission")) openMission();
@@ -751,10 +950,18 @@
       if (closeMission) $("#missionDialog").close();
       const listenButton = event.target.closest("[data-listen-phrase]");
       if (listenButton) listenMission(listenButton);
+      const storyLine = event.target.closest("[data-story-line]");
+      if (storyLine) playStoryLine(storyLine);
+      const wordCard = event.target.closest("[data-word]");
+      if (wordCard) playWord(wordCard);
       const recordButton = event.target.closest("[data-record-phrase]");
       if (recordButton) recordMission(recordButton);
+      const phraseToken = event.target.closest("[data-token]");
+      if (phraseToken) addPhraseToken(phraseToken);
       const answer = event.target.closest("[data-answer]");
       if (answer) checkAnswer(answer);
+      const roleLine = event.target.closest("[data-role-line]");
+      if (roleLine) playRoleLine(roleLine);
       const next = event.target.closest("[data-mission-next]");
       if (next && !next.disabled) nextMissionStep();
       if (event.target.closest("[data-finish-mission]")) finishMission();
