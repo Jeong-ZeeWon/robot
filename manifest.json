@@ -4,7 +4,7 @@
   "description": "8살 어린이를 위한 살아있는 영어 모험 친구",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#fff9ed",
+  "background_color": "#fff4dc",
   "theme_color": "#ff794d",
   "lang": "ko-KR",
   "orientation": "portrait-primary",
