@@ -85,8 +85,11 @@
               <div class="action-petal action-petal-two" aria-hidden="true">YAY!</div>
             </div>
 
+            <button id="robotPlayToggle" class="robot-play-toggle" type="button" aria-expanded="false">
+              <span>✦</span> 시오니와 놀기
+            </button>
             <div class="robot-action-dock" aria-label="시오니와 놀기">
-              <span>시오니와 놀기</span>
+              <span>무엇을 할까?</span>
               <div>
                 <button type="button" data-robot-action="wave">👋<small>인사</small></button>
                 <button type="button" data-robot-action="highfive">🖐️<small>하이파이브</small></button>
@@ -147,31 +150,18 @@
 
         <section class="continue-strip" aria-labelledby="choiceHeading">
           <div class="section-title">
-            <div><p>CHOOSE YOUR PLAY</p><h2 id="choiceHeading">지금 하고 싶은 건?</h2></div>
+            <div><p>MORE TO EXPLORE</p><h2 id="choiceHeading">조금 더 놀고 싶다면</h2></div>
             <button type="button" data-go="journey">모험 지도 보기 <span>→</span></button>
           </div>
-          <div class="activity-rail">
-            <button class="activity-tile talk" type="button" data-go="talk">
-              <span class="tile-illustration"><i class="bubble b1">Hi!</i><i class="bubble b2">Yes!</i><b>🤖</b></span>
-              <span class="tile-copy"><small>AI TALK</small><b>시오니와 수다</b><em>내 이야기를 영어로 말해요</em></span>
-              <i class="tile-arrow">↗</i>
-            </button>
-            <button class="activity-tile word" type="button" data-quick-game="word">
-              <span class="tile-illustration"><i class="letter a">A</i><i class="letter b">B</i><b>🍎</b></span>
-              <span class="tile-copy"><small>WORD POP</small><b>단어 팡팡</b><em>그림과 소리를 연결해요</em></span>
-              <i class="tile-arrow">↗</i>
-            </button>
-            <button class="activity-tile role" type="button" data-quick-game="role">
-              <span class="tile-illustration"><i class="awning"></i><b>🥤</b></span>
-              <span class="tile-copy"><small>ROLE PLAY</small><b>상황 역할 놀이</b><em>진짜처럼 주문해 봐요</em></span>
-              <i class="tile-arrow">↗</i>
-            </button>
-            <button class="activity-tile song" type="button" data-quick-game="rhythm">
-              <span class="tile-illustration"><i class="note n1">♪</i><i class="note n2">♫</i><b>🎧</b></span>
-              <span class="tile-copy"><small>RHYTHM</small><b>리듬 영어</b><em>박자에 맞춰 따라 해요</em></span>
-              <i class="tile-arrow">↗</i>
-            </button>
-          </div>
+          <details class="more-play">
+            <summary><span>＋</span><b>다른 영어 놀이 열기</b><small>말하기 · 단어 · 역할 · 리듬</small></summary>
+            <div class="activity-rail">
+              <button class="activity-tile talk" type="button" data-go="talk"><span class="tile-illustration"><b>💬</b></span><span class="tile-copy"><b>시오니와 수다</b><em>자유롭게 말해요</em></span></button>
+              <button class="activity-tile word" type="button" data-quick-game="word"><span class="tile-illustration"><b>🍎</b></span><span class="tile-copy"><b>단어 팡팡</b><em>그림으로 익혀요</em></span></button>
+              <button class="activity-tile role" type="button" data-quick-game="role"><span class="tile-illustration"><b>🥤</b></span><span class="tile-copy"><b>역할 놀이</b><em>진짜처럼 말해요</em></span></button>
+              <button class="activity-tile song" type="button" data-quick-game="rhythm"><span class="tile-illustration"><b>🎧</b></span><span class="tile-copy"><b>리듬 영어</b><em>박자에 맞춰요</em></span></button>
+            </div>
+          </details>
         </section>
       </section>
 

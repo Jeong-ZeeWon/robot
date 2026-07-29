@@ -933,8 +933,17 @@
         setRobot(item.mood, item.action);
         sparkle(state.feeling === "sleepy" ? "☁" : "★");
         speak(item.en);
+        $("#sioniStage").classList.remove("is-controls-open");
+        $("#robotPlayToggle").setAttribute("aria-expanded", "false");
+        $("#robotPlayToggle").innerHTML = "<span>✦</span> 시오니와 놀기";
       }
 
+      if (event.target.closest("#robotPlayToggle")) {
+        const stage = $("#sioniStage");
+        const open = stage.classList.toggle("is-controls-open");
+        $("#robotPlayToggle").setAttribute("aria-expanded", String(open));
+        $("#robotPlayToggle").innerHTML = open ? "<span>＋</span> 닫기" : "<span>✦</span> 시오니와 놀기";
+      }
       const robotTouch = event.target.closest("#robot");
       if (robotTouch) reactToRobotTouch(event, robotTouch);
       const robotAction = event.target.closest("[data-robot-action]");
