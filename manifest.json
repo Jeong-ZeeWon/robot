@@ -1,1 +1,14 @@
-{"name":"시오니 v14","short_name":"Sioni","start_url":"./","display":"standalone","background_color":"#f7fbff","theme_color":"#75f5d3","lang":"ko-KR","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]}
+{
+  "name": "시오니 영어 놀이터",
+  "short_name": "시오니",
+  "description": "8살 어린이를 위한 영어 친구 로봇",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8f9ff",
+  "theme_color": "#725cff",
+  "lang": "ko-KR",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
