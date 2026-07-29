@@ -218,7 +218,9 @@
     version: VERSION, stars: 0, streak: 1, lastVisit: null, activeDays: [], completedMissions: [],
     missionSteps: {}, listens: 0, speaks: 0, quizzes: 0, chatTurns: 0, games: 0,
     voice: true, koreanHelp: true, aiEnabled: true, currentMission: 0, selectedWorld: 0,
-    collection: [], feeling: null, learnerId: crypto.randomUUID?.() || `kid-${Date.now()}`
+    collection: [], feeling: null, learnerId: crypto.randomUUID?.() || `kid-${Date.now()}`,
+    mastery: {}, reviewQueue: [], attempts: {}, visitCount: 0, lastInteraction: null,
+    reactionHistory: [], reunionDays: 0
   };
 
   let state = loadState();
@@ -226,6 +228,7 @@
   let currentMissionIndex = state.currentMission;
   let missionStep = 0;
   let chatStarted = false;
+  let chatHistory = [];
   let toastTimer;
 
   function loadState() {
@@ -256,10 +259,48 @@
     if (state.lastVisit && state.lastVisit !== today) {
       const diff = Math.round((new Date(today) - new Date(state.lastVisit)) / 86400000);
       state.streak = diff === 1 ? state.streak + 1 : 1;
+      state.reunionDays = Math.max(0, diff);
+      state.visitCount = (state.visitCount || 0) + 1;
     }
     if (!state.activeDays.includes(today)) state.activeDays = [...state.activeDays, today].slice(-60);
     state.lastVisit = today;
+    refreshReviewQueue();
     saveState();
+  }
+
+  function refreshReviewQueue() {
+    const today = dateKey();
+    const due = Object.entries(state.mastery || {})
+      .filter(([, item]) => item.nextReview && item.nextReview <= today)
+      .sort((a, b) => (a[1].strength || 0) - (b[1].strength || 0))
+      .map(([key]) => key);
+    state.reviewQueue = [...new Set(due)].slice(0, 12);
+  }
+
+  function schedulePractice(key, success, kind = "word") {
+    if (!key) return;
+    const cleanKey = String(key).toLowerCase().replace(/[^a-z0-9 '!.-]/g, "").trim().slice(0, 60);
+    if (!cleanKey) return;
+    const previous = state.mastery[cleanKey] || { strength: 0, correct: 0, retry: 0, kind };
+    const strength = success ? Math.min(5, (previous.strength || 0) + 1) : Math.max(0, (previous.strength || 0) - 1);
+    const intervals = [0, 1, 2, 4, 7, 14];
+    const next = new Date();
+    next.setDate(next.getDate() + (success ? intervals[strength] : 0));
+    state.mastery[cleanKey] = {
+      ...previous, kind, strength,
+      correct: (previous.correct || 0) + (success ? 1 : 0),
+      retry: (previous.retry || 0) + (success ? 0 : 1),
+      lastSeen: dateKey(), nextReview: dateKey(next)
+    };
+    refreshReviewQueue();
+    saveState();
+  }
+
+  function weakLearningItems(limit = 6) {
+    return Object.entries(state.mastery || {})
+      .sort((a, b) => (a[1].strength || 0) - (b[1].strength || 0) || (b[1].retry || 0) - (a[1].retry || 0))
+      .slice(0, limit)
+      .map(([text, data]) => ({ text, strength: data.strength || 0, retry: data.retry || 0, kind: data.kind }));
   }
 
   function showToast(message) {
@@ -270,7 +311,7 @@
     toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2300);
   }
 
-  function speak(text, onend) {
+  function speak(text, onend, rate = .78) {
     if (!state.voice || !("speechSynthesis" in window)) {
       if (onend) onend();
       return;
@@ -278,7 +319,7 @@
     speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
-    utterance.rate = .78;
+    utterance.rate = rate;
     utterance.pitch = 1.12;
     const voices = speechSynthesis.getVoices();
     utterance.voice = voices.find(v => /^en-(US|GB)/.test(v.lang) && /female|samantha|ava|zira/i.test(v.name))
@@ -358,7 +399,10 @@
     $("#missionArt").style.background = `linear-gradient(155deg,${mission.color},#ffad73)`;
     $("#missionProgressLabel").textContent = `${done.length} / 8`;
     $$(".segmented-progress i").forEach((bar, index) => bar.classList.toggle("is-done", index < done.length));
-    $("#missionButtonHint").textContent = done.length ? "이어서 다음 활동" : "첫 활동부터 시작";
+    const dueCount = (state.reviewQueue || []).length;
+    $("#missionButtonHint").textContent = dueCount
+      ? `기억을 깨울 표현 ${Math.min(dueCount, 3)}개 포함`
+      : done.length ? "이어서 다음 활동" : "첫 활동부터 시작";
     $("#missionButtonText").textContent = done.length ? "모험 이어하기" : "모험 시작하기";
     const hour = new Date().getHours();
     const greeting = hour < 12
@@ -366,9 +410,12 @@
       : hour < 18
         ? ["HELLO, MY FRIEND!", "I was waiting for you!", "시오니가 널 기다리고 있었어!"]
         : ["GOOD EVENING, FRIEND!", "Let's end today with a smile!", "오늘을 영어 한마디로 즐겁게 마무리하자!"];
-    $("#greetingEyebrow").textContent = greeting[0];
-    $("#greetingTitle").textContent = state.feeling ? FEELINGS[state.feeling].en : greeting[1];
-    $("#greetingKorean").textContent = state.feeling ? FEELINGS[state.feeling].ko : greeting[2];
+    const reunion = state.reunionDays >= 2
+      ? ["WELCOME BACK, MY FRIEND!", "I missed our adventures!", `${state.reunionDays}일 만이야! 다시 만나서 정말 반가워.`]
+      : greeting;
+    $("#greetingEyebrow").textContent = reunion[0];
+    $("#greetingTitle").textContent = state.feeling ? FEELINGS[state.feeling].en : reunion[1];
+    $("#greetingKorean").textContent = state.feeling ? FEELINGS[state.feeling].ko : reunion[2];
     $("#dayLabel").textContent = `오늘의 모험 · ${world.ko}`;
     $$(".emotion-dock button").forEach(button => button.classList.toggle("is-selected", button.dataset.feeling === state.feeling));
   }
@@ -475,9 +522,11 @@
     const extra = MISSION_CONTENT[mission.id];
     const content = $("#missionStepContent");
     if (missionStep === 0) {
+      const reviews = (state.reviewQueue || []).slice(0, 3);
       content.innerHTML = `
         <small class="step-kicker">STEP 1 · STORY</small><h2>오늘의 이야기를 만나 봐!</h2><p>그림을 보며 장면 속 영어를 상상해 보세요.</p>
         <div class="story-pages">${extra.story.map(([icon,en,ko]) => `<button class="story-page" type="button" data-story-line="${escapeHtml(en)}"><span>${icon}</span><b>${en}</b><small>${state.koreanHelp ? ko : ""}</small></button>`).join("")}</div>
+        ${reviews.length ? `<div class="review-warmup"><span>기억 깨우기</span>${reviews.map(item => `<button type="button" data-review-item="${escapeHtml(item)}">↻ ${escapeHtml(item)}</button>`).join("")}</div>` : ""}
         <button class="mission-next" type="button" data-mission-next>이야기를 만났어요 · 다음으로</button>`;
     } else if (missionStep === 1) {
       content.innerHTML = `
@@ -490,6 +539,7 @@
         <small class="step-kicker">STEP 3 · LISTEN</small><h2>핵심 문장을 귀에 담아 봐!</h2><p>한 번은 뜻을 생각하고, 한 번은 리듬을 따라 들어요.</p>
         <button class="listen-orb" type="button" data-listen-phrase aria-label="${mission.phrase} 듣기">👂</button>
         <strong class="big-phrase">${mission.phrase}</strong><span class="big-translation">${state.koreanHelp ? mission.ko : ""}</span>
+        <div class="listen-speed-row"><button type="button" data-listen-speed=".58">🐢 천천히</button><button type="button" data-listen-speed=".82">▶ 자연스럽게</button></div>
         <button class="mission-next" type="button" data-mission-next disabled>들었어요 · 다음으로</button>`;
     } else if (missionStep === 3) {
       content.innerHTML = `
@@ -564,6 +614,7 @@
       state.stars++;
       saveState();
     }
+    schedulePractice(button.dataset.word, true, "word");
     speak(button.dataset.word);
     const played = $$(".word-card.is-played", $("#missionPlayer")).length;
     $("#wordFeedback").textContent = `${played} / 3 단어를 들었어요`;
@@ -589,10 +640,12 @@
       state.quizzes++;
       state.stars += 2;
       markMissionStep(4);
+      schedulePractice(MISSIONS[currentMissionIndex].phrase, true, "sentence");
       saveState();
       $("[data-mission-next]", $("#missionPlayer")).disabled = false;
       speak(MISSIONS[currentMissionIndex].phrase);
     } else if (!target.startsWith(attempt)) {
+      schedulePractice(MISSIONS[currentMissionIndex].phrase, false, "sentence");
       sentence.textContent = "순서를 다시 생각해 볼까? ↺";
       sentence.dataset.words = "[]";
       $$(".phrase-token", $("#missionPlayer")).forEach(token => token.classList.remove("is-used"));
@@ -607,6 +660,7 @@
     state.speaks++;
     state.stars += 2;
     markMissionStep(6);
+    schedulePractice(button.dataset.roleLine, true, "conversation");
     saveState();
     $("[data-mission-next]", $("#missionPlayer")).disabled = false;
   }
@@ -617,6 +671,7 @@
     state.listens++;
     state.stars++;
     markMissionStep(2);
+    schedulePractice(mission.phrase, true, "listening");
     saveState();
     const next = $("[data-mission-next]", $("#missionPlayer"));
     if (next) next.disabled = false;
@@ -653,6 +708,12 @@
       state.speaks++;
       state.stars += 2;
       markMissionStep(3);
+      if (transcript) {
+        const targetWords = new Set(MISSIONS[currentMissionIndex].phrase.toLowerCase().match(/[a-z]+/g) || []);
+        const heardWords = new Set(transcript.toLowerCase().match(/[a-z]+/g) || []);
+        const overlap = [...targetWords].filter(word => heardWords.has(word)).length / Math.max(1, targetWords.size);
+        schedulePractice(MISSIONS[currentMissionIndex].phrase, overlap >= .5, "speaking");
+      }
       saveState();
       feedback.textContent = transcript ? `“${transcript}” — 멋진 용기야!` : "말해 줘서 고마워! 목소리에 별 두 개!";
       setRobot("happy", "highfive");
@@ -670,9 +731,11 @@
       state.quizzes++;
       state.stars += 2;
       markMissionStep(5);
+      schedulePractice(button.querySelector("small").textContent, true, "meaning");
       saveState();
       speak(`Yes! ${button.querySelector("small").textContent}!`);
     } else {
+      schedulePractice(button.querySelector("small").textContent, false, "meaning");
       button.classList.add("is-wrong");
       $("#quizFeedback").textContent = "거의 다 왔어! 다른 그림을 한 번 볼까?";
       setTimeout(() => button.classList.remove("is-wrong"), 650);
@@ -732,6 +795,8 @@
     if (!message) return;
     $("#chatInput").value = "";
     addChatMessage("user", message);
+    chatHistory.push({ role: "user", content: message });
+    chatHistory = chatHistory.slice(-8);
     setSuggestions([]);
     state.chatTurns++;
     state.speaks++;
@@ -755,8 +820,15 @@
           learnerId: state.learnerId,
           level: state.completedMissions.length < 4 ? "Pre-A1" : "A1",
           mission: currentMission().title,
+          targetExpression: currentMission().phrase,
           knownWords: currentMission().words,
-          conversationTurn: state.chatTurns
+          conversationTurn: state.chatTurns,
+          weakItems: weakLearningItems(),
+          reviewItems: (state.reviewQueue || []).slice(0, 5),
+          recentConversation: chatHistory.slice(-6),
+          curriculum: MISSIONS.map(item => ({
+            id: item.id, title: item.title, phrase: item.phrase, words: item.words
+          }))
         })
       });
       if (!response.ok) throw new Error(`AI ${response.status}`);
@@ -764,6 +836,8 @@
       if (!data.reply) throw new Error("Empty AI response");
       loading.remove();
       addChatMessage("sioni", data.reply, data.korean);
+      chatHistory.push({ role: "assistant", content: data.reply });
+      chatHistory = chatHistory.slice(-8);
       setSuggestions(data.suggestions?.length ? data.suggestions : makeSuggestions(data.reply));
       setRobot(data.emotion || "happy", data.action || "nod");
       speak(data.reply);
@@ -777,6 +851,8 @@
       };
       loading.remove();
       addChatMessage("sioni", fallback.reply, fallback.korean);
+      chatHistory.push({ role: "assistant", content: fallback.reply });
+      chatHistory = chatHistory.slice(-8);
       setSuggestions(fallback.suggestions);
       setRobot(fallback.emotion, fallback.action);
       speak(fallback.reply);
@@ -865,6 +941,9 @@
     report.hidden = false;
     const earned = BADGES.filter(b => b.test(state)).length;
     const totalActivities = state.listens + state.speaks + state.quizzes + state.games;
+    const masteryEntries = Object.values(state.mastery || {});
+    const strongItems = masteryEntries.filter(item => (item.strength || 0) >= 4).length;
+    const reviewItems = (state.reviewQueue || []).length;
     const recommendation = state.speaks < state.listens
       ? "듣기는 충분히 즐기고 있어요. 다음에는 아이가 고른 짧은 문장을 말해보도록 격려해 주세요."
       : state.chatTurns < 3
@@ -877,7 +956,7 @@
         <div class="report-stat"><b>${state.speaks}</b><small>말한 횟수</small></div>
         <div class="report-stat"><b>${earned}</b><small>얻은 배지</small></div>
       </div>
-      <section class="report-section"><h3>지금까지의 성장</h3><p>총 ${totalActivities}번의 학습 행동을 했고, ${state.completedMissions.length}개의 이야기 미션을 완료했습니다. 현재 별은 ${state.stars}개입니다.</p></section>
+      <section class="report-section"><h3>지금까지의 성장</h3><p>총 ${totalActivities}번의 학습 행동을 했고, ${state.completedMissions.length}개의 이야기 미션을 완료했습니다. 익숙해진 표현은 ${strongItems}개이며, 다음 학습에서 다시 만날 표현은 ${reviewItems}개입니다.</p></section>
       <section class="report-section"><h3>시오니의 다음 제안</h3><p>${recommendation}</p></section>
       <section class="report-section"><h3>아이와 이렇게 이야기해 보세요</h3><ul><li>“오늘 어떤 영어가 제일 재미있었어?”</li><li>“틀려도 말해 본 네 용기가 정말 멋져.”</li></ul></section>
       <section class="report-section"><h3>학습 설정</h3>
@@ -895,6 +974,18 @@
     setRobot(mood, action);
     sparkle(action === "highfive" ? "★" : action === "shy" ? "♥" : "✦");
     speak(english);
+    state.lastInteraction = { at: new Date().toISOString(), english };
+    saveState();
+  }
+
+  function pickFreshReaction(lines, group) {
+    const recent = new Set((state.reactionHistory || []).slice(-4));
+    const available = lines.map((line, index) => ({ line, id: `${group}-${index}` })).filter(item => !recent.has(item.id));
+    const pool = available.length ? available : lines.map((line, index) => ({ line, id: `${group}-${index}` }));
+    const picked = pool[Math.floor(Math.random() * pool.length)];
+    state.reactionHistory = [...(state.reactionHistory || []), picked.id].slice(-12);
+    saveState();
+    return picked.line;
   }
 
   function reactToRobotTouch(event, robot) {
@@ -907,13 +998,13 @@
     else if (y > .52 && y < .82 && x > .37 && x < .63) zone = "heart";
     else if (y > .48 && (x < .36 || x > .64)) zone = "hand";
     const lines = ROBOT_REACTIONS[zone];
-    const line = lines[Math.floor(Math.random() * lines.length)];
+    const line = pickFreshReaction(lines, `touch-${zone}`);
     showRobotLine(line);
   }
 
   function performRobotAction(actionName) {
     const lines = ROBOT_ACTIONS[actionName] || ROBOT_ACTIONS.wave;
-    const copy = lines[Math.floor(Math.random() * lines.length)];
+    const copy = pickFreshReaction(lines, `action-${actionName}`);
     const actionMap = { wave:"wave", highfive:"highfive", dance:"dance", jump:"jump", joke:"shy", charge:"jump", secret:"shy", quiz:"wave" };
     const moodMap = { joke:"surprised", charge:"happy", secret:"calm", quiz:"curious" };
     showRobotLine([copy[0], copy[1], moodMap[actionName] || "happy", actionMap[actionName]]);
@@ -959,8 +1050,22 @@
       if (closeMission) $("#missionDialog").close();
       const listenButton = event.target.closest("[data-listen-phrase]");
       if (listenButton) listenMission(listenButton);
+      const speedButton = event.target.closest("[data-listen-speed]");
+      if (speedButton) {
+        const mission = MISSIONS[currentMissionIndex];
+        speak(mission.phrase, null, Number(speedButton.dataset.listenSpeed));
+        state.listens++;
+        schedulePractice(mission.phrase, true, "listening");
+      }
       const storyLine = event.target.closest("[data-story-line]");
       if (storyLine) playStoryLine(storyLine);
+      const reviewItem = event.target.closest("[data-review-item]");
+      if (reviewItem) {
+        speak(reviewItem.dataset.reviewItem);
+        schedulePractice(reviewItem.dataset.reviewItem, true, "review");
+        reviewItem.disabled = true;
+        reviewItem.textContent = `✓ ${reviewItem.dataset.reviewItem}`;
+      }
       const wordCard = event.target.closest("[data-word]");
       if (wordCard) playWord(wordCard);
       const recordButton = event.target.closest("[data-record-phrase]");
