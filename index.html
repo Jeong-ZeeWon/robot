@@ -3,218 +3,285 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#725cff">
-  <meta name="description" content="8살 어린이를 위한 영어 친구 로봇, 시오니">
+  <meta name="theme-color" content="#fff9ed">
+  <meta name="description" content="8살 어린이를 위한 살아있는 영어 친구 로봇, 시오니">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>시오니 영어 놀이터</title>
-  <link rel="manifest" href="manifest.json?v=15.0.0">
+  <title>시오니 — 나의 영어 모험 친구</title>
+  <link rel="manifest" href="manifest.json?v=20">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="app.css?v=15.0.0">
+  <link rel="stylesheet" href="app.css?v=20">
 </head>
 <body>
-  <div class="sky" aria-hidden="true">
-    <i class="cloud cloud-a"></i><i class="cloud cloud-b"></i><i class="star-dot star-a"></i><i class="star-dot star-b"></i>
+  <a class="skip-link" href="#mainContent">본문 바로가기</a>
+  <div class="ambient" aria-hidden="true">
+    <span class="ambient-sun"></span><span class="ambient-cloud cloud-one"></span>
+    <span class="ambient-cloud cloud-two"></span><span class="ambient-grain"></span>
   </div>
 
-  <main class="app" aria-label="시오니 영어 놀이터">
+  <div id="appShell" class="app-shell">
     <header class="topbar">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">S</span>
-        <div><strong>시오니</strong><small>나의 영어 친구</small></div>
-      </div>
-      <div class="top-actions">
-        <button id="soundButton" class="round-button" type="button" aria-label="시오니 목소리 끄기" aria-pressed="true">🔊</button>
-        <button id="parentButton" class="round-button" type="button" aria-label="보호자 설정 열기">⚙️</button>
+      <button class="brand" type="button" data-go="home" aria-label="시오니 홈">
+        <span class="brand-orbit"><i>S</i></span>
+        <span><b>시오니</b><small>SIONI ENGLISH CLUB</small></span>
+      </button>
+      <div class="top-stats">
+        <button class="streak-chip" type="button" data-go="journey" aria-label="연속 학습일 보기">
+          <span>🔥</span><b id="streakCount">1</b><small>일</small>
+        </button>
+        <button class="star-chip" type="button" data-go="treasure" aria-label="별 보물함 보기">
+          <span>★</span><b id="starCount">0</b>
+        </button>
+        <button id="soundButton" class="icon-button" type="button" aria-label="소리 끄기" aria-pressed="true">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10H4Zm12.5 2a4 4 0 0 0-2-3.46v6.92a4 4 0 0 0 2-3.46Z"/></svg>
+        </button>
+        <button id="parentButton" class="avatar-button" type="button" aria-label="보호자 리포트 열기">어른</button>
       </div>
     </header>
 
-    <section id="homeView" class="view is-active" data-view="home">
-      <div class="streak-row">
-        <span class="day-pill">🔥 <b id="streakCount">1</b>일 연속</span>
-        <div class="star-total" aria-label="모은 별"><span>⭐</span><b id="starCount">0</b></div>
-      </div>
+    <main id="mainContent">
+      <section id="homeView" class="view is-active" data-view="home">
+        <div class="home-grid">
+          <section id="sioniStage" class="sioni-stage mood-sunny" aria-labelledby="greetingTitle">
+            <div class="stage-sky" aria-hidden="true">
+              <span class="stage-cloud c1"></span><span class="stage-cloud c2"></span>
+              <span class="stage-star s1">✦</span><span class="stage-star s2">✦</span>
+              <span class="far-hill"></span><span class="near-hill"></span>
+            </div>
+            <div class="day-label"><i></i><span id="dayLabel">오늘의 모험</span></div>
+            <div class="speech-card">
+              <span class="speech-tail"></span>
+              <p id="greetingEyebrow">GOOD MORNING, FRIEND!</p>
+              <h1 id="greetingTitle">Ready for a tiny adventure?</h1>
+              <p id="greetingKorean">작은 영어 모험을 떠날 준비됐어?</p>
+              <button id="greetingSpeak" class="say-again" type="button">
+                <span class="sound-bars"><i></i><i></i><i></i></span> 다시 듣기
+              </button>
+            </div>
 
-      <section id="sioniRoom" class="hero room-morning" aria-labelledby="helloTitle">
-        <div class="room-scenery" aria-hidden="true">
-          <div class="room-window"><i class="sun"></i><i class="hill one"></i><i class="hill two"></i></div>
-          <div class="shelf"><i></i><i></i><i></i></div>
-          <div class="floor-rug"></div>
-        </div>
-        <button class="room-prop prop-lamp" data-prop="lamp" type="button" aria-label="별 조명 만지기">💡</button>
-        <button class="room-prop prop-book" data-prop="book" type="button" aria-label="영어책 펼치기">📕</button>
-        <button class="room-prop prop-plant" data-prop="plant" type="button" aria-label="화분 만지기">🌱</button>
-        <button class="room-prop prop-ball" data-prop="ball" type="button" aria-label="공 굴리기">🟣</button>
-        <div class="speech-bubble">
-          <p class="bubble-kicker">TODAY'S MISSION</p>
-          <h1 id="helloTitle">Hi! Ready to play?</h1>
-          <p id="helloKorean">안녕! 오늘도 영어로 놀아볼까?</p>
-          <button id="listenGreeting" class="listen-link" type="button">🔊 다시 듣기</button>
-        </div>
+            <div id="robotScene" class="robot-scene">
+              <div id="emotionSparkles" class="emotion-sparkles" aria-hidden="true"></div>
+              <button id="robot" class="robot" type="button" aria-label="시오니를 쓰다듬기">
+                <span class="antenna"><i></i><b></b></span>
+                <span class="ear ear-left"></span><span class="ear ear-right"></span>
+                <span class="head">
+                  <span class="face-screen">
+                    <i class="brow brow-left"></i><i class="brow brow-right"></i>
+                    <i class="eye eye-left"><b></b></i><i class="eye eye-right"><b></b></i>
+                    <i class="cheek cheek-left"></i><i class="cheek cheek-right"></i>
+                    <i class="mouth"></i>
+                  </span>
+                </span>
+                <span class="neck"></span>
+                <span class="body">
+                  <i class="shoulder shoulder-left"></i><i class="shoulder shoulder-right"></i>
+                  <i class="arm arm-left"><b></b></i><i class="arm arm-right"><b></b></i>
+                  <i class="heart-core"><b>★</b></i>
+                  <i class="body-light l1"></i><i class="body-light l2"></i>
+                </span>
+                <span class="robot-shadow"></span>
+              </button>
+              <div class="action-petal action-petal-one" aria-hidden="true">HELLO!</div>
+              <div class="action-petal action-petal-two" aria-hidden="true">YAY!</div>
+            </div>
 
-        <div class="robot-wrap">
-          <button id="robot" class="robot" type="button" aria-label="시오니 쓰다듬기">
-            <i class="antenna"><b></b></i>
-            <div class="robot-head">
-              <span class="robot-ear left"></span><span class="robot-ear right"></span>
-              <div id="robotFace" class="robot-face">
-                <i class="eye left"></i><i class="eye right"></i><i class="mouth"></i>
+            <div class="emotion-dock" aria-label="시오니에게 지금 기분 말하기">
+              <span>오늘 기분은?</span>
+              <div>
+                <button type="button" data-feeling="happy" aria-label="기뻐요">😊<small>Happy</small></button>
+                <button type="button" data-feeling="excited" aria-label="신나요">🤩<small>Excited</small></button>
+                <button type="button" data-feeling="okay" aria-label="괜찮아요">🙂<small>Okay</small></button>
+                <button type="button" data-feeling="sleepy" aria-label="졸려요">😴<small>Sleepy</small></button>
               </div>
             </div>
-            <div class="robot-body"><i class="core-ring"></i><i class="heart">★</i><i class="arm left"></i><i class="arm right"></i></div>
-            <i class="robot-shadow"></i>
-          </button>
+          </section>
+
+          <aside class="mission-panel" aria-labelledby="missionHeading">
+            <div class="mission-topline">
+              <div>
+                <p id="worldName">WORLD 1 · SUNNY TOWN</p>
+                <h2 id="missionHeading">오늘의 이야기</h2>
+              </div>
+              <span id="missionMinutes">12분</span>
+            </div>
+            <article class="story-ticket">
+              <div id="missionArt" class="ticket-art"><span>🥞</span><i></i></div>
+              <div class="ticket-copy">
+                <small id="missionKicker">MISSION 01</small>
+                <h3 id="missionTitle">시오니의 아침 식탁</h3>
+                <p id="missionDesc">좋아하는 아침 메뉴를 영어로 골라 줘!</p>
+                <div class="phrase-preview"><span>오늘의 한마디</span><b id="missionPhrase">I like pancakes!</b></div>
+              </div>
+            </article>
+            <div class="mission-progress">
+              <div><span>오늘의 준비</span><b id="missionProgressLabel">0 / 4</b></div>
+              <div class="segmented-progress" aria-label="오늘 미션 진행률">
+                <i></i><i></i><i></i><i></i>
+              </div>
+            </div>
+            <button id="startMission" class="adventure-button" type="button">
+              <span class="button-shine"></span>
+              <span><small id="missionButtonHint">첫 활동부터 시작</small><b id="missionButtonText">모험 시작하기</b></span>
+              <i>→</i>
+            </button>
+            <div class="daily-promise">
+              <span class="promise-icon">🌱</span>
+              <p><b>하루 12분이면 충분해요</b><small>듣고, 말하고, 놀면서 한 문장을 내 것으로!</small></p>
+            </div>
+          </aside>
         </div>
-        <div class="action-dock" aria-label="시오니와 놀기">
-          <button type="button" data-sioni-action="pet"><span>🫳</span><small>쓰담</small></button>
-          <button type="button" data-sioni-action="highfive"><span>🖐️</span><small>하이파이브</small></button>
-          <button type="button" data-sioni-action="dance"><span>🎵</span><small>춤</small></button>
-          <button type="button" data-sioni-action="surprise"><span>🎁</span><small>깜짝</small></button>
-        </div>
+
+        <section class="continue-strip" aria-labelledby="choiceHeading">
+          <div class="section-title">
+            <div><p>CHOOSE YOUR PLAY</p><h2 id="choiceHeading">지금 하고 싶은 건?</h2></div>
+            <button type="button" data-go="journey">모험 지도 보기 <span>→</span></button>
+          </div>
+          <div class="activity-rail">
+            <button class="activity-tile talk" type="button" data-go="talk">
+              <span class="tile-illustration"><i class="bubble b1">Hi!</i><i class="bubble b2">Yes!</i><b>🤖</b></span>
+              <span class="tile-copy"><small>AI TALK</small><b>시오니와 수다</b><em>내 이야기를 영어로 말해요</em></span>
+              <i class="tile-arrow">↗</i>
+            </button>
+            <button class="activity-tile word" type="button" data-quick-game="word">
+              <span class="tile-illustration"><i class="letter a">A</i><i class="letter b">B</i><b>🍎</b></span>
+              <span class="tile-copy"><small>WORD POP</small><b>단어 팡팡</b><em>그림과 소리를 연결해요</em></span>
+              <i class="tile-arrow">↗</i>
+            </button>
+            <button class="activity-tile role" type="button" data-quick-game="role">
+              <span class="tile-illustration"><i class="awning"></i><b>🥤</b></span>
+              <span class="tile-copy"><small>ROLE PLAY</small><b>상황 역할 놀이</b><em>진짜처럼 주문해 봐요</em></span>
+              <i class="tile-arrow">↗</i>
+            </button>
+            <button class="activity-tile song" type="button" data-quick-game="rhythm">
+              <span class="tile-illustration"><i class="note n1">♪</i><i class="note n2">♫</i><b>🎧</b></span>
+              <span class="tile-copy"><small>RHYTHM</small><b>리듬 영어</b><em>박자에 맞춰 따라 해요</em></span>
+              <i class="tile-arrow">↗</i>
+            </button>
+          </div>
+        </section>
       </section>
 
-      <section class="lesson-card" aria-labelledby="lessonTitle">
-        <div class="lesson-head">
-          <div><span class="lesson-icon">🍎</span><div><small>오늘의 10분 영어</small><h2 id="lessonTitle">I like apples!</h2></div></div>
-          <span id="lessonProgressText">0/3</span>
-        </div>
-        <div class="progress-track"><i id="lessonProgress"></i></div>
-        <div class="lesson-steps">
-          <button class="lesson-step" data-step="listen" type="button">
-            <span class="step-number">1</span><span class="step-icon">👂</span><span><b>듣기</b><small>Listen</small></span><i class="step-check">✓</i>
-          </button>
-          <button class="lesson-step" data-step="speak" type="button">
-            <span class="step-number">2</span><span class="step-icon">🎙️</span><span><b>따라 말하기</b><small>Say it</small></span><i class="step-check">✓</i>
-          </button>
-          <button class="lesson-step" data-step="quiz" type="button">
-            <span class="step-number">3</span><span class="step-icon">🎮</span><span><b>그림 퀴즈</b><small>Play</small></span><i class="step-check">✓</i>
-          </button>
-        </div>
-      </section>
-
-      <section class="quick-section" aria-labelledby="quickTitle">
-        <div class="section-heading"><h2 id="quickTitle">무엇을 해볼까?</h2><small>하고 싶은 걸 골라봐!</small></div>
-        <div class="quick-grid">
-          <button type="button" data-jump="chat"><span class="quick-art purple">💬</span><b>영어 대화</b><small>시오니와 이야기해요</small></button>
-          <button type="button" data-activity="words"><span class="quick-art yellow">🧩</span><b>단어 놀이</b><small>그림으로 외워요</small></button>
-          <button type="button" data-activity="roleplay"><span class="quick-art mint">🎭</span><b>역할 놀이</b><small>가게에서 말해요</small></button>
-          <button type="button" data-activity="review"><span class="quick-art coral">🏆</span><b>복습 도전</b><small>별을 더 모아요</small></button>
-        </div>
-      </section>
-    </section>
-
-    <section id="playView" class="view" data-view="play" aria-labelledby="playTitle">
-      <div class="view-heading">
-        <button class="back-button" data-jump="home" type="button" aria-label="오늘 화면으로">←</button>
-        <div><small>PLAY LAB</small><h1 id="playTitle">영어 놀이 연구소</h1></div>
-        <span class="status-pill">4가지 놀이</span>
-      </div>
-      <section class="play-hero">
-        <div class="play-bot">S</div>
-        <div><small>오늘 배운 말로</small><h2>놀면서 한 번 더!</h2><p>틀려도 괜찮아. 시오니가 힌트를 줄게.</p></div>
-      </section>
-      <div class="game-grid">
-        <button type="button" data-game="wordPop"><span class="game-art bubbles">🍎</span><b>단어 팡팡</b><small>그림과 단어를 연결해요</small><i>+2 ⭐</i></button>
-        <button type="button" data-game="roleplay"><span class="game-art shop">🛍️</span><b>역할 놀이</b><small>간식 가게에서 말해요</small><i>+3 ⭐</i></button>
-        <button type="button" data-game="soundHunt"><span class="game-art sound">👂</span><b>소리 탐정</b><small>듣고 맞는 그림을 찾아요</small><i>+2 ⭐</i></button>
-        <button type="button" data-game="emotion"><span class="game-art emotion">😄</span><b>표정 거울</b><small>오늘 기분을 영어로 말해요</small><i>+2 ⭐</i></button>
-      </div>
-      <section class="collection-card">
-        <div><small>MY COLLECTION</small><h2>시오니의 장난감 선반</h2></div>
-        <div id="collectionShelf" class="collection-shelf"></div>
-      </section>
-    </section>
-
-    <section id="chatView" class="view" data-view="chat" aria-labelledby="chatTitle">
-      <div class="view-heading">
-        <button class="back-button" data-jump="home" type="button" aria-label="오늘 화면으로">←</button>
-        <div><small>FREE TALK</small><h1 id="chatTitle">시오니와 말하기</h1></div>
-        <span id="aiStatus" class="status-pill">안전 모드</span>
-      </div>
-
-      <div id="chatLog" class="chat-log" role="log" aria-live="polite">
-        <article class="chat-message sioni">
-          <span class="mini-bot">S</span>
-          <div><p>Hi! What do you like?</p><small>안녕! 넌 무엇을 좋아하니?</small><button type="button" data-speak="Hi! What do you like?">🔊</button></div>
-        </article>
-      </div>
-
-      <div class="topic-chips" aria-label="대화 주제">
-        <button type="button" data-prompt="I like pizza.">🍕 음식</button>
-        <button type="button" data-prompt="I like cats.">🐱 동물</button>
-        <button type="button" data-prompt="I like soccer.">⚽ 놀이</button>
-        <button type="button" data-prompt="I am happy.">😊 기분</button>
-      </div>
-
-      <form id="chatForm" class="chat-compose">
-        <label class="sr-only" for="chatInput">영어로 말하거나 입력하기</label>
-        <input id="chatInput" maxlength="160" autocomplete="off" placeholder="영어로 말해 보세요">
-        <button id="micButton" class="mic-button" type="button" aria-label="마이크로 말하기">🎙️</button>
-        <button class="send-button" type="submit" aria-label="보내기">➤</button>
-      </form>
-      <p class="privacy-note">🔒 대화는 이 기기에만 학습 기록으로 남아요. 이름·학교·주소는 말하지 않아요.</p>
-    </section>
-
-    <section id="progressView" class="view" data-view="progress" aria-labelledby="progressTitle">
-      <div class="view-heading">
-        <button class="back-button" data-jump="home" type="button" aria-label="오늘 화면으로">←</button>
-        <div><small>MY STARS</small><h1 id="progressTitle">내가 모은 별</h1></div>
-      </div>
-      <section class="big-score">
-        <div class="score-orbit">⭐</div>
-        <p>지금까지 모은 별</p><strong id="bigStarCount">0</strong>
-        <small>영어를 말할 때마다 반짝반짝 자라요!</small>
-      </section>
-      <section class="week-card">
-        <h2>이번 주</h2>
-        <div id="weekDays" class="week-days"></div>
-      </section>
-      <section class="badge-card">
-        <h2>나의 배지</h2>
-        <div class="badges">
-          <div id="badgeFirst"><span>🌱</span><b>첫 문장</b><small>영어 한 문장 말하기</small></div>
-          <div id="badgeListener"><span>🎧</span><b>귀 쫑긋</b><small>3번 듣기</small></div>
-          <div id="badgeBrave"><span>🦁</span><b>용감한 입</b><small>5번 말하기</small></div>
+      <section id="journeyView" class="view" data-view="journey" aria-labelledby="journeyTitle">
+        <header class="view-hero journey-hero">
+          <div><p>MY ENGLISH ADVENTURE</p><h1 id="journeyTitle">모험 지도</h1><span>매일 한 걸음, 영어 세계가 활짝 열려요.</span></div>
+          <div class="journey-compass"><i>✦</i><b id="journeyPercent">0%</b><small>탐험 완료</small></div>
+        </header>
+        <div class="map-layout">
+          <div id="worldTabs" class="world-tabs" role="tablist" aria-label="영어 모험 세계"></div>
+          <section class="map-card">
+            <div class="map-scenery" aria-hidden="true"><span class="map-cloud"></span><span class="map-hills"></span><span class="map-river"></span><span class="map-path"></span></div>
+            <div id="missionMap" class="mission-map"></div>
+          </section>
+          <aside class="map-side">
+            <article class="passport-card">
+              <p>MY PASSPORT</p><div><span class="passport-bot">S</span><b>용감한 영어 탐험가</b></div>
+              <dl><dt>완료한 모험</dt><dd id="completedCount">0</dd><dt>말한 문장</dt><dd id="spokenCount">0</dd></dl>
+            </article>
+            <article class="next-reward"><span>🎒</span><div><small>NEXT REWARD</small><b id="nextRewardName">탐험가 가방</b><p><i id="rewardProgress"></i></p></div></article>
+          </aside>
         </div>
       </section>
-    </section>
-  </main>
 
-  <nav class="bottom-nav" aria-label="주요 메뉴">
-    <button class="is-active" data-nav="home" type="button"><span>🏠</span><b>오늘</b></button>
-    <button data-nav="play" type="button"><span>🎮</span><b>놀기</b></button>
-    <button data-nav="chat" type="button"><span>💬</span><b>말하기</b></button>
-    <button data-nav="progress" type="button"><span>⭐</span><b>내 별</b></button>
-  </nav>
+      <section id="talkView" class="view" data-view="talk" aria-labelledby="talkTitle">
+        <header class="view-hero talk-hero">
+          <div><p>SAFE AI CONVERSATION</p><h1 id="talkTitle">시오니와 영어 수다</h1><span>짧게 말해도 괜찮아. 시오니가 이어 줄게!</span></div>
+          <span id="aiStatus" class="safe-badge"><i></i> 어린이 안전 모드</span>
+        </header>
+        <div class="talk-layout">
+          <aside class="talk-side">
+            <div id="talkRobot" class="talk-robot mood-happy">
+              <span class="mini-antenna"></span><span class="mini-face"><i></i><i></i><b></b></span><em>★</em>
+            </div>
+            <div class="talk-meter">
+              <span>오늘의 말하기</span>
+              <div><i id="talkMeterFill"></i></div>
+              <small id="talkMeterText">첫 문장을 기다리고 있어요</small>
+            </div>
+            <div class="topic-deck">
+              <span>무슨 이야기를 할까?</span>
+              <button type="button" data-topic="food">🍓 내가 좋아하는 음식</button>
+              <button type="button" data-topic="animal">🐶 만나고 싶은 동물</button>
+              <button type="button" data-topic="play">🛝 오늘 재미있던 일</button>
+              <button type="button" data-topic="dream">🚀 나의 상상 여행</button>
+            </div>
+          </aside>
+          <section class="conversation-card">
+            <div id="chatLog" class="chat-log" role="log" aria-live="polite"></div>
+            <div id="suggestionChips" class="suggestion-chips" aria-label="대답 도움말"></div>
+            <form id="chatForm" class="chat-compose">
+              <label class="sr-only" for="chatInput">영어로 말하거나 입력하기</label>
+              <button id="micButton" class="big-mic" type="button" aria-label="마이크로 영어 말하기">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v7a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V22h2v-3.08A7 7 0 0 0 19 12h-2Z"/></svg>
+              </button>
+              <div class="input-wrap">
+                <input id="chatInput" maxlength="160" autocomplete="off" placeholder="영어로 짧게 써도 좋아요">
+                <small id="inputCoach">예: I like strawberries.</small>
+              </div>
+              <button class="send-button" type="submit" aria-label="보내기">↑</button>
+            </form>
+            <p class="privacy-note"><span>●</span> 이름·학교·주소는 묻지 않아요. 대화 기록은 이 기기에 저장하지 않아요.</p>
+          </section>
+        </div>
+      </section>
 
-  <dialog id="activityDialog" class="activity-dialog">
-    <button class="dialog-close" data-close-dialog type="button" aria-label="닫기">×</button>
-    <div id="activityContent"></div>
+      <section id="treasureView" class="view" data-view="treasure" aria-labelledby="treasureTitle">
+        <header class="view-hero treasure-hero">
+          <div><p>LOOK HOW YOU GREW</p><h1 id="treasureTitle">나의 반짝 보물함</h1><span>용기 내어 말한 순간들이 모두 보물이 되었어!</span></div>
+          <div class="total-stars"><span>★</span><b id="bigStarCount">0</b><small>모은 별</small></div>
+        </header>
+        <div class="progress-dashboard">
+          <section class="week-story">
+            <div class="card-title"><div><small>THIS WEEK</small><h2>이번 주 발자국</h2></div><b id="weekSummary">첫걸음을 시작해요</b></div>
+            <div id="weekDays" class="week-days"></div>
+            <div class="weekly-message"><span>🌟</span><p><b id="weeklyTitle">오늘 한 문장부터!</b><small id="weeklyCopy">시오니가 네 첫 영어를 기다리고 있어.</small></p></div>
+          </section>
+          <section class="skill-garden">
+            <div class="card-title"><div><small>SKILL GARDEN</small><h2>자라고 있는 영어 씨앗</h2></div></div>
+            <div id="skillBars" class="skill-bars"></div>
+          </section>
+          <section class="badge-vault">
+            <div class="card-title"><div><small>MY BADGES</small><h2>용기의 배지</h2></div><b id="badgeCount">0 / 6</b></div>
+            <div id="badgeGrid" class="badge-grid"></div>
+          </section>
+          <section class="collection-room">
+            <div class="card-title"><div><small>SIONI'S ROOM</small><h2>모험으로 꾸민 방</h2></div><button type="button" data-go="journey">더 모으기 →</button></div>
+            <div id="collectionRoom" class="collection-scene"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="주요 메뉴">
+      <button class="is-active" type="button" data-nav="home"><span>⌂</span><b>오늘</b></button>
+      <button type="button" data-nav="journey"><span>◇</span><b>모험</b></button>
+      <button class="talk-nav" type="button" data-nav="talk"><span>✦</span><b>말하기</b></button>
+      <button type="button" data-nav="treasure"><span>★</span><b>보물함</b></button>
+    </nav>
+  </div>
+
+  <dialog id="missionDialog" class="mission-dialog">
+    <div id="missionPlayer" class="mission-player"></div>
+  </dialog>
+
+  <dialog id="gameDialog" class="game-dialog">
+    <button class="dialog-close" type="button" data-close="gameDialog" aria-label="놀이 닫기">×</button>
+    <div id="gameContent"></div>
   </dialog>
 
   <dialog id="parentDialog" class="parent-dialog">
-    <form method="dialog">
-      <button class="dialog-close" value="close" aria-label="닫기">×</button>
-      <p class="dialog-kicker">FOR GROWN-UPS</p>
-      <h2>보호자 설정</h2>
-      <p>아래 문제를 풀면 설정을 열 수 있어요.</p>
-      <label>7 + 6 = <input id="parentAnswer" inputmode="numeric" maxlength="2"></label>
-      <button id="parentUnlock" class="primary-button" type="button">확인</button>
-      <div id="parentSettings" hidden>
-        <hr>
-        <label class="setting-select">학습 날짜
-          <select id="lessonDaySelect" aria-label="학습 날짜 선택"></select>
-        </label>
-        <label class="toggle-row">한국어 도움말 <input id="koreanToggle" type="checkbox" checked></label>
-        <label class="toggle-row">AI 대화 사용 <input id="aiToggle" type="checkbox" checked></label>
-        <button id="resetProgress" class="danger-button" type="button">학습 기록 초기화</button>
-        <p class="parent-note">AI 서버가 연결되지 않은 동안에는 검증된 어린이용 대화만 사용합니다.</p>
-      </div>
-    </form>
+    <button class="dialog-close" type="button" data-close="parentDialog" aria-label="보호자 화면 닫기">×</button>
+    <div id="parentGate">
+      <p class="dialog-eyebrow">GROWN-UPS ONLY</p><h2>보호자 확인</h2>
+      <p>아이가 실수로 설정을 바꾸지 않도록 확인할게요.</p>
+      <label><span>8 × 2 =</span><input id="parentAnswer" type="number" inputmode="numeric" aria-label="8 곱하기 2의 답"></label>
+      <button id="parentUnlock" class="primary-button" type="button">보호자 화면 열기</button>
+    </div>
+    <div id="parentReport" hidden></div>
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="config.js?v=15.0.0"></script>
-  <script src="app.js?v=15.0.0" defer></script>
+  <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
+  <script src="config.js?v=20"></script>
+  <script src="app.js?v=20" defer></script>
 </body>
 </html>

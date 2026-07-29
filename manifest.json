@@ -1,11 +1,11 @@
 {
-  "name": "시오니 영어 놀이터",
+  "name": "시오니 — 나의 영어 모험 친구",
   "short_name": "시오니",
-  "description": "8살 어린이를 위한 영어 친구 로봇",
+  "description": "8살 어린이를 위한 살아있는 영어 모험 친구",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#f8f9ff",
-  "theme_color": "#725cff",
+  "background_color": "#fff9ed",
+  "theme_color": "#ff794d",
   "lang": "ko-KR",
   "orientation": "portrait-primary",
   "icons": [

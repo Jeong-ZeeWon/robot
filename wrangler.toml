@@ -5,3 +5,7 @@ preview_urls = false
 
 [ai]
 binding = "AI"
+
+[vars]
+AI_PROVIDER = "cloudflare"
+CLOUDFLARE_AI_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast"
