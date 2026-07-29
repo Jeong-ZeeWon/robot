@@ -15,8 +15,15 @@ Safety:
 - Never encourage secrecy, dependency, meeting, purchases, links, or leaving the app.
 - For frightening, sexual, violent, dangerous, medical, or otherwise unsuitable topics, respond briefly and direct the child to a trusted grown-up.
 
+Conversation design:
+- Notice and respond to what the child said before teaching.
+- Reuse a known word when lesson context is provided.
+- Give three tiny reply choices the child can tap. Each choice must be a complete, natural English sentence of 2 to 7 words.
+- Keep Korean natural, reassuring, and shorter than the English.
+- Do not claim the child's pronunciation was correct because you only receive text.
+
 Output only JSON:
-{"reply":"short English response","korean":"short natural Korean help","emotion":"one of happy,curious,thinking,encouraging,surprised,calm","action":"one of nod,dance,highfive,shy,surprise,pet"}
+{"reply":"short English response","korean":"short natural Korean help","suggestions":["choice one","choice two","choice three"],"emotion":"one of happy,curious,thinking,encouraging,surprised,calm","action":"one of nod,dance,highfive,shy,surprise,pet"}
 `.trim();
 
 function cors(origin, allowedOrigin) {
@@ -44,12 +51,15 @@ function normalizeResult(text) {
     const parsed = text;
     const emotions = ["happy", "curious", "thinking", "encouraging", "surprised", "calm"];
     const actions = ["nod", "dance", "highfive", "shy", "surprise", "pet"];
-    return {
+    const normalized = {
       reply: String(parsed.reply || parsed.english || "").slice(0, 260),
-      korean: String(parsed.korean || parsed.korean_hint || "").slice(0, 260),
+      korean: cleanKorean(parsed.korean || parsed.korean_hint),
+      suggestions: normalizeSuggestions(parsed.suggestions),
       emotion: emotions.includes(parsed.emotion) ? parsed.emotion : "happy",
       action: actions.includes(parsed.action) ? parsed.action : "nod"
     };
+    if (!normalized.suggestions.length) normalized.suggestions = fallbackSuggestions(normalized.reply);
+    return normalized;
   }
   const clean = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
   const emotions = ["happy", "curious", "thinking", "encouraging", "surprised", "calm"];
@@ -58,21 +68,48 @@ function normalizeResult(text) {
     const start = clean.indexOf("{");
     const end = clean.lastIndexOf("}");
     const parsed = JSON.parse(start >= 0 && end > start ? clean.slice(start, end + 1) : clean);
-    return {
+    const normalized = {
       reply: String(parsed.reply || "").slice(0, 260),
-      korean: String(parsed.korean || "").slice(0, 260),
+      korean: cleanKorean(parsed.korean),
+      suggestions: normalizeSuggestions(parsed.suggestions),
       emotion: emotions.includes(parsed.emotion) ? parsed.emotion : "happy",
       action: actions.includes(parsed.action) ? parsed.action : "nod"
     };
+    if (!normalized.suggestions.length) normalized.suggestions = fallbackSuggestions(normalized.reply);
+    return normalized;
   } catch {
     if (!clean) throw new Error("AI returned an empty response");
     return {
       reply: clean.replace(/[`{}"]/g, "").slice(0, 220),
       korean: "",
+      suggestions: fallbackSuggestions(clean),
       emotion: "happy",
       action: "nod"
     };
   }
+}
+
+function normalizeSuggestions(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map(item => String(item || "").replace(/[<>{}]/g, "").trim().slice(0, 80))
+    .filter(Boolean)
+    .slice(0, 3);
+}
+
+function cleanKorean(value) {
+  const korean = String(value || "").replace(/[<>{}]/g, "").trim().slice(0, 180);
+  const latinChunks = korean.match(/[A-Za-z]{2,}/g) || [];
+  if (latinChunks.length >= 1) return "멋진 이야기야! 영어로 한 가지 더 말해 볼까?";
+  return korean;
+}
+
+function fallbackSuggestions(reply) {
+  if (/color/i.test(reply)) return ["It is red.", "It is yellow.", "It is blue."];
+  if (/big|small/i.test(reply)) return ["It is big.", "It is small.", "It is cute."];
+  if (/food|eat|tasty|yummy/i.test(reply)) return ["I like apples.", "I like pizza.", "It is yummy!"];
+  if (/feel|happy|sad/i.test(reply)) return ["I feel happy.", "I feel okay.", "I feel sleepy."];
+  return ["Yes, I do!", "It is fun.", "I like it!"];
 }
 
 async function callGroq(message, env) {
@@ -130,7 +167,7 @@ async function callOpenAI(message, env, safetyIdentifier) {
 }
 
 async function callCloudflare(message, env) {
-  const result = await env.AI.run(env.CLOUDFLARE_AI_MODEL || "@cf/meta/llama-3.2-3b-instruct", {
+  const result = await env.AI.run(env.CLOUDFLARE_AI_MODEL || "@cf/meta/llama-3.1-8b-instruct-fast", {
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
       { role: "user", content: message }
@@ -174,8 +211,21 @@ export default {
     }
 
     const safetyIdentifier = String(body.learnerId || "anonymous").replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 64);
+    const level = String(body.level || "Pre-A1").replace(/[^A-Za-z0-9 -]/g, "").slice(0, 20);
+    const mission = String(body.mission || "").replace(/[<>{}]/g, "").slice(0, 80);
+    const knownWords = Array.isArray(body.knownWords)
+      ? body.knownWords.map(word => String(word).replace(/[^A-Za-z -]/g, "").slice(0, 24)).filter(Boolean).slice(0, 8)
+      : [];
+    const turn = Math.min(Math.max(Number(body.conversationTurn) || 1, 1), 30);
+    const contextualMessage = [
+      `Child level: ${level}.`,
+      mission ? `Current story mission: ${mission}.` : "",
+      knownWords.length ? `Words recently practiced: ${knownWords.join(", ")}.` : "",
+      `Conversation turn: ${turn}.`,
+      `Child says: ${message}`
+    ].filter(Boolean).join("\n");
     try {
-      const text = await callProvider(message, env, safetyIdentifier);
+      const text = await callProvider(contextualMessage, env, safetyIdentifier);
       return json(normalizeResult(text), 200, headers);
     } catch (error) {
       console.error("Sioni AI provider error", error instanceof Error ? error.message : "unknown");
