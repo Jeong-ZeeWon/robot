@@ -1,0 +1,7 @@
+name = "sioni-english-ai"
+main = "api/worker.js"
+compatibility_date = "2026-07-29"
+preview_urls = false
+
+[ai]
+binding = "AI"
