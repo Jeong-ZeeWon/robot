@@ -137,14 +137,44 @@ body{background:
 .robot-pod .arm b{display:none}
 .robot-pod .heart-core{left:73px;top:91px;width:24px;height:13px;border:0;border-radius:5px;background:linear-gradient(#41444b,#1e2025);box-shadow:inset 0 1px 2px #737780,0 1px 1px #fff}
 .robot-pod .heart-core:before,.robot-pod .heart-core b,.robot-pod .body-light{display:none}
-.robot-pod .robot-shadow{z-index:1;left:25px;bottom:10px;width:270px;height:88px;border-radius:50%;background:linear-gradient(180deg,#f9fafb,#d9dde2 68%,#c2c7cd);filter:none;box-shadow:inset 0 10px 12px rgba(255,255,255,.9),inset 0 -8px 11px rgba(76,86,96,.13),0 17px 17px rgba(43,67,72,.2)}
+.robot-pod .robot-shadow{z-index:1;left:25px;bottom:10px;width:270px;height:88px;overflow:hidden;border-radius:50%;background:linear-gradient(180deg,#f9fafb,#d9dde2 68%,#c2c7cd);filter:none;box-shadow:inset 0 10px 12px rgba(255,255,255,.9),inset 0 -8px 11px rgba(76,86,96,.13),0 17px 17px rgba(43,67,72,.2)}
 .robot-pod .robot-shadow:before{content:"";position:absolute;left:18px;right:18px;top:5px;height:57px;border-radius:50%;background:radial-gradient(ellipse,#f5f7f8 47%,transparent 49%),conic-gradient(from 215deg,#5ef2e2,#71ff66,#d7e4df,#59e8df);box-shadow:0 0 15px rgba(91,250,204,.42)}
 .robot-pod .robot-shadow:after{content:"";position:absolute;left:29px;right:29px;top:13px;height:44px;border-radius:50%;background:#e8ebee;box-shadow:inset 0 4px 7px rgba(255,255,255,.9)}
-.robot-pod.is-happy .eye{height:28px;top:58px;border-radius:50% 50% 8px 8px;background:transparent;border-top:8px solid #75ff65;box-shadow:0 -3px 12px rgba(104,255,90,.7)}
+.robot-pod.is-happy .eye{top:55px;width:30px;height:38px;border:0;border-radius:50% 50% 45% 45%;background:linear-gradient(180deg,#a0ff86,#6dff5e);box-shadow:0 0 9px #71ff62,0 0 23px rgba(104,255,90,.76)}
+.robot-pod.is-happy .eye-left{transform:rotate(15deg)}.robot-pod.is-happy .eye-right{transform:rotate(-15deg)}
 .robot-pod.is-surprised .eye{transform:scale(1.13) rotate(7deg)}
 .robot-pod.is-sleepy .eye{height:7px;top:69px;border-radius:8px;transform:none}
 .robot-pod.action-wave .arm-right{transform:rotate(-38deg);animation:podWave .55s 2}.robot-pod.action-highfive .arm-right{transform:rotate(-58deg)}.robot-pod.action-shy .arm-left{transform:rotate(21deg)}.robot-pod.action-shy .arm-right{transform:rotate(-21deg)}
 @keyframes podWave{50%{transform:rotate(-52deg)}}
+.robot-pod .head{animation:podHeadIdle 8s ease-in-out infinite}.robot-pod .body{animation:podBodyIdle 4.2s ease-in-out infinite}.robot-pod .face-screen{animation:podScreenGlow 3.8s ease-in-out infinite}.robot-pod .eye{animation:podBlink 5.4s ease-in-out infinite}.robot-pod .eye-right{animation-delay:.04s}.robot-pod .robot-shadow:before{animation:podBaseFlow 4s linear infinite}.robot-pod .head:after{animation:podSensor 2.6s ease-in-out infinite}.robot-halo{animation:haloPulse 4s ease-in-out infinite,podHaloDrift 9s linear infinite}
+@keyframes podHeadIdle{0%,45%,100%{transform:translate(0,0) rotate(0)}55%{transform:translate(-4px,1px) rotate(-2deg)}68%{transform:translate(3px,-1px) rotate(1.5deg)}}
+@keyframes podBodyIdle{50%{transform:translateY(-2px) scaleX(1.008)}}
+@keyframes podScreenGlow{50%{box-shadow:inset 0 5px 18px #050609,inset 0 -2px 8px rgba(255,255,255,.05),0 0 0 2px rgba(91,96,106,.3),0 3px 2px #fff,0 0 18px rgba(110,255,112,.18)}}
+@keyframes podBlink{0%,44%,48%,100%{scale:1 1}46%{scale:1 .12}}
+@keyframes podBaseFlow{to{filter:hue-rotate(360deg);transform:rotate(360deg)}}
+@keyframes podSensor{50%{filter:brightness(1.55);box-shadow:0 0 9px rgba(91,255,190,.7)}}
+@keyframes podHaloDrift{to{rotate:360deg}}
+.robot-pod.action-nod .head{animation:podNod .42s ease-in-out 4}.robot-pod.action-nod .body{animation:podBodyBounce .84s ease-in-out 2}
+.robot-pod.action-wave .head{animation:podCuriousTilt .9s ease-in-out 2}.robot-pod.action-wave .eye{animation:podHappyBlink .55s ease-in-out 3}
+.robot-pod.action-highfive .head{animation:podHighFiveHead .65s ease-in-out 2}.robot-pod.action-highfive .robot-shadow:before{animation:podBaseBurst .65s ease-in-out 3}
+.robot-pod.action-dance .head{animation:podDanceHead .45s ease-in-out 5}.robot-pod.action-dance .body{animation:podDanceBody .45s ease-in-out 5}.robot-pod.action-dance .robot-shadow:before{animation:podBaseFlow .5s linear infinite}
+.robot-pod.action-jump .head,.robot-pod.action-jump .body{animation:podJumpParts .65s ease-in-out 2}
+.robot-pod.action-shy .head{animation:podShy 1.1s ease-in-out 2}.robot-pod.action-shy .eye{animation:podShyEyes 1.1s ease-in-out 2}
+.robot-pod.action-charge .head{animation:podChargeHead .38s ease-in-out 5}.robot-pod.action-charge .eye{animation:podChargeEyes .38s ease-in-out 5}.robot-pod.action-charge .robot-shadow:before{animation:podChargeRing .55s linear 4}
+.robot-pod.action-secret .head{animation:podSecret 1.2s ease-in-out 2}.robot-pod.action-secret .eye{animation:podSecretEyes 1.2s ease-in-out 2}
+.robot-pod.action-quiz .head{animation:podQuizHead .8s ease-in-out 3}.robot-pod.action-quiz .eye-left{animation:podQuizLeft .8s ease-in-out 3}.robot-pod.action-quiz .eye-right{animation:podQuizRight .8s ease-in-out 3}
+.robot-pod.action-joke{animation:podJoke .48s ease-in-out 5}.robot-pod.action-joke .eye{animation:podHappyBlink .48s ease-in-out 5}
+.robot-pod.action-scan .head{animation:podScanHead 1.1s ease-in-out 2}.robot-pod.action-scan .eye{animation:podScanEyes 1.1s ease-in-out 2}
+@keyframes podNod{50%{transform:translateY(8px) rotate(.5deg)}}@keyframes podBodyBounce{50%{transform:translateY(-4px)}}
+@keyframes podCuriousTilt{50%{transform:rotate(-5deg) translate(-3px,-2px)}}@keyframes podHappyBlink{50%{scale:1 .42;filter:brightness(1.35)}}
+@keyframes podHighFiveHead{40%{transform:rotate(4deg) translateY(-5px)}70%{transform:rotate(-2deg)}}@keyframes podBaseBurst{50%{scale:1.12;filter:brightness(1.6) hue-rotate(60deg)}}
+@keyframes podDanceHead{25%{transform:translate(-8px,-3px) rotate(-5deg)}75%{transform:translate(8px,-3px) rotate(5deg)}}@keyframes podDanceBody{25%{transform:translateX(5px) rotate(2deg)}75%{transform:translateX(-5px) rotate(-2deg)}}
+@keyframes podJumpParts{45%{transform:translateY(-9px) scale(1.02)}75%{transform:translateY(2px) scale(.99)}}
+@keyframes podShy{50%{transform:rotate(6deg) translate(4px,4px)}}@keyframes podShyEyes{50%{scale:.83 .55;filter:brightness(1.25)}}
+@keyframes podChargeHead{50%{transform:translateY(-3px);filter:brightness(1.08)}}@keyframes podChargeEyes{50%{scale:1.2 1.08;filter:brightness(1.8)}}@keyframes podChargeRing{to{transform:rotate(360deg);filter:hue-rotate(160deg) brightness(1.6)}}
+@keyframes podSecret{45%,75%{transform:translate(-8px,4px) rotate(-7deg)}}@keyframes podSecretEyes{45%,75%{height:17px;top:65px;scale:.9 .7}}
+@keyframes podQuizHead{30%{transform:rotate(-6deg) translateX(-4px)}70%{transform:rotate(6deg) translateX(4px)}}@keyframes podQuizLeft{40%{transform:translateX(10px) rotate(15deg)}}@keyframes podQuizRight{40%{transform:translateX(10px) rotate(-15deg)}}
+@keyframes podJoke{25%{transform:translateX(-4px) rotate(-2deg)}75%{transform:translateX(4px) rotate(2deg)}}@keyframes podScanHead{35%{transform:translateX(-8px) rotate(-3deg)}70%{transform:translateX(8px) rotate(3deg)}}@keyframes podScanEyes{35%{translate:-12px 0}70%{translate:12px 0}}
 .talk-robot .mini-face{border-color:#d7dce1;background:#181a1f;box-shadow:inset 0 2px 8px #050609,0 5px 9px rgba(43,63,72,.18)}.talk-robot .mini-face i{width:15px;height:30px;border-radius:12px;background:#75ff65;box-shadow:0 0 10px rgba(104,255,90,.75)}.talk-robot .mini-face b{display:none}.talk-robot>em{border-color:#d7dce1;background:linear-gradient(#fff,#e1e5e8);color:#6eff70}.talk-robot:after{content:"";position:absolute;left:22px;right:22px;bottom:-13px;height:29px;border-radius:50%;background:conic-gradient(#60eee1,#75ff65,#dce5e1,#60eee1);box-shadow:0 5px 12px rgba(52,95,91,.18)}
 @media(max-width:720px){.aurora{width:100vw;opacity:.16;filter:blur(55px)}.sioni-stage,.mission-panel,.view-hero{box-shadow:0 15px 35px rgba(49,73,94,.13)}.robot-halo{opacity:.82}.speech-card{box-shadow:0 14px 30px rgba(39,95,110,.14)}}
-@media(prefers-reduced-motion:reduce){.aurora,.robot-halo,.heart-core:before,.adventure-button{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.aurora,.robot-halo,.heart-core:before,.adventure-button,.robot-pod,.robot-pod *{animation:none!important}}

@@ -332,10 +332,10 @@
   function setRobot(mood = "happy", action = "wave") {
     const robot = $("#robot");
     const moodClasses = ["is-happy", "is-surprised", "is-sleepy", "is-thinking"];
-    const actionClasses = ["action-wave", "action-highfive", "action-dance", "action-jump", "action-shy"];
+    const actionClasses = ["action-wave", "action-highfive", "action-dance", "action-jump", "action-shy", "action-nod", "action-charge", "action-secret", "action-quiz", "action-joke", "action-scan"];
     robot.classList.remove(...moodClasses, ...actionClasses);
     const moodMap = { happy: "is-happy", encouraging: "is-happy", surprised: "is-surprised", curious: "is-thinking", thinking: "is-thinking", sleepy: "is-sleepy", calm: "is-happy" };
-    const actionMap = { nod: "action-jump", wave: "action-wave", highfive: "action-highfive", dance: "action-dance", jump: "action-jump", shy: "action-shy", surprise: "action-jump", pet: "action-shy" };
+    const actionMap = { nod: "action-nod", wave: "action-wave", highfive: "action-highfive", dance: "action-dance", jump: "action-jump", shy: "action-shy", surprise: "action-scan", pet: "action-nod", charge: "action-charge", secret: "action-secret", quiz: "action-quiz", joke: "action-joke", scan: "action-scan" };
     void robot.offsetWidth;
     if (moodMap[mood]) robot.classList.add(moodMap[mood]);
     if (actionMap[action]) robot.classList.add(actionMap[action]);
@@ -343,7 +343,7 @@
     setTimeout(() => {
       robot.classList.remove(...actionClasses);
       $("#robotScene")?.classList.remove("is-celebrating");
-    }, 1800);
+    }, 2400);
   }
 
   function sparkle(symbol = "✦") {
@@ -1014,7 +1014,7 @@
   function performRobotAction(actionName) {
     const lines = ROBOT_ACTIONS[actionName] || ROBOT_ACTIONS.wave;
     const copy = pickFreshReaction(lines, `action-${actionName}`);
-    const actionMap = { wave:"wave", highfive:"highfive", dance:"dance", jump:"jump", joke:"shy", charge:"jump", secret:"shy", quiz:"wave" };
+    const actionMap = { wave:"wave", highfive:"highfive", dance:"dance", jump:"jump", joke:"joke", charge:"charge", secret:"secret", quiz:"quiz" };
     const moodMap = { joke:"surprised", charge:"happy", secret:"calm", quiz:"curious" };
     showRobotLine([copy[0], copy[1], moodMap[actionName] || "happy", actionMap[actionName]]);
   }
