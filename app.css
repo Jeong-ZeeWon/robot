@@ -197,6 +197,6 @@ body{background:
 .state-curious .robot-pod .head{animation:podQuizHead .95s ease-in-out 2}.state-curious .robot-pod .eye{animation:podScanEyes 1.1s ease-in-out 2}
 .state-sleepy .robot-pod{animation:liveSleep 3.2s ease-in-out infinite}.state-sleepy .robot-status{opacity:.75}@keyframes liveSleep{50%{transform:translateY(5px) rotate(-1.5deg);filter:saturate(.75)}}
 @media(max-width:720px){.aurora{width:100vw;opacity:.16;filter:blur(55px)}.sioni-stage,.mission-panel,.view-hero{box-shadow:0 15px 35px rgba(49,73,94,.13)}.robot-halo{opacity:.82}.speech-card{box-shadow:0 14px 30px rgba(39,95,110,.14)}}
-@media(max-width:720px){.sioni-stage{min-height:750px}.sioni-stage .robot-scene{top:325px;bottom:auto}.speech-card{z-index:7}.robot-status{bottom:-24px}}
-@media(max-width:390px){.sioni-stage{min-height:710px}.sioni-stage .robot-scene{top:310px}}
+@media(max-width:720px){.sioni-stage{min-height:610px}.sioni-stage .robot-scene{top:170px;bottom:auto}.speech-card{z-index:7}.robot-status{bottom:-24px}}
+@media(max-width:390px){.sioni-stage{min-height:610px}.sioni-stage .robot-scene{top:160px}}
 @media(prefers-reduced-motion:reduce){.aurora,.robot-halo,.heart-core:before,.adventure-button,.robot-pod,.robot-pod *{animation:none!important}}
