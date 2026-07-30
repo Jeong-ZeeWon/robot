@@ -8,9 +8,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>시오니 — 나의 영어 모험 친구</title>
-  <link rel="manifest" href="manifest.json?v=27">
+  <link rel="manifest" href="manifest.json?v=28">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="app.css?v=27">
+  <link rel="stylesheet" href="app.css?v=28">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">본문 바로가기</a>
@@ -129,7 +129,7 @@
               <div class="ticket-copy">
                 <small id="missionKicker">첫 번째 모험</small>
                 <h3 id="missionTitle">시오니의 아침 식탁</h3>
-                <p id="missionDesc">좋아하는 아침 메뉴를 영어로 골라 줘!</p>
+                <p id="missionDesc">시오니의 아침 영어를 듣고 그대로 따라 해!</p>
                 <button id="missionPhrase" class="phrase-preview phrase-listen" type="button"><span>🔊</span><b>오늘의 영어 먼저 듣기</b></button>
               </div>
             </article>
@@ -191,7 +191,7 @@
 
       <section id="talkView" class="view" data-view="talk" aria-labelledby="talkTitle">
         <header class="view-hero talk-hero">
-          <div><p>안전한 AI 말하기 친구</p><h1 id="talkTitle">시오니와 영어 수다</h1><span>마이크를 누르고 말해 봐. 시오니가 이어 줄게!</span></div>
+          <div><p>처음 영어 따라 하기</p><h1 id="talkTitle">시오니 따라 말하기</h1><span>시오니가 먼저 말하면 들린 소리를 그대로 흉내 내요.</span></div>
           <span id="aiStatus" class="safe-badge"><i></i> 어린이 안전 모드</span>
         </header>
         <div class="talk-layout">
@@ -205,11 +205,11 @@
               <small id="talkMeterText">첫 문장을 기다리고 있어요</small>
             </div>
             <div class="topic-deck">
-              <span>무슨 이야기를 할까?</span>
-              <button type="button" data-topic="food">🍓 내가 좋아하는 음식</button>
-              <button type="button" data-topic="animal">🐶 만나고 싶은 동물</button>
-              <button type="button" data-topic="play">🛝 오늘 재미있던 일</button>
-              <button type="button" data-topic="dream">🚀 나의 상상 여행</button>
+              <span>무슨 소리를 따라 할까?</span>
+                <button type="button" data-topic="food">🍓 음식 소리 따라 하기</button>
+                <button type="button" data-topic="animal">🐶 동물 소리 따라 하기</button>
+                <button type="button" data-topic="play">🛝 움직임 따라 하기</button>
+                <button type="button" data-topic="dream">🚀 우주 소리 따라 하기</button>
             </div>
           </aside>
           <section class="conversation-card">
@@ -290,7 +290,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
-  <script src="config.js?v=27"></script>
-  <script src="app.js?v=27" defer></script>
+  <script src="config.js?v=28"></script>
+  <script src="app.js?v=28" defer></script>
 </body>
 </html>
