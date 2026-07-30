@@ -113,5 +113,38 @@ body{background:
 .voice-first{position:relative;flex-wrap:wrap;justify-content:center;padding:18px;background:linear-gradient(145deg,#f6fffc,#fff9ec)}.voice-first .big-mic{flex-basis:72px;height:72px;border-radius:25px}.voice-first .voice-instruction{display:flex;flex:1 1 210px;flex-direction:column;text-align:left}.voice-instruction b{font-size:15px}.voice-instruction small{margin-top:3px;color:var(--muted);font-size:10px}.voice-first .input-wrap,.voice-first .send-button{display:none}.voice-first.is-keyboard-open .input-wrap,.voice-first.is-keyboard-open .send-button{display:block}.voice-first.is-keyboard-open .input-wrap{flex:1 1 220px}.keyboard-toggle{flex:0 0 100%;border:0;background:transparent;color:#7b8492;font-size:9px;text-decoration:underline;padding:6px}
 .suggestion-chips button{min-height:46px;font-size:11px}.message-body button{min-height:40px;font-size:10px}
 @media(prefers-reduced-motion:reduce){.sound-visual i{animation:none!important}}
+
+/* Sioni Pod — rounded desktop-robot silhouette based on the supplied reference. */
+.robot-scene{width:320px;height:430px}
+.robot-pod{filter:drop-shadow(0 24px 18px rgba(34,68,76,.2)) drop-shadow(0 0 18px rgba(93,255,196,.15))}
+.robot-pod .antenna{z-index:1;left:116px;top:24px;width:88px;height:35px;border:0;border-radius:19px 19px 8px 8px;background:linear-gradient(180deg,#d8dce3,#aeb5c0);transform:none;box-shadow:inset 0 5px 8px rgba(255,255,255,.8)}
+.robot-pod .antenna i,.robot-pod .antenna b{display:none}
+.robot-pod .ear{display:none}
+.robot-pod .head{z-index:5;left:23px;top:47px;width:274px;height:166px;border:0;border-radius:62px 68px 57px 59px;background:linear-gradient(145deg,#fff 0%,#eef0f3 52%,#c9ced5 100%);box-shadow:inset 13px 12px 17px rgba(255,255,255,.95),inset -13px -14px 22px rgba(89,99,111,.18),0 8px 13px rgba(34,55,68,.18)}
+.robot-pod .head:before{left:23px;right:auto;top:13px;width:172px;height:9px;background:linear-gradient(90deg,rgba(255,255,255,.9),rgba(255,255,255,.14));transform:rotate(-3deg)}
+.robot-pod .head:after{content:"";position:absolute;z-index:4;left:132px;top:8px;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 65% 40%,#555a62 0 18%,#14171c 22% 58%,#7f858d 63% 73%,#22262c 78%);box-shadow:0 1px 2px rgba(0,0,0,.35)}
+.robot-pod .face-screen{inset:20px 22px 21px;border-radius:47px;background:radial-gradient(circle at 48% 25%,#292b31,#15171c 72%);box-shadow:inset 0 5px 18px #050609,inset 0 -2px 8px rgba(255,255,255,.05),0 0 0 2px rgba(91,96,106,.3),0 3px 2px #fff}
+.robot-pod .face-screen:after{width:142px;height:65px;left:12px;top:-34px;background:rgba(255,255,255,.055)}
+.robot-pod .brow,.robot-pod .cheek,.robot-pod .mouth{display:none}
+.robot-pod .eye{top:44px;width:27px;height:57px;border:0;border-radius:18px;background:#75ff65;box-shadow:0 0 8px #71ff62,0 0 22px rgba(104,255,90,.82);transform:rotate(7deg)}
+.robot-pod .eye-left{left:58px}.robot-pod .eye-right{right:58px}.robot-pod .eye b{display:none}
+.robot-pod .neck{z-index:2;left:139px;top:202px;width:42px;height:42px;border:0;border-radius:8px;background:linear-gradient(90deg,#aeb5be,#eef0f1 45%,#bbc1c8);box-shadow:inset 0 4px 6px rgba(255,255,255,.7)}
+.robot-pod .body{z-index:4;left:76px;top:231px;width:168px;height:128px;border:0;border-radius:38px 38px 31px 31px;background:linear-gradient(145deg,#fbfcfd,#e7e9ec 53%,#cbd0d5);box-shadow:inset 9px 8px 14px #fff,inset -10px -11px 17px rgba(76,89,101,.14),0 8px 10px rgba(48,65,73,.13)}
+.robot-pod .body:before{content:"S";position:absolute;left:74px;top:57px;color:#cbd0d4;font:900 14px var(--font-round);text-shadow:0 1px #fff}
+.robot-pod .shoulder{display:none}
+.robot-pod .arm{top:23px;width:39px;height:77px;border:0;border-radius:18px;background:linear-gradient(145deg,#eef0f2,#cdd2d7);box-shadow:inset 4px 4px 7px rgba(255,255,255,.8),0 2px 5px rgba(50,65,72,.13);transform-origin:50% 10px}
+.robot-pod .arm-left{left:24px;transform:rotate(8deg)}.robot-pod .arm-right{right:24px;transform:rotate(-8deg)}
+.robot-pod .arm b{display:none}
+.robot-pod .heart-core{left:73px;top:91px;width:24px;height:13px;border:0;border-radius:5px;background:linear-gradient(#41444b,#1e2025);box-shadow:inset 0 1px 2px #737780,0 1px 1px #fff}
+.robot-pod .heart-core:before,.robot-pod .heart-core b,.robot-pod .body-light{display:none}
+.robot-pod .robot-shadow{z-index:1;left:25px;bottom:10px;width:270px;height:88px;border-radius:50%;background:linear-gradient(180deg,#f9fafb,#d9dde2 68%,#c2c7cd);filter:none;box-shadow:inset 0 10px 12px rgba(255,255,255,.9),inset 0 -8px 11px rgba(76,86,96,.13),0 17px 17px rgba(43,67,72,.2)}
+.robot-pod .robot-shadow:before{content:"";position:absolute;left:18px;right:18px;top:5px;height:57px;border-radius:50%;background:radial-gradient(ellipse,#f5f7f8 47%,transparent 49%),conic-gradient(from 215deg,#5ef2e2,#71ff66,#d7e4df,#59e8df);box-shadow:0 0 15px rgba(91,250,204,.42)}
+.robot-pod .robot-shadow:after{content:"";position:absolute;left:29px;right:29px;top:13px;height:44px;border-radius:50%;background:#e8ebee;box-shadow:inset 0 4px 7px rgba(255,255,255,.9)}
+.robot-pod.is-happy .eye{height:28px;top:58px;border-radius:50% 50% 8px 8px;background:transparent;border-top:8px solid #75ff65;box-shadow:0 -3px 12px rgba(104,255,90,.7)}
+.robot-pod.is-surprised .eye{transform:scale(1.13) rotate(7deg)}
+.robot-pod.is-sleepy .eye{height:7px;top:69px;border-radius:8px;transform:none}
+.robot-pod.action-wave .arm-right{transform:rotate(-38deg);animation:podWave .55s 2}.robot-pod.action-highfive .arm-right{transform:rotate(-58deg)}.robot-pod.action-shy .arm-left{transform:rotate(21deg)}.robot-pod.action-shy .arm-right{transform:rotate(-21deg)}
+@keyframes podWave{50%{transform:rotate(-52deg)}}
+.talk-robot .mini-face{border-color:#d7dce1;background:#181a1f;box-shadow:inset 0 2px 8px #050609,0 5px 9px rgba(43,63,72,.18)}.talk-robot .mini-face i{width:15px;height:30px;border-radius:12px;background:#75ff65;box-shadow:0 0 10px rgba(104,255,90,.75)}.talk-robot .mini-face b{display:none}.talk-robot>em{border-color:#d7dce1;background:linear-gradient(#fff,#e1e5e8);color:#6eff70}.talk-robot:after{content:"";position:absolute;left:22px;right:22px;bottom:-13px;height:29px;border-radius:50%;background:conic-gradient(#60eee1,#75ff65,#dce5e1,#60eee1);box-shadow:0 5px 12px rgba(52,95,91,.18)}
 @media(max-width:720px){.aurora{width:100vw;opacity:.16;filter:blur(55px)}.sioni-stage,.mission-panel,.view-hero{box-shadow:0 15px 35px rgba(49,73,94,.13)}.robot-halo{opacity:.82}.speech-card{box-shadow:0 14px 30px rgba(39,95,110,.14)}}
 @media(prefers-reduced-motion:reduce){.aurora,.robot-halo,.heart-core:before,.adventure-button{animation:none!important}}
