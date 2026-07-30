@@ -22,73 +22,73 @@
   const MISSIONS = [
     {
       id: "breakfast", world: 0, title: "시오니의 아침 식탁", kicker: "MISSION 01", art: "🥞",
-      description: "좋아하는 아침 메뉴를 영어로 골라 줘!", phrase: "I like pancakes!", ko: "나는 팬케이크를 좋아해!",
+      description: "시오니의 아침 영어를 듣고 그대로 따라 해!", phrase: "I like pancakes!", ko: "나는 팬케이크를 좋아해!",
       words: ["pancakes", "milk", "apple"], choices: [["🥞", "pancakes"], ["🥛", "milk"], ["🍎", "apple"]],
       answer: "🥞", question: "What does Sioni like?", reward: "🥞", color: "#ffd96d"
     },
     {
       id: "hello", world: 0, title: "새 친구를 만났어!", kicker: "MISSION 02", art: "👋",
-      description: "먼저 다정하게 인사해 볼까?", phrase: "Hi! I am Sioni.", ko: "안녕! 나는 시오니야.",
+      description: "시오니의 짧은 인사를 듣고 그대로 따라 해!", phrase: "Hi! I am Sioni.", ko: "안녕! 나는 시오니야.",
       words: ["hi", "friend", "name"], choices: [["👋", "Hi"], ["😴", "Good night"], ["🍽️", "Eat"]],
       answer: "👋", question: "How do we say hello?", reward: "👋", color: "#8edcc5"
     },
     {
       id: "colors", world: 0, title: "무지개 페인트 소동", kicker: "MISSION 03", art: "🎨",
-      description: "시오니가 잃어버린 색을 찾아 줘!", phrase: "It is bright yellow.", ko: "그것은 밝은 노란색이야.",
+      description: "색깔 그림을 보며 시오니 소리를 따라 해!", phrase: "It is bright yellow.", ko: "그것은 밝은 노란색이야.",
       words: ["yellow", "purple", "green"], choices: [["🟡", "yellow"], ["🟣", "purple"], ["🟢", "green"]],
       answer: "🟡", question: "Which one is yellow?", reward: "🖍️", color: "#ffbb70"
     },
     {
       id: "feelings", world: 0, title: "마음 날씨 방송", kicker: "MISSION 04", art: "😊",
-      description: "오늘 마음의 날씨를 알려 줘!", phrase: "I feel happy today.", ko: "나는 오늘 기분이 좋아.",
+      description: "기분 표정을 보며 시오니 소리를 따라 해!", phrase: "I feel happy today.", ko: "나는 오늘 기분이 좋아.",
       words: ["happy", "sad", "sleepy"], choices: [["😊", "happy"], ["😢", "sad"], ["😴", "sleepy"]],
       answer: "😊", question: "Which face is happy?", reward: "🌈", color: "#ffaaa8"
     },
     {
       id: "animals", world: 1, title: "숲속 발자국 탐정", kicker: "MISSION 05", art: "🐾",
-      description: "누구의 발자국인지 영어로 말해 봐!", phrase: "I see a little fox.", ko: "작은 여우가 보여.",
+      description: "동물 그림을 보며 짧은 영어를 따라 해!", phrase: "I see a little fox.", ko: "작은 여우가 보여.",
       words: ["fox", "rabbit", "bear"], choices: [["🦊", "fox"], ["🐰", "rabbit"], ["🐻", "bear"]],
       answer: "🦊", question: "What does Sioni see?", reward: "🦊", color: "#8ed6a7"
     },
     {
       id: "picnic", world: 1, title: "비밀 소풍 바구니", kicker: "MISSION 06", art: "🧺",
-      description: "소풍에 가져갈 간식을 골라 보자!", phrase: "Can I have an apple?", ko: "사과 하나 먹어도 될까요?",
+      description: "간식 그림을 보며 부탁하는 소리를 따라 해!", phrase: "Can I have an apple?", ko: "사과 하나 먹어도 될까요?",
       words: ["apple", "juice", "sandwich"], choices: [["🍎", "apple"], ["🧃", "juice"], ["🥪", "sandwich"]],
       answer: "🍎", question: "What did you ask for?", reward: "🧺", color: "#f2c875"
     },
     {
       id: "weather", world: 1, title: "구름 우체국", kicker: "MISSION 07", art: "☁️",
-      description: "오늘 날씨 편지를 배달해 줘!", phrase: "It is cloudy today.", ko: "오늘은 흐린 날이야.",
+      description: "날씨 그림을 보며 시오니 소리를 따라 해!", phrase: "It is cloudy today.", ko: "오늘은 흐린 날이야.",
       words: ["cloudy", "sunny", "rainy"], choices: [["☁️", "cloudy"], ["☀️", "sunny"], ["🌧️", "rainy"]],
       answer: "☁️", question: "How is the weather?", reward: "☂️", color: "#a9d5e8"
     },
     {
       id: "movement", world: 1, title: "동물 체조 시간", kicker: "MISSION 08", art: "🕺",
-      description: "영어를 듣고 몸으로 표현해 봐!", phrase: "I can jump high!", ko: "나는 높이 뛸 수 있어!",
+      description: "영어를 듣고 같은 소리와 동작을 따라 해!", phrase: "I can jump high!", ko: "나는 높이 뛸 수 있어!",
       words: ["jump", "run", "dance"], choices: [["🦘", "jump"], ["🏃", "run"], ["💃", "dance"]],
       answer: "🦘", question: "Which one can jump?", reward: "🏅", color: "#b2dfa0"
     },
     {
       id: "moon", world: 2, title: "달나라 첫 착륙", kicker: "MISSION 09", art: "🌙",
-      description: "우주에서 보이는 것을 말해 보자!", phrase: "I can see the moon.", ko: "달이 보여.",
+      description: "달 그림을 보며 시오니 소리를 따라 해!", phrase: "I can see the moon.", ko: "달이 보여.",
       words: ["moon", "star", "rocket"], choices: [["🌙", "moon"], ["⭐", "star"], ["🚀", "rocket"]],
       answer: "🌙", question: "What can you see?", reward: "🌙", color: "#b9b2ec"
     },
     {
       id: "alien", world: 2, title: "외계인과 하이파이브", kicker: "MISSION 10", art: "👽",
-      description: "새로운 우주 친구를 소개해 줘!", phrase: "This is my new friend.", ko: "이 친구는 나의 새 친구야.",
+      description: "새 친구를 소개하는 소리를 그대로 따라 해!", phrase: "This is my new friend.", ko: "이 친구는 나의 새 친구야.",
       words: ["this", "new", "friend"], choices: [["🤝", "friend"], ["🚪", "door"], ["🍕", "pizza"]],
       answer: "🤝", question: "Which picture means friend?", reward: "👽", color: "#a8e5cc"
     },
     {
       id: "numbers", world: 2, title: "별 조각 세기", kicker: "MISSION 11", art: "✨",
-      description: "반짝이는 별을 영어로 세어 보자!", phrase: "I see five stars.", ko: "별 다섯 개가 보여.",
+      description: "별을 보며 시오니가 세는 소리를 따라 해!", phrase: "I see five stars.", ko: "별 다섯 개가 보여.",
       words: ["three", "four", "five"], choices: [["⭐⭐⭐", "three"], ["⭐⭐⭐⭐", "four"], ["⭐⭐⭐⭐⭐", "five"]],
       answer: "⭐⭐⭐⭐⭐", question: "Which group has five stars?", reward: "🔭", color: "#ffdc74"
     },
     {
       id: "home", world: 2, title: "지구로 돌아가는 날", kicker: "MISSION 12", art: "🌍",
-      description: "친구들에게 따뜻하게 작별 인사해!", phrase: "See you again, friends!", ko: "친구들아, 다음에 또 만나!",
+      description: "시오니의 작별 인사를 듣고 그대로 따라 해!", phrase: "See you again, friends!", ko: "친구들아, 다음에 또 만나!",
       words: ["see you", "again", "friends"], choices: [["👋", "See you"], ["😴", "Sleep"], ["🍴", "Eat"]],
       answer: "👋", question: "How do we say goodbye?", reward: "🚀", color: "#78c9dd"
     }
@@ -200,18 +200,18 @@
   };
 
   const TOPICS = {
-    food: { prompt: "Let's talk about food! What food do you like?", ko: "음식 이야기하자! 어떤 음식을 좋아해?", chips: ["I like pizza.", "I like strawberries.", "I like rice."] },
-    animal: { prompt: "What animal do you want to meet?", ko: "어떤 동물을 만나고 싶어?", chips: ["I like dogs.", "I want to see a whale.", "A fox is cute."] },
-    play: { prompt: "What was fun today?", ko: "오늘 무엇이 재미있었어?", chips: ["I played soccer.", "I drew a picture.", "I played with blocks."] },
-    dream: { prompt: "Where shall we fly in our imagination?", ko: "상상 속에서 어디로 날아갈까?", chips: ["Let's go to the moon!", "I want to see dinosaurs.", "Let's visit a candy town."] }
+    food: { prompt: "I like apples.", ko: "시오니 소리를 듣고 그대로 따라 해 봐.", chips: ["I like apples.", "Yummy apple!", "More, please."] },
+    animal: { prompt: "I like dogs.", ko: "강아지 그림을 보며 그대로 따라 해 봐.", chips: ["I like dogs.", "A cute dog.", "Hello, dog!"] },
+    play: { prompt: "I can jump.", ko: "시오니와 함께 몸을 움직이며 따라 해 봐.", chips: ["I can jump.", "I can run.", "I can dance."] },
+    dream: { prompt: "Go to the moon!", ko: "우주로 가는 목소리를 그대로 따라 해 봐.", chips: ["Go to the moon!", "I see a star.", "Hello, moon!"] }
   };
 
   const fallbackReplies = [
-    { test: /pizza|rice|apple|food|eat|strawberry/i, reply: "Yum! That sounds tasty. What color is it?", korean: "맛있겠다! 그것은 무슨 색이야?", suggestions: ["It is red.", "It is yellow.", "It is brown."], emotion: "happy", action: "nod" },
-    { test: /dog|cat|fox|whale|animal/i, reply: "What a lovely animal! Is it big or small?", korean: "정말 멋진 동물이야! 크니, 작니?", suggestions: ["It is big.", "It is small.", "It is cute."], emotion: "curious", action: "wave" },
-    { test: /soccer|draw|block|play|game/i, reply: "That sounds fun! Who did you play with?", korean: "재미있었겠다! 누구와 같이 놀았어?", suggestions: ["With my friend.", "With my family.", "By myself."], emotion: "happy", action: "highfive" },
-    { test: /moon|dinosaur|candy|space|rocket/i, reply: "Wow, what an adventure! What can you see there?", korean: "와, 멋진 모험이야! 거기에서 무엇이 보여?", suggestions: ["I see stars.", "I see a dinosaur.", "I see candy."], emotion: "surprised", action: "jump" },
-    { test: /sad|angry|bad|tired/i, reply: "I hear you. You can say, “I feel sad.”", korean: "네 마음을 듣고 있어. ‘I feel sad.’라고 말해도 좋아.", suggestions: ["I feel sad.", "I feel tired.", "I want a hug."], emotion: "calm", action: "shy" }
+    { test: /pizza|rice|apple|food|eat|strawberry/i, reply: "Yummy, yummy food!", korean: "시오니가 먼저 말할게. 들린 소리를 그대로 흉내 내 봐.", suggestions: ["Yummy apple!", "I like pizza.", "More, please."], emotion: "happy", action: "nod" },
+    { test: /dog|cat|fox|whale|animal/i, reply: "I like animals.", korean: "동물을 보며 시오니 소리를 그대로 따라 해 봐.", suggestions: ["I like dogs.", "A cute cat.", "Hello, fox!"], emotion: "curious", action: "wave" },
+    { test: /soccer|draw|block|play|game/i, reply: "I can play!", korean: "시오니가 먼저 말하면 바로 소리를 따라 해 봐.", suggestions: ["I can jump.", "I can draw.", "Let's play!"], emotion: "happy", action: "highfive" },
+    { test: /moon|dinosaur|candy|space|rocket/i, reply: "Go to the moon!", korean: "우주로 가는 목소리를 그대로 따라 해 봐.", suggestions: ["I see stars.", "Hello, moon!", "Go, rocket!"], emotion: "surprised", action: "jump" },
+    { test: /sad|angry|bad|tired/i, reply: "I feel okay.", korean: "천천히 시오니 소리만 흉내 내도 괜찮아.", suggestions: ["I feel okay.", "I feel tired.", "A little hug."], emotion: "calm", action: "shy" }
   ];
 
   const defaults = {
@@ -604,7 +604,7 @@
 
   function renderMissionPlayer() {
     const mission = MISSIONS[currentMissionIndex];
-    const stepNames = ["이야기", "단어", "듣기", "말하기", "문장", "찾기", "대화", "보상"];
+    const stepNames = ["이야기 듣기", "소리 흉내", "문장 듣기", "따라 말하기", "한 소리씩", "그림과 소리", "역할 따라 하기", "보상"];
     $("#missionPlayer").innerHTML = `
       <div class="mission-shell">
         <aside class="mission-story-side">
@@ -633,10 +633,10 @@
         <button class="mission-next" type="button" data-mission-next>이야기를 만났어요 · 다음으로</button>`;
     } else if (missionStep === 1) {
       content.innerHTML = `
-        <small class="step-kicker">2 · 그림과 소리</small><h2>오늘의 소리 세 친구</h2><p>그림 카드를 눌러 영어 소리를 모두 들어 보세요.</p>
+        <small class="step-kicker">2 · 듣고 흉내 내기</small><h2>그림을 누르고 소리를 흉내 내요</h2><p>잘하려고 하지 않아도 괜찮아요. 들리는 대로 따라 해요.</p>
         <div class="word-cards">${mission.words.map((word,index) => `<button class="word-card" type="button" data-word="${escapeHtml(word)}" aria-label="${index + 1}번 그림 영어 듣기"><span>${extra.wordIcons[index]}</span><b>소리 ${index + 1}</b><small>🔊 눌러서 듣기</small></button>`).join("")}</div>
         <span class="big-translation" id="wordFeedback">0 / 3 단어를 들었어요</span>
-        <button class="mission-next" type="button" data-mission-next disabled>세 단어를 알았어요 · 다음으로</button>`;
+        <button class="mission-next" type="button" data-mission-next disabled>세 소리를 따라 했어요 · 다음으로</button>`;
     } else if (missionStep === 2) {
       content.innerHTML = `
         <small class="step-kicker">3 · 귀로 듣기</small><h2>핵심 문장을 귀에 담아 봐!</h2><p>글자는 보지 않고 뜻과 리듬을 귀로 느껴요.</p>
@@ -652,26 +652,28 @@
         <span class="big-translation" id="speechFeedback">마이크를 누르고 들은 소리를 따라 해요</span>
         <button class="mission-next" type="button" data-mission-next>말했어요 · 다음으로</button>`;
     } else if (missionStep === 4) {
-      const tokens = mission.phrase.replace(/[.!?]/g,"").split(" ").sort(() => Math.random() - .5);
+      const tokens = mission.phrase.replace(/[.!?]/g,"").split(" ");
       content.innerHTML = `
-        <small class="step-kicker">5 · 소리 순서 놀이</small><h2>들은 소리를 순서대로 모아 줘!</h2><p>버튼을 눌러 소리를 듣고, 문장의 순서를 찾아요.</p>
-        <button class="model-listen" type="button" data-speak="${escapeHtml(mission.phrase)}">🔊 문장 다시 듣기</button>
-        <div id="builtSentence" class="built-sentence">아래 소리를 차례로 눌러요</div>
-        <div class="phrase-builder">${tokens.map((word,index) => `<button class="phrase-token" type="button" data-token="${escapeHtml(word)}">🔊 소리 ${index + 1}</button>`).join("")}</div>
-        <button class="mission-next" type="button" data-mission-next disabled>문장을 완성했어요 · 다음으로</button>`;
+        <small class="step-kicker">5 · 한 소리씩 따라 하기</small><h2>시오니를 따라 한 조각씩 말해요</h2><p>빛나는 버튼부터 하나씩 누르고, 들린 소리를 흉내 내요.</p>
+        <button class="model-listen" type="button" data-speak="${escapeHtml(mission.phrase)}">🔊 전체 소리 먼저 듣기</button>
+        <div id="builtSentence" class="built-sentence">빛나는 첫 버튼부터 시작해요</div>
+        <div class="phrase-builder echo-builder">${tokens.map((word,index) => `<button class="phrase-token ${index === 0 ? "is-current" : ""}" type="button" data-token="${escapeHtml(word)}" data-echo-index="${index}" ${index === 0 ? "" : "disabled"}>🔊 소리 ${index + 1}</button>`).join("")}</div>
+        <button class="mission-next" type="button" data-mission-next disabled>모두 따라 했어요 · 다음으로</button>`;
     } else if (missionStep === 5) {
+      const targetChoice = mission.choices.find(([emoji]) => emoji === mission.answer) || mission.choices[0];
       content.innerHTML = `
-        <small class="step-kicker">6 · 그림 찾기</small><h2>어떤 그림을 말했을까?</h2><p>영어를 듣고 맞는 그림을 찾아보세요.</p>
-        <button class="model-listen" type="button" data-speak="${escapeHtml((mission.choices.find(([emoji]) => emoji === mission.answer) || [null, mission.words[0]])[1])}">🔊 문제 소리 듣기</button>
-        <div class="choice-grid">${mission.choices.map(([emoji, word],index) => `<button type="button" data-answer="${emoji}" data-answer-word="${escapeHtml(word)}" aria-label="${index + 1}번 그림"><span>${emoji}</span><small>그림 ${index + 1}</small></button>`).join("")}</div>
-        <span class="big-translation" id="quizFeedback">천천히 생각해도 좋아요.</span>
-        <button class="mission-next" type="button" data-mission-next disabled>정답이에요 · 대화하기</button>`;
+        <small class="step-kicker">6 · 그림 보며 따라 하기</small><h2>빛나는 그림을 누르고 따라 해요</h2><p>정답을 찾는 문제가 아니에요. 그림과 영어 소리를 함께 만나요.</p>
+        <button class="model-listen" type="button" data-speak="${escapeHtml(targetChoice[1])}">🔊 그림 소리 먼저 듣기</button>
+        <div class="choice-grid guided-choice"><button class="is-guide" type="button" data-answer="${targetChoice[0]}" data-answer-word="${escapeHtml(targetChoice[1])}" aria-label="빛나는 그림 누르기"><span>${targetChoice[0]}</span><small>✨ 이 그림을 눌러요</small></button></div>
+        <span class="big-translation" id="quizFeedback">누르고 들린 소리를 그대로 흉내 내요.</span>
+        <button class="mission-next" type="button" data-mission-next disabled>그림 소리를 따라 했어요 · 다음으로</button>`;
     } else if (missionStep === 6) {
+      const echoLine = extra.role[2][0];
       content.innerHTML = `
-        <small class="step-kicker">7 · 듣고 대답하기</small><h2>이야기 속 주인공이 되어 봐!</h2><p>${extra.role[0]}</p>
-        <div class="role-card"><span>🤖</span><div><button class="model-listen" type="button" data-speak="${escapeHtml(extra.role[1])}">🔊 시오니 질문 듣기</button><small>질문을 듣고 대답 소리를 골라 따라 말해 보세요.</small></div></div>
-        <div class="role-replies">${extra.role[2].map((line,index) => `<button type="button" data-role-line="${escapeHtml(line)}">🔊 대답 ${index + 1}</button>`).join("")}</div>
-        <button class="mission-next" type="button" data-mission-next disabled>대화를 해냈어요 · 보상 보기</button>`;
+        <small class="step-kicker">7 · 역할 따라 하기</small><h2>시오니와 같은 소리를 말해 봐요</h2><p>질문에 답할 필요 없어요. 시오니 목소리만 그대로 따라 해요.</p>
+        <div class="role-card"><span>🤖</span><div><b>시오니가 먼저 말해 줄게요</b><small>버튼을 누르고 바로 소리를 흉내 내요.</small></div></div>
+        <div class="role-replies"><button class="echo-role-button" type="button" data-role-line="${escapeHtml(echoLine)}">🔊 듣고 그대로 따라 말하기</button></div>
+        <button class="mission-next" type="button" data-mission-next disabled>따라 말했어요 · 보상 보기</button>`;
     } else {
       const alreadyDone = state.completedMissions.includes(mission.id);
       content.innerHTML = `
@@ -732,31 +734,29 @@
 
   function addPhraseToken(button) {
     if (button.classList.contains("is-used")) return;
-    speak(button.dataset.token);
     button.classList.add("is-used");
+    button.classList.remove("is-current");
     const sentence = $("#builtSentence");
     const words = JSON.parse(sentence.dataset.words || "[]");
     words.push(button.dataset.token);
     sentence.dataset.words = JSON.stringify(words);
-    sentence.textContent = `${"🔊 ".repeat(words.length)}${words.length}개 소리를 모았어요`;
-    const target = MISSIONS[currentMissionIndex].phrase.replace(/[.!?]/g, "").trim().toLowerCase();
-    const attempt = words.join(" ").trim().toLowerCase();
-    if (attempt === target) {
+    const tokens = $$(".phrase-token", $("#missionPlayer"));
+    sentence.textContent = `${words.length}개 소리를 따라 했어요`;
+    const next = tokens.find(item => !item.classList.contains("is-used"));
+    if (next) {
+      next.disabled = false;
+      next.classList.add("is-current");
+      speak(button.dataset.token);
+    } else {
       sentence.classList.add("is-right");
-      sentence.textContent = "문장 소리를 순서대로 완성했어요 ✓";
+      sentence.textContent = "모든 소리를 따라 했어요 ✓";
       state.quizzes++;
       state.stars += 2;
       markMissionStep(4);
       schedulePractice(MISSIONS[currentMissionIndex].phrase, true, "sentence");
       saveState();
       $("[data-mission-next]", $("#missionPlayer")).disabled = false;
-      speak(MISSIONS[currentMissionIndex].phrase);
-    } else if (!target.startsWith(attempt)) {
-      schedulePractice(MISSIONS[currentMissionIndex].phrase, false, "sentence");
-      sentence.textContent = "순서를 다시 생각해 볼까? ↺";
-      sentence.dataset.words = "[]";
-      $$(".phrase-token", $("#missionPlayer")).forEach(token => token.classList.remove("is-used"));
-      setTimeout(() => { if (sentence.dataset.words === "[]") sentence.textContent = "아래 소리를 차례로 눌러요"; }, 900);
+      speak(button.dataset.token, () => speak(MISSIONS[currentMissionIndex].phrase));
     }
   }
 
@@ -825,12 +825,7 @@
       state.speaks++;
       state.stars += 2;
       markMissionStep(3);
-      if (transcript) {
-        const targetWords = new Set(MISSIONS[currentMissionIndex].phrase.toLowerCase().match(/[a-z]+/g) || []);
-        const heardWords = new Set(transcript.toLowerCase().match(/[a-z]+/g) || []);
-        const overlap = [...targetWords].filter(word => heardWords.has(word)).length / Math.max(1, targetWords.size);
-        schedulePractice(MISSIONS[currentMissionIndex].phrase, overlap >= .5, "speaking");
-      }
+      if (transcript) schedulePractice(MISSIONS[currentMissionIndex].phrase, true, "speaking");
       saveState();
       feedback.textContent = transcript ? "영어로 말한 네 용기가 정말 멋져! ★★" : "말해 줘서 고마워! 목소리에 별 두 개!";
       setRobot("happy", "highfive");
@@ -843,7 +838,7 @@
     if (button.dataset.answer === mission.answer) {
       button.classList.add("is-right");
       const answerWord = button.dataset.answerWord;
-      $("#quizFeedback").textContent = "정답이야! 귀로 듣고 그림을 정말 잘 찾았어.";
+      $("#quizFeedback").textContent = "잘 따라 했어! 그림과 소리가 친구가 되었어.";
       $$(".choice-grid button").forEach(item => item.disabled = true);
       $("[data-mission-next]", $("#missionPlayer")).disabled = false;
       state.quizzes++;
@@ -852,11 +847,6 @@
       schedulePractice(answerWord, true, "meaning");
       saveState();
       speak(`Yes! ${answerWord}!`);
-    } else {
-      schedulePractice(button.dataset.answerWord, false, "meaning");
-      button.classList.add("is-wrong");
-      $("#quizFeedback").textContent = "거의 다 왔어! 다른 그림을 한 번 볼까?";
-      setTimeout(() => button.classList.remove("is-wrong"), 650);
     }
   }
 
@@ -878,8 +868,8 @@
     if (chatStarted) return;
     chatStarted = true;
     $("#chatLog").innerHTML = "";
-    addChatMessage("sioni", "Hi! I’m Sioni. What shall we talk about?", "안녕! 난 시오니야. 무슨 이야기를 해볼까?");
-    setSuggestions(["I like food.", "I like animals.", "Let's imagine!"]);
+    addChatMessage("sioni", "Hi! I am Sioni.", "시오니의 짧은 영어를 듣고 그대로 따라 해 봐.");
+    setSuggestions(["Hi, Sioni!", "I am happy.", "Let's play!"]);
     updateTalkMeter();
   }
 
@@ -890,14 +880,14 @@
     message.className = `chat-message ${role}${loading ? " is-loading" : ""}`;
     message.innerHTML = role === "sioni"
       ? `<span class="message-avatar">S</span><div class="message-body">${loading ? `<span class="typing-dots"><i></i><i></i><i></i></span>` : `<p>${state.koreanHelp && korean ? escapeHtml(korean) : "시오니가 영어로 말했어요!"}</p><small>영어는 글자가 아니라 소리로 만나요</small><button type="button" data-speak="${escapeHtml(english)}">🔊 영어 다시 듣기</button>`}</div>`
-      : `<div class="message-body"><p>내가 영어로 말했어요 🎙️</p><small>멋진 말하기 도전!</small></div>`;
+      : `<div class="message-body"><p>시오니를 따라 했어요 🎙️</p><small>소리를 흉내 낸 용기가 멋져!</small></div>`;
     $("#chatLog").append(message);
     $("#chatLog").scrollTop = $("#chatLog").scrollHeight;
     return message;
   }
 
   function setSuggestions(items = []) {
-    $("#suggestionChips").innerHTML = items.slice(0, 3).map((item,index) => `<button type="button" data-suggestion="${escapeHtml(item)}">🔊 대답 ${index + 1} 듣고 말하기</button>`).join("");
+    $("#suggestionChips").innerHTML = items.slice(0, 3).map((item,index) => `<button type="button" data-suggestion="${escapeHtml(item)}">🔊 따라 할 소리 ${index + 1}</button>`).join("");
   }
 
   function escapeHtml(value) {
@@ -937,7 +927,7 @@
         body: JSON.stringify({
           message,
           learnerId: state.learnerId,
-          level: state.completedMissions.length < 4 ? "Pre-A1" : "A1",
+          level: "Absolute beginner; imitation only",
           mission: currentMission().title,
           targetExpression: currentMission().phrase,
           knownWords: currentMission().words,
@@ -963,9 +953,9 @@
       $("#aiStatus").innerHTML = "<i></i> AI 친구 연결됨";
     } catch {
       const fallback = fallbackReplies.find(item => item.test.test(message)) || {
-        reply: "That is interesting! Tell me one more thing.",
-        korean: "재미있는 이야기야! 한 가지 더 말해 줄래?",
-        suggestions: ["I like it.", "It is fun.", "It is my favorite."],
+        reply: "I like it!",
+        korean: "시오니가 먼저 말했어. 들린 소리를 그대로 따라 해 봐.",
+        suggestions: ["I like it.", "It is fun.", "Good job!"],
         emotion: "curious", action: "wave"
       };
       loading.remove();
@@ -1013,15 +1003,15 @@
   function openGame(type) {
     const games = {
       word: {
-        emoji: "🍎", title: "단어 팡팡", copy: "시오니가 말하는 단어를 듣고 그림을 골라 봐!",
+        emoji: "🍎", title: "단어 팡팡", copy: "그림 버튼을 누르고 시오니 소리를 따라 해!",
         options: [["Apple", "🍎"], ["Banana", "🍌"], ["Grape", "🍇"]]
       },
       role: {
-        emoji: "🥤", title: "간식 가게 역할 놀이", copy: "시오니에게 원하는 음료를 주문해 봐!",
+        emoji: "🥤", title: "간식 가게 역할 놀이", copy: "시오니가 먼저 말하면 주문 소리를 그대로 따라 해!",
         options: [["Milk, please.", "🥛"], ["Juice, please.", "🧃"], ["Water, please.", "💧"]]
       },
       rhythm: {
-        emoji: "🎧", title: "리듬 영어", copy: "박자를 느끼며 한 문장을 골라 따라 해 봐!",
+        emoji: "🎧", title: "리듬 영어", copy: "버튼을 눌러 듣고 박자에 맞춰 그대로 따라 해!",
         options: [["Clap, clap, hello!", "👏"], ["Jump up high!", "🦘"], ["Turn around!", "💫"]]
       }
     };
