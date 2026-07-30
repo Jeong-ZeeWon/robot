@@ -230,6 +230,26 @@
   let chatStarted = false;
   let chatHistory = [];
   let toastTimer;
+  let characterState = "ready";
+  let characterStateTimer;
+  let idleTimer;
+  let idleCycles = 0;
+  let speechToken = 0;
+  let touchChain = { zone: "", count: 0, at: 0 };
+  let gazeFrame = 0;
+
+  const CHARACTER_LABELS = {
+    ready: "함께 놀 준비 완료", attentive: "너를 보고 있어", listening: "네 목소리를 듣는 중",
+    thinking: "생각을 모으는 중", speaking: "영어로 말하는 중", celebrating: "함께 기뻐하는 중",
+    curious: "궁금한 것이 생겼어", sleepy: "잠깐 쉬어 가는 중"
+  };
+
+  const IDLE_MOMENTS = [
+    ["Want to hear a tiny word?", "작은 영어 소리 하나 들어 볼래?", "curious", "quiz"],
+    ["I am right here with you.", "시오니는 여기서 함께 기다리고 있어.", "calm", "nod"],
+    ["Give me a little wave!", "시오니에게 손을 흔들어 줘!", "happy", "wave"],
+    ["Touch my glowing eyes!", "반짝이는 눈을 살짝 눌러 봐!", "curious", "scan"]
+  ];
 
   function loadState() {
     try {
@@ -311,12 +331,82 @@
     toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2300);
   }
 
+  function setCharacterState(next, duration = 0) {
+    const scene = $("#robotScene");
+    if (!scene) return;
+    clearTimeout(characterStateTimer);
+    characterState = next;
+    scene.classList.remove(...Object.keys(CHARACTER_LABELS).map(name => `state-${name}`), "speech-beat");
+    scene.classList.add(`state-${next}`);
+    const label = CHARACTER_LABELS[next] || CHARACTER_LABELS.ready;
+    const status = $("#robotStatus");
+    if (status) status.querySelector("span").textContent = label;
+    if (duration) characterStateTimer = setTimeout(() => setCharacterState("attentive"), duration);
+  }
+
+  function speechBeat() {
+    const scene = $("#robotScene");
+    if (!scene) return;
+    scene.classList.remove("speech-beat");
+    void scene.offsetWidth;
+    scene.classList.add("speech-beat");
+  }
+
+  function noteInteraction() {
+    clearTimeout(idleTimer);
+    idleCycles = 0;
+    if (!["speaking", "listening", "thinking", "celebrating"].includes(characterState)) setCharacterState("attentive");
+    scheduleIdleMoment();
+  }
+
+  function scheduleIdleMoment() {
+    clearTimeout(idleTimer);
+    const delay = 16000 + Math.random() * 9000;
+    idleTimer = setTimeout(() => {
+      if (document.hidden || !$("#homeView")?.classList.contains("is-active") || $("dialog[open]") || ["speaking", "listening", "thinking"].includes(characterState)) {
+        scheduleIdleMoment();
+        return;
+      }
+      const moment = IDLE_MOMENTS[idleCycles % IDLE_MOMENTS.length];
+      idleCycles++;
+      setCharacterState("curious", 3200);
+      setRobot(moment[2], moment[3]);
+      if (idleCycles % 2 === 0) {
+        $("#greetingEyebrow").textContent = "시오니가 먼저 말을 걸었어!";
+        $("#greetingTitle").textContent = moment[1];
+        $("#greetingKorean").textContent = "🔊 시오니의 영어를 들어 봐";
+        $("#greetingSpeak").dataset.speech = moment[0];
+        speak(moment[0]);
+      }
+      scheduleIdleMoment();
+    }, delay);
+  }
+
+  function trackRobotGaze(event) {
+    if (gazeFrame) return;
+    gazeFrame = requestAnimationFrame(() => {
+      gazeFrame = 0;
+      const scene = $("#robotScene");
+      const robot = $("#robot");
+      if (!scene || !robot || ["speaking", "listening", "celebrating"].includes(characterState)) return;
+      const box = robot.getBoundingClientRect();
+      const x = Math.max(-1, Math.min(1, (event.clientX - (box.left + box.width / 2)) / (box.width * .55)));
+      const y = Math.max(-1, Math.min(1, (event.clientY - (box.top + box.height * .35)) / (box.height * .45)));
+      scene.style.setProperty("--gaze-x", `${(x * 7).toFixed(1)}px`);
+      scene.style.setProperty("--gaze-y", `${(y * 4).toFixed(1)}px`);
+      scene.style.setProperty("--gaze-tilt", `${(x * 2.2).toFixed(1)}deg`);
+      scene.classList.add("is-tracking");
+    });
+  }
+
   function speak(text, onend, rate = .78) {
     if (!state.voice || !("speechSynthesis" in window)) {
       if (onend) onend();
       return;
     }
+    const token = ++speechToken;
     speechSynthesis.cancel();
+    setCharacterState("speaking");
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
     utterance.rate = rate;
@@ -324,8 +414,18 @@
     const voices = speechSynthesis.getVoices();
     utterance.voice = voices.find(v => /^en-(US|GB)/.test(v.lang) && /female|samantha|ava|zira/i.test(v.name))
       || voices.find(v => /^en/.test(v.lang)) || null;
-    utterance.onend = () => onend?.();
-    utterance.onerror = () => onend?.();
+    utterance.onboundary = speechBeat;
+    utterance.onend = () => {
+      if (token === speechToken) {
+        setCharacterState("attentive", 1800);
+        scheduleIdleMoment();
+      }
+      onend?.();
+    };
+    utterance.onerror = () => {
+      if (token === speechToken) setCharacterState("attentive");
+      onend?.();
+    };
     speechSynthesis.speak(utterance);
   }
 
@@ -362,6 +462,7 @@
   }
 
   function celebrate() {
+    setCharacterState("celebrating", 3200);
     const layer = $("#celebrationLayer");
     const colors = ["#ff7953", "#ffd85c", "#62d4b0", "#5aa9e8", "#8977de"];
     for (let i = 0; i < 42; i++) {
@@ -698,9 +799,19 @@
     recognition.lang = "en-US";
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
-    recognition.onresult = event => callback?.(event.results[0][0].transcript);
-    recognition.onerror = () => callback?.("");
-    recognition.onend = () => { recognition = null; };
+    setCharacterState("listening");
+    recognition.onresult = event => {
+      setCharacterState("thinking");
+      callback?.(event.results[0][0].transcript);
+    };
+    recognition.onerror = () => {
+      setCharacterState("attentive");
+      callback?.("");
+    };
+    recognition.onend = () => {
+      recognition = null;
+      if (characterState === "listening") setCharacterState("attentive");
+    };
     recognition.start();
   }
 
@@ -816,6 +927,7 @@
       return;
     }
     const loading = addChatMessage("sioni", "", "", true);
+    setCharacterState("thinking");
     try {
       let data;
       if (!state.aiEnabled) throw new Error("AI disabled");
@@ -1006,9 +1118,23 @@
     else if (y < .51 && x > .25 && x < .75) zone = y < .35 ? "head" : "face";
     else if (y > .52 && y < .82 && x > .37 && x < .63) zone = "heart";
     else if (y > .48 && (x < .36 || x > .64)) zone = "hand";
+    const now = Date.now();
+    touchChain = touchChain.zone === zone && now - touchChain.at < 2600
+      ? { zone, count: Math.min(4, touchChain.count + 1), at: now }
+      : { zone, count: 1, at: now };
     const lines = ROBOT_REACTIONS[zone];
     const line = pickFreshReaction(lines, `touch-${zone}`);
-    showRobotLine(line);
+    if (touchChain.count >= 4) {
+      showRobotLine(["You found my super reaction!", "우와! 시오니의 특별 반응을 찾았어!", "happy", "dance"]);
+      sparkle("★");
+    } else if (touchChain.count === 3) {
+      showRobotLine([line[0], `${line[1]} 세 번이나 찾았네!`, "surprised", "scan"]);
+      sparkle("✦");
+    } else if (touchChain.count === 2) {
+      showRobotLine([line[0], `${line[1]} 한 번 더!`, line[2], "nod"]);
+    } else {
+      showRobotLine(line);
+    }
   }
 
   function performRobotAction(actionName) {
@@ -1021,6 +1147,7 @@
 
   function bindEvents() {
     document.addEventListener("click", event => {
+      noteInteraction();
       const go = event.target.closest("[data-go],[data-nav]");
       if (go) goTo(go.dataset.go || go.dataset.nav);
 
@@ -1129,6 +1256,14 @@
         }
       }
     });
+    $("#sioniStage").addEventListener("pointermove", trackRobotGaze);
+    $("#sioniStage").addEventListener("pointerleave", () => {
+      const scene = $("#robotScene");
+      scene.classList.remove("is-tracking");
+      scene.style.removeProperty("--gaze-x");
+      scene.style.removeProperty("--gaze-y");
+      scene.style.removeProperty("--gaze-tilt");
+    });
 
     $("#chatForm").addEventListener("submit", event => {
       event.preventDefault();
@@ -1156,6 +1291,8 @@
     renderTreasure();
     renderSound();
     bindEvents();
+    setCharacterState("ready", 1800);
+    scheduleIdleMoment();
     if ("speechSynthesis" in window) speechSynthesis.getVoices();
   }
 
