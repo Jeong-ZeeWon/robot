@@ -105,10 +105,8 @@ function normalizeSuggestions(value) {
 }
 
 function cleanKorean(value) {
-  const korean = String(value || "").replace(/[<>{}]/g, "").trim().slice(0, 180);
-  const latinChunks = korean.match(/[A-Za-z]{2,}/g) || [];
-  if (latinChunks.length >= 1) return "멋진 이야기야! 영어로 한 가지 더 말해 볼까?";
-  return korean;
+  void value;
+  return "시오니가 먼저 말할게. 들린 소리를 그대로 따라 해 봐.";
 }
 
 function fallbackSuggestions(reply) {
