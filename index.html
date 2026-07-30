@@ -8,9 +8,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>시오니 — 나의 영어 모험 친구</title>
-  <link rel="manifest" href="manifest.json?v=20">
+  <link rel="manifest" href="manifest.json?v=21">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="app.css?v=20">
+  <link rel="stylesheet" href="app.css?v=21">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">본문 바로가기</a>
@@ -24,7 +24,7 @@
     <header class="topbar">
       <button class="brand" type="button" data-go="home" aria-label="시오니 홈">
         <span class="brand-orbit"><i>S</i></span>
-        <span><b>시오니</b><small>SIONI ENGLISH CLUB</small></span>
+        <span><b>시오니</b><small>듣고 말하는 영어 친구</small></span>
       </button>
       <div class="top-stats">
         <button class="streak-chip" type="button" data-go="journey" aria-label="연속 학습일 보기">
@@ -52,9 +52,9 @@
             <div class="day-label"><i></i><span id="dayLabel">오늘의 모험</span></div>
             <div class="speech-card">
               <span class="speech-tail"></span>
-              <p id="greetingEyebrow">GOOD MORNING, FRIEND!</p>
-              <h1 id="greetingTitle">Ready for a tiny adventure?</h1>
-              <p id="greetingKorean">작은 영어 모험을 떠날 준비됐어?</p>
+              <p id="greetingEyebrow">시오니의 영어 인사</p>
+              <h1 id="greetingTitle">작은 영어 모험을 떠날까?</h1>
+              <p id="greetingKorean">버튼을 누르면 영어로 들려줄게!</p>
               <button id="greetingSpeak" class="say-again" type="button">
                 <span class="sound-bars"><i></i><i></i><i></i></span> 다시 듣기
               </button>
@@ -83,8 +83,8 @@
                 </span>
                 <span class="robot-shadow"></span>
               </button>
-              <div class="action-petal action-petal-one" aria-hidden="true">HELLO!</div>
-              <div class="action-petal action-petal-two" aria-hidden="true">YAY!</div>
+              <div class="action-petal action-petal-one" aria-hidden="true">👋</div>
+              <div class="action-petal action-petal-two" aria-hidden="true">★</div>
             </div>
 
             <button id="robotPlayToggle" class="robot-play-toggle" type="button" aria-expanded="false">
@@ -107,10 +107,10 @@
             <div class="emotion-dock" aria-label="시오니에게 지금 기분 말하기">
               <span>오늘 기분은?</span>
               <div>
-                <button type="button" data-feeling="happy" aria-label="기뻐요">😊<small>Happy</small></button>
-                <button type="button" data-feeling="excited" aria-label="신나요">🤩<small>Excited</small></button>
-                <button type="button" data-feeling="okay" aria-label="괜찮아요">🙂<small>Okay</small></button>
-                <button type="button" data-feeling="sleepy" aria-label="졸려요">😴<small>Sleepy</small></button>
+                <button type="button" data-feeling="happy" aria-label="기뻐요">😊<small>기뻐요</small></button>
+                <button type="button" data-feeling="excited" aria-label="신나요">🤩<small>신나요</small></button>
+                <button type="button" data-feeling="okay" aria-label="괜찮아요">🙂<small>괜찮아요</small></button>
+                <button type="button" data-feeling="sleepy" aria-label="졸려요">😴<small>졸려요</small></button>
               </div>
             </div>
           </section>
@@ -118,7 +118,7 @@
           <aside class="mission-panel" aria-labelledby="missionHeading">
             <div class="mission-topline">
               <div>
-                <p id="worldName">WORLD 1 · SUNNY TOWN</p>
+                <p id="worldName">첫 번째 이야기 마을</p>
                 <h2 id="missionHeading">오늘의 이야기</h2>
               </div>
               <span id="missionMinutes">12분</span>
@@ -126,10 +126,10 @@
             <article class="story-ticket">
               <div id="missionArt" class="ticket-art"><span>🥞</span><i></i></div>
               <div class="ticket-copy">
-                <small id="missionKicker">MISSION 01</small>
+                <small id="missionKicker">첫 번째 모험</small>
                 <h3 id="missionTitle">시오니의 아침 식탁</h3>
                 <p id="missionDesc">좋아하는 아침 메뉴를 영어로 골라 줘!</p>
-                <div class="phrase-preview"><span>오늘의 한마디</span><b id="missionPhrase">I like pancakes!</b></div>
+                <button id="missionPhrase" class="phrase-preview phrase-listen" type="button"><span>🔊</span><b>오늘의 영어 먼저 듣기</b></button>
               </div>
             </article>
             <div class="mission-progress">
@@ -152,7 +152,7 @@
 
         <section class="continue-strip" aria-labelledby="choiceHeading">
           <div class="section-title">
-            <div><p>MORE TO EXPLORE</p><h2 id="choiceHeading">조금 더 놀고 싶다면</h2></div>
+            <div><p>더 놀아 볼까요?</p><h2 id="choiceHeading">조금 더 놀고 싶다면</h2></div>
             <button type="button" data-go="journey">모험 지도 보기 <span>→</span></button>
           </div>
           <details class="more-play">
@@ -169,7 +169,7 @@
 
       <section id="journeyView" class="view" data-view="journey" aria-labelledby="journeyTitle">
         <header class="view-hero journey-hero">
-          <div><p>MY ENGLISH ADVENTURE</p><h1 id="journeyTitle">모험 지도</h1><span>매일 한 걸음, 영어 세계가 활짝 열려요.</span></div>
+          <div><p>나의 영어 모험</p><h1 id="journeyTitle">모험 지도</h1><span>매일 한 걸음, 영어 세계가 활짝 열려요.</span></div>
           <div class="journey-compass"><i>✦</i><b id="journeyPercent">0%</b><small>탐험 완료</small></div>
         </header>
         <div class="map-layout">
@@ -180,17 +180,17 @@
           </section>
           <aside class="map-side">
             <article class="passport-card">
-              <p>MY PASSPORT</p><div><span class="passport-bot">S</span><b>용감한 영어 탐험가</b></div>
+              <p>나의 모험 기록</p><div><span class="passport-bot">★</span><b>용감한 영어 탐험가</b></div>
               <dl><dt>완료한 모험</dt><dd id="completedCount">0</dd><dt>말한 문장</dt><dd id="spokenCount">0</dd></dl>
             </article>
-            <article class="next-reward"><span>🎒</span><div><small>NEXT REWARD</small><b id="nextRewardName">탐험가 가방</b><p><i id="rewardProgress"></i></p></div></article>
+            <article class="next-reward"><span>🎒</span><div><small>다음 보물</small><b id="nextRewardName">탐험가 가방</b><p><i id="rewardProgress"></i></p></div></article>
           </aside>
         </div>
       </section>
 
       <section id="talkView" class="view" data-view="talk" aria-labelledby="talkTitle">
         <header class="view-hero talk-hero">
-          <div><p>SAFE AI CONVERSATION</p><h1 id="talkTitle">시오니와 영어 수다</h1><span>짧게 말해도 괜찮아. 시오니가 이어 줄게!</span></div>
+          <div><p>안전한 AI 말하기 친구</p><h1 id="talkTitle">시오니와 영어 수다</h1><span>마이크를 누르고 말해 봐. 시오니가 이어 줄게!</span></div>
           <span id="aiStatus" class="safe-badge"><i></i> 어린이 안전 모드</span>
         </header>
         <div class="talk-layout">
@@ -214,16 +214,18 @@
           <section class="conversation-card">
             <div id="chatLog" class="chat-log" role="log" aria-live="polite"></div>
             <div id="suggestionChips" class="suggestion-chips" aria-label="대답 도움말"></div>
-            <form id="chatForm" class="chat-compose">
+            <form id="chatForm" class="chat-compose voice-first">
               <label class="sr-only" for="chatInput">영어로 말하거나 입력하기</label>
               <button id="micButton" class="big-mic" type="button" aria-label="마이크로 영어 말하기">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v7a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V22h2v-3.08A7 7 0 0 0 19 12h-2Z"/></svg>
               </button>
+              <div class="voice-instruction"><b>마이크를 누르고 영어로 말해요</b><small id="inputCoach">짧게 말해도 괜찮아요!</small></div>
               <div class="input-wrap">
                 <input id="chatInput" maxlength="160" autocomplete="off" placeholder="영어로 짧게 써도 좋아요">
-                <small id="inputCoach">예: I like strawberries.</small>
+                <small>보호자가 필요할 때만 입력해 주세요</small>
               </div>
               <button class="send-button" type="submit" aria-label="보내기">↑</button>
+              <button id="keyboardToggle" class="keyboard-toggle" type="button" aria-expanded="false">어른 입력 도움</button>
             </form>
             <p class="privacy-note"><span>●</span> 이름·학교·주소는 묻지 않아요. 대화 기록은 이 기기에 저장하지 않아요.</p>
           </section>
@@ -232,25 +234,25 @@
 
       <section id="treasureView" class="view" data-view="treasure" aria-labelledby="treasureTitle">
         <header class="view-hero treasure-hero">
-          <div><p>LOOK HOW YOU GREW</p><h1 id="treasureTitle">나의 반짝 보물함</h1><span>용기 내어 말한 순간들이 모두 보물이 되었어!</span></div>
+          <div><p>내가 자란 모습</p><h1 id="treasureTitle">나의 반짝 보물함</h1><span>용기 내어 말한 순간들이 모두 보물이 되었어!</span></div>
           <div class="total-stars"><span>★</span><b id="bigStarCount">0</b><small>모은 별</small></div>
         </header>
         <div class="progress-dashboard">
           <section class="week-story">
-            <div class="card-title"><div><small>THIS WEEK</small><h2>이번 주 발자국</h2></div><b id="weekSummary">첫걸음을 시작해요</b></div>
+            <div class="card-title"><div><small>이번 주</small><h2>이번 주 발자국</h2></div><b id="weekSummary">첫걸음을 시작해요</b></div>
             <div id="weekDays" class="week-days"></div>
             <div class="weekly-message"><span>🌟</span><p><b id="weeklyTitle">오늘 한 문장부터!</b><small id="weeklyCopy">시오니가 네 첫 영어를 기다리고 있어.</small></p></div>
           </section>
           <section class="skill-garden">
-            <div class="card-title"><div><small>SKILL GARDEN</small><h2>자라고 있는 영어 씨앗</h2></div></div>
+            <div class="card-title"><div><small>영어 씨앗</small><h2>자라고 있는 영어 씨앗</h2></div></div>
             <div id="skillBars" class="skill-bars"></div>
           </section>
           <section class="badge-vault">
-            <div class="card-title"><div><small>MY BADGES</small><h2>용기의 배지</h2></div><b id="badgeCount">0 / 6</b></div>
+            <div class="card-title"><div><small>나의 배지</small><h2>용기의 배지</h2></div><b id="badgeCount">0 / 6</b></div>
             <div id="badgeGrid" class="badge-grid"></div>
           </section>
           <section class="collection-room">
-            <div class="card-title"><div><small>SIONI'S ROOM</small><h2>모험으로 꾸민 방</h2></div><button type="button" data-go="journey">더 모으기 →</button></div>
+            <div class="card-title"><div><small>시오니의 방</small><h2>모험으로 꾸민 방</h2></div><button type="button" data-go="journey">더 모으기 →</button></div>
             <div id="collectionRoom" class="collection-scene"></div>
           </section>
         </div>
@@ -287,7 +289,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
-  <script src="config.js?v=20"></script>
-  <script src="app.js?v=20" defer></script>
+  <script src="config.js?v=21"></script>
+  <script src="app.js?v=21" defer></script>
 </body>
 </html>

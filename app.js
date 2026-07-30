@@ -1,9 +1,9 @@
 (() => {
   "use strict";
 
-  const VERSION = 20;
-  const STORE_KEY = "sioni-english-v20";
-  const OLD_STORE_KEY = "sioni-english-v15";
+  const VERSION = 21;
+  const STORE_KEY = "sioni-english-v21";
+  const OLD_STORE_KEY = "sioni-english-v20";
   const API_ENDPOINT = window.SIONI_API_ENDPOINT || "/api/chat";
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const $ = (selector, root = document) => root.querySelector(selector);
@@ -390,11 +390,11 @@
     const done = missionDoneSteps();
     $("#streakCount").textContent = state.streak;
     $("#starCount").textContent = state.stars;
-    $("#worldName").textContent = `WORLD ${mission.world + 1} · ${world.name.toUpperCase()}`;
-    $("#missionKicker").textContent = mission.kicker;
+    $("#worldName").textContent = `${mission.world + 1}번째 세계 · ${world.ko}`;
+    $("#missionKicker").textContent = `${state.currentMission + 1}번째 모험`;
     $("#missionTitle").textContent = mission.title;
     $("#missionDesc").textContent = mission.description;
-    $("#missionPhrase").textContent = mission.phrase;
+    $("#missionPhrase").dataset.speech = mission.phrase;
     $("#missionArt span").textContent = mission.art;
     $("#missionArt").style.background = `linear-gradient(155deg,${mission.color},#ffad73)`;
     $("#missionProgressLabel").textContent = `${done.length} / 8`;
@@ -413,9 +413,11 @@
     const reunion = state.reunionDays >= 2
       ? ["WELCOME BACK, MY FRIEND!", "I missed our adventures!", `${state.reunionDays}일 만이야! 다시 만나서 정말 반가워.`]
       : greeting;
-    $("#greetingEyebrow").textContent = reunion[0];
-    $("#greetingTitle").textContent = state.feeling ? FEELINGS[state.feeling].en : reunion[1];
-    $("#greetingKorean").textContent = state.feeling ? FEELINGS[state.feeling].ko : reunion[2];
+    const greetingSpeech = state.feeling ? FEELINGS[state.feeling].en : reunion[1];
+    $("#greetingEyebrow").textContent = state.feeling ? "시오니가 네 기분을 들었어!" : "시오니의 영어 인사";
+    $("#greetingTitle").textContent = state.feeling ? FEELINGS[state.feeling].ko : reunion[2];
+    $("#greetingKorean").textContent = "🔊 버튼을 누르면 영어로 들려줄게!";
+    $("#greetingSpeak").dataset.speech = greetingSpeech;
     $("#dayLabel").textContent = `오늘의 모험 · ${world.ko}`;
     $$(".emotion-dock button").forEach(button => button.classList.toggle("is-selected", button.dataset.feeling === state.feeling));
   }
@@ -437,7 +439,7 @@
     $("#nextRewardName").textContent = state.completedMissions.length >= 8 ? "별빛 망원경" : state.completedMissions.length >= 4 ? "우주 헬멧" : "탐험가 가방";
     $("#worldTabs").innerHTML = WORLDS.map((world, index) => `
       <button type="button" role="tab" aria-selected="${state.selectedWorld === index}" class="${state.selectedWorld === index ? "is-active" : ""}" data-world="${index}">
-        ${world.icon} ${world.ko} <small>${world.name}</small>
+        ${world.icon} ${world.ko} <small>${index + 1}번째 세계</small>
       </button>`).join("");
     const world = WORLDS[state.selectedWorld];
     const missionIndexes = MISSIONS.map((_, i) => i).slice(world.range[0], world.range[1] + 1);
@@ -449,7 +451,7 @@
       const locked = missionIndex > state.currentMission && !done;
       return `<button type="button" class="map-node ${done ? "is-done" : ""} ${current ? "is-current" : ""} ${locked ? "is-locked" : ""}"
         style="left:${positions[localIndex][0]}%;top:${positions[localIndex][1]}%" data-mission="${missionIndex}" ${locked ? "disabled" : ""}>
-        <span>${locked ? "🔒" : mission.art}</span><b>${mission.kicker.replace("MISSION ", "")} · ${mission.title}</b>
+        <span>${locked ? "🔒" : mission.art}</span><b>${missionIndex + 1} · ${mission.title}</b>
       </button>`;
     }).join("");
   }
@@ -506,7 +508,7 @@
       <div class="mission-shell">
         <aside class="mission-story-side">
           <button class="mission-close" type="button" data-close-mission aria-label="미션 닫기">×</button>
-          <div class="mission-side-copy"><small>${mission.kicker} · ${stepNames[missionStep]}</small><h2>${mission.title}</h2><p>${mission.description}</p></div>
+          <div class="mission-side-copy"><small>${currentMissionIndex + 1}번째 모험 · ${stepNames[missionStep]}</small><h2>${mission.title}</h2><p>${mission.description}</p></div>
           <span class="side-robot">${mission.art}</span>
         </aside>
         <section class="mission-main">
@@ -524,47 +526,50 @@
     if (missionStep === 0) {
       const reviews = (state.reviewQueue || []).slice(0, 3);
       content.innerHTML = `
-        <small class="step-kicker">STEP 1 · STORY</small><h2>오늘의 이야기를 만나 봐!</h2><p>그림을 보며 장면 속 영어를 상상해 보세요.</p>
-        <div class="story-pages">${extra.story.map(([icon,en,ko]) => `<button class="story-page" type="button" data-story-line="${escapeHtml(en)}"><span>${icon}</span><b>${en}</b><small>${state.koreanHelp ? ko : ""}</small></button>`).join("")}</div>
-        ${reviews.length ? `<div class="review-warmup"><span>기억 깨우기</span>${reviews.map(item => `<button type="button" data-review-item="${escapeHtml(item)}">↻ ${escapeHtml(item)}</button>`).join("")}</div>` : ""}
+        <small class="step-kicker">1 · 그림 이야기</small><h2>그림을 누르고 영어를 들어 봐!</h2><p>글자를 읽지 않아도 괜찮아요. 그림과 소리로 만나요.</p>
+        <div class="story-pages">${extra.story.map(([icon,en,ko], index) => `<button class="story-page" type="button" data-story-line="${escapeHtml(en)}" aria-label="${index + 1}번 장면 영어 듣기"><span>${icon}</span><b>${state.koreanHelp ? ko : `${index + 1}번 장면`}</b><small>🔊 눌러서 영어 듣기</small></button>`).join("")}</div>
+        ${reviews.length ? `<div class="review-warmup"><span>기억 깨우기</span>${reviews.map((item,index) => `<button type="button" data-review-item="${escapeHtml(item)}">🔊 복습 소리 ${index + 1}</button>`).join("")}</div>` : ""}
         <button class="mission-next" type="button" data-mission-next>이야기를 만났어요 · 다음으로</button>`;
     } else if (missionStep === 1) {
       content.innerHTML = `
-        <small class="step-kicker">STEP 2 · NEW WORDS</small><h2>오늘의 단어 세 친구</h2><p>카드를 눌러 소리를 모두 들어 보세요.</p>
-        <div class="word-cards">${mission.words.map((word,index) => `<button class="word-card" type="button" data-word="${escapeHtml(word)}"><span>${extra.wordIcons[index]}</span><b>${word}</b><small>눌러서 듣기</small></button>`).join("")}</div>
+        <small class="step-kicker">2 · 그림과 소리</small><h2>오늘의 소리 세 친구</h2><p>그림 카드를 눌러 영어 소리를 모두 들어 보세요.</p>
+        <div class="word-cards">${mission.words.map((word,index) => `<button class="word-card" type="button" data-word="${escapeHtml(word)}" aria-label="${index + 1}번 그림 영어 듣기"><span>${extra.wordIcons[index]}</span><b>소리 ${index + 1}</b><small>🔊 눌러서 듣기</small></button>`).join("")}</div>
         <span class="big-translation" id="wordFeedback">0 / 3 단어를 들었어요</span>
         <button class="mission-next" type="button" data-mission-next disabled>세 단어를 알았어요 · 다음으로</button>`;
     } else if (missionStep === 2) {
       content.innerHTML = `
-        <small class="step-kicker">STEP 3 · LISTEN</small><h2>핵심 문장을 귀에 담아 봐!</h2><p>한 번은 뜻을 생각하고, 한 번은 리듬을 따라 들어요.</p>
-        <button class="listen-orb" type="button" data-listen-phrase aria-label="${mission.phrase} 듣기">👂</button>
-        <strong class="big-phrase">${mission.phrase}</strong><span class="big-translation">${state.koreanHelp ? mission.ko : ""}</span>
+        <small class="step-kicker">3 · 귀로 듣기</small><h2>핵심 문장을 귀에 담아 봐!</h2><p>글자는 보지 않고 뜻과 리듬을 귀로 느껴요.</p>
+        <button class="listen-orb" type="button" data-listen-phrase aria-label="오늘의 영어 문장 듣기">👂</button>
+        <div class="sound-visual" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><span class="big-translation">${state.koreanHelp ? mission.ko : "영어 소리를 잘 들어 보세요"}</span>
         <div class="listen-speed-row"><button type="button" data-listen-speed=".58">🐢 천천히</button><button type="button" data-listen-speed=".82">▶ 자연스럽게</button></div>
         <button class="mission-next" type="button" data-mission-next disabled>들었어요 · 다음으로</button>`;
     } else if (missionStep === 3) {
       content.innerHTML = `
-        <small class="step-kicker">STEP 4 · SPEAK</small><h2>이제 네 목소리로 말해 봐!</h2><p>작게 말하고, 보통으로 말하고, 신나게 말해도 좋아요.</p>
+        <small class="step-kicker">4 · 따라 말하기</small><h2>듣고 네 목소리로 따라 해 봐!</h2><p>먼저 소리를 다시 듣고, 마이크를 눌러 말해요.</p>
+        <button class="model-listen" type="button" data-speak="${escapeHtml(mission.phrase)}">🔊 먼저 영어 듣기</button>
         <div class="speak-orb"><i class="sound-ring"></i><button type="button" data-record-phrase aria-label="영어 말하기">🎙️</button></div>
-        <strong class="big-phrase">${mission.phrase}</strong><span class="big-translation" id="speechFeedback">버튼을 누르고 말해 보세요</span>
+        <span class="big-translation" id="speechFeedback">마이크를 누르고 들은 소리를 따라 해요</span>
         <button class="mission-next" type="button" data-mission-next>말했어요 · 다음으로</button>`;
     } else if (missionStep === 4) {
       const tokens = mission.phrase.replace(/[.!?]/g,"").split(" ").sort(() => Math.random() - .5);
       content.innerHTML = `
-        <small class="step-kicker">STEP 5 · BUILD A SENTENCE</small><h2>흩어진 말을 문장으로 모아 줘!</h2><p>낱말을 영어 순서대로 눌러 보세요.</p>
-        <div id="builtSentence" class="built-sentence">여기에 문장이 만들어져요</div>
-        <div class="phrase-builder">${tokens.map(word => `<button class="phrase-token" type="button" data-token="${escapeHtml(word)}">${word}</button>`).join("")}</div>
+        <small class="step-kicker">5 · 소리 순서 놀이</small><h2>들은 소리를 순서대로 모아 줘!</h2><p>버튼을 눌러 소리를 듣고, 문장의 순서를 찾아요.</p>
+        <button class="model-listen" type="button" data-speak="${escapeHtml(mission.phrase)}">🔊 문장 다시 듣기</button>
+        <div id="builtSentence" class="built-sentence">아래 소리를 차례로 눌러요</div>
+        <div class="phrase-builder">${tokens.map((word,index) => `<button class="phrase-token" type="button" data-token="${escapeHtml(word)}">🔊 소리 ${index + 1}</button>`).join("")}</div>
         <button class="mission-next" type="button" data-mission-next disabled>문장을 완성했어요 · 다음으로</button>`;
     } else if (missionStep === 5) {
       content.innerHTML = `
-        <small class="step-kicker">STEP 6 · FIND IT</small><h2>${mission.question}</h2><p>들었던 이야기에서 맞는 그림을 찾아보세요.</p>
-        <div class="choice-grid">${mission.choices.map(([emoji, word]) => `<button type="button" data-answer="${emoji}">${emoji}<small>${word}</small></button>`).join("")}</div>
+        <small class="step-kicker">6 · 그림 찾기</small><h2>어떤 그림을 말했을까?</h2><p>영어를 듣고 맞는 그림을 찾아보세요.</p>
+        <button class="model-listen" type="button" data-speak="${escapeHtml((mission.choices.find(([emoji]) => emoji === mission.answer) || [null, mission.words[0]])[1])}">🔊 문제 소리 듣기</button>
+        <div class="choice-grid">${mission.choices.map(([emoji, word],index) => `<button type="button" data-answer="${emoji}" data-answer-word="${escapeHtml(word)}" aria-label="${index + 1}번 그림"><span>${emoji}</span><small>그림 ${index + 1}</small></button>`).join("")}</div>
         <span class="big-translation" id="quizFeedback">천천히 생각해도 좋아요.</span>
         <button class="mission-next" type="button" data-mission-next disabled>정답이에요 · 대화하기</button>`;
     } else if (missionStep === 6) {
       content.innerHTML = `
-        <small class="step-kicker">STEP 7 · MINI ROLE PLAY</small><h2>이야기 속 주인공이 되어 봐!</h2><p>${extra.role[0]}</p>
-        <div class="role-card"><span>🤖</span><div><b>${extra.role[1]}</b><small>시오니의 질문을 듣고 대답을 골라 말해 보세요.</small></div></div>
-        <div class="role-replies">${extra.role[2].map(line => `<button type="button" data-role-line="${escapeHtml(line)}">${line} 🔊</button>`).join("")}</div>
+        <small class="step-kicker">7 · 듣고 대답하기</small><h2>이야기 속 주인공이 되어 봐!</h2><p>${extra.role[0]}</p>
+        <div class="role-card"><span>🤖</span><div><button class="model-listen" type="button" data-speak="${escapeHtml(extra.role[1])}">🔊 시오니 질문 듣기</button><small>질문을 듣고 대답 소리를 골라 따라 말해 보세요.</small></div></div>
+        <div class="role-replies">${extra.role[2].map((line,index) => `<button type="button" data-role-line="${escapeHtml(line)}">🔊 대답 ${index + 1}</button>`).join("")}</div>
         <button class="mission-next" type="button" data-mission-next disabled>대화를 해냈어요 · 보상 보기</button>`;
     } else {
       const alreadyDone = state.completedMissions.includes(mission.id);
@@ -626,17 +631,18 @@
 
   function addPhraseToken(button) {
     if (button.classList.contains("is-used")) return;
+    speak(button.dataset.token);
     button.classList.add("is-used");
     const sentence = $("#builtSentence");
     const words = JSON.parse(sentence.dataset.words || "[]");
     words.push(button.dataset.token);
     sentence.dataset.words = JSON.stringify(words);
-    sentence.textContent = words.join(" ");
+    sentence.textContent = `${"🔊 ".repeat(words.length)}${words.length}개 소리를 모았어요`;
     const target = MISSIONS[currentMissionIndex].phrase.replace(/[.!?]/g, "").trim().toLowerCase();
     const attempt = words.join(" ").trim().toLowerCase();
     if (attempt === target) {
       sentence.classList.add("is-right");
-      sentence.textContent = `${words.join(" ")} ✓`;
+      sentence.textContent = "문장 소리를 순서대로 완성했어요 ✓";
       state.quizzes++;
       state.stars += 2;
       markMissionStep(4);
@@ -649,7 +655,7 @@
       sentence.textContent = "순서를 다시 생각해 볼까? ↺";
       sentence.dataset.words = "[]";
       $$(".phrase-token", $("#missionPlayer")).forEach(token => token.classList.remove("is-used"));
-      setTimeout(() => { if (sentence.dataset.words === "[]") sentence.textContent = "여기에 문장이 만들어져요"; }, 900);
+      setTimeout(() => { if (sentence.dataset.words === "[]") sentence.textContent = "아래 소리를 차례로 눌러요"; }, 900);
     }
   }
 
@@ -715,7 +721,7 @@
         schedulePractice(MISSIONS[currentMissionIndex].phrase, overlap >= .5, "speaking");
       }
       saveState();
-      feedback.textContent = transcript ? `“${transcript}” — 멋진 용기야!` : "말해 줘서 고마워! 목소리에 별 두 개!";
+      feedback.textContent = transcript ? "영어로 말한 네 용기가 정말 멋져! ★★" : "말해 줘서 고마워! 목소리에 별 두 개!";
       setRobot("happy", "highfive");
       sparkle("★");
     });
@@ -725,17 +731,18 @@
     const mission = MISSIONS[currentMissionIndex];
     if (button.dataset.answer === mission.answer) {
       button.classList.add("is-right");
-      $("#quizFeedback").textContent = `Yes! ${button.querySelector("small").textContent}! 정말 잘 찾았어.`;
+      const answerWord = button.dataset.answerWord;
+      $("#quizFeedback").textContent = "정답이야! 귀로 듣고 그림을 정말 잘 찾았어.";
       $$(".choice-grid button").forEach(item => item.disabled = true);
       $("[data-mission-next]", $("#missionPlayer")).disabled = false;
       state.quizzes++;
       state.stars += 2;
       markMissionStep(5);
-      schedulePractice(button.querySelector("small").textContent, true, "meaning");
+      schedulePractice(answerWord, true, "meaning");
       saveState();
-      speak(`Yes! ${button.querySelector("small").textContent}!`);
+      speak(`Yes! ${answerWord}!`);
     } else {
-      schedulePractice(button.querySelector("small").textContent, false, "meaning");
+      schedulePractice(button.dataset.answerWord, false, "meaning");
       button.classList.add("is-wrong");
       $("#quizFeedback").textContent = "거의 다 왔어! 다른 그림을 한 번 볼까?";
       setTimeout(() => button.classList.remove("is-wrong"), 650);
@@ -771,15 +778,15 @@
     const message = document.createElement("article");
     message.className = `chat-message ${role}${loading ? " is-loading" : ""}`;
     message.innerHTML = role === "sioni"
-      ? `<span class="message-avatar">S</span><div class="message-body">${loading ? `<span class="typing-dots"><i></i><i></i><i></i></span>` : `<p>${escapeHtml(english)}</p>${state.koreanHelp && korean ? `<small>${escapeHtml(korean)}</small>` : ""}<button type="button" data-speak="${escapeHtml(english)}">🔊 다시 듣기</button>`}</div>`
-      : `<div class="message-body"><p>${escapeHtml(english)}</p><small>내가 말한 문장</small></div>`;
+      ? `<span class="message-avatar">S</span><div class="message-body">${loading ? `<span class="typing-dots"><i></i><i></i><i></i></span>` : `<p>${state.koreanHelp && korean ? escapeHtml(korean) : "시오니가 영어로 말했어요!"}</p><small>영어는 글자가 아니라 소리로 만나요</small><button type="button" data-speak="${escapeHtml(english)}">🔊 영어 다시 듣기</button>`}</div>`
+      : `<div class="message-body"><p>내가 영어로 말했어요 🎙️</p><small>멋진 말하기 도전!</small></div>`;
     $("#chatLog").append(message);
     $("#chatLog").scrollTop = $("#chatLog").scrollHeight;
     return message;
   }
 
   function setSuggestions(items = []) {
-    $("#suggestionChips").innerHTML = items.slice(0, 3).map(item => `<button type="button" data-suggestion="${escapeHtml(item)}">${escapeHtml(item)}</button>`).join("");
+    $("#suggestionChips").innerHTML = items.slice(0, 3).map((item,index) => `<button type="button" data-suggestion="${escapeHtml(item)}">🔊 대답 ${index + 1} 듣고 말하기</button>`).join("");
   }
 
   function escapeHtml(value) {
@@ -886,7 +893,7 @@
     $("#inputCoach").textContent = "듣고 있어요… 영어로 말해 보세요!";
     listenWithRecognition(transcript => {
       button.classList.remove("is-listening");
-      $("#inputCoach").textContent = transcript ? `들린 문장: ${transcript}` : "잘 안 들렸어요. 다시 말하거나 써 주세요.";
+      $("#inputCoach").textContent = transcript ? "영어 목소리를 잘 들었어요!" : "잘 안 들렸어요. 마이크를 다시 눌러 말해 주세요.";
       if (transcript) sendChat(transcript);
     });
   }
@@ -907,7 +914,7 @@
       }
     };
     const game = games[type] || games.word;
-    $("#gameContent").innerHTML = `<div class="game-emoji">${game.emoji}</div><small class="dialog-eyebrow">QUICK PLAY</small><h2>${game.title}</h2><p>${game.copy}</p><div class="game-options">${game.options.map(([line, icon]) => `<button type="button" data-game-line="${escapeHtml(line)}">${icon} ${line}</button>`).join("")}</div>`;
+    $("#gameContent").innerHTML = `<div class="game-emoji">${game.emoji}</div><small class="dialog-eyebrow">바로 놀이</small><h2>${game.title}</h2><p>${game.copy}</p><div class="game-options">${game.options.map(([line, icon],index) => `<button type="button" data-game-line="${escapeHtml(line)}">${icon} 🔊 소리 ${index + 1}</button>`).join("")}</div>`;
     $("#gameDialog").showModal();
     speak(game.options[0][0]);
   }
@@ -918,7 +925,7 @@
     state.speaks++;
     state.stars += 2;
     saveState();
-    button.textContent = `★ +2 · ${line}`;
+    button.textContent = "★ +2 · 영어로 잘 말했어요!";
     button.parentElement.querySelectorAll("button").forEach(item => item.disabled = true);
     setTimeout(() => {
       $("#gameDialog").close();
@@ -969,8 +976,10 @@
 
   function showRobotLine(line) {
     const [english, korean, mood = "happy", action = "wave"] = line;
-    $("#greetingTitle").textContent = english;
-    $("#greetingKorean").textContent = korean;
+    $("#greetingEyebrow").textContent = "시오니의 영어 반응";
+    $("#greetingTitle").textContent = korean;
+    $("#greetingKorean").textContent = "🔊 영어로 말하는 중이에요";
+    $("#greetingSpeak").dataset.speech = english;
     setRobot(mood, action);
     sparkle(action === "highfive" ? "★" : action === "shy" ? "♥" : "✦");
     speak(english);
@@ -1040,7 +1049,8 @@
       const robotAction = event.target.closest("[data-robot-action]");
       if (robotAction) performRobotAction(robotAction.dataset.robotAction);
 
-      if (event.target.closest("#greetingSpeak")) speak($("#greetingTitle").textContent);
+      if (event.target.closest("#greetingSpeak")) speak($("#greetingSpeak").dataset.speech || currentMission().phrase);
+      if (event.target.closest("#missionPhrase")) speak($("#missionPhrase").dataset.speech || currentMission().phrase);
       if (event.target.closest("#startMission")) openMission();
       const mapNode = event.target.closest("[data-mission]");
       if (mapNode) openMission(Number(mapNode.dataset.mission));
@@ -1064,7 +1074,7 @@
         speak(reviewItem.dataset.reviewItem);
         schedulePractice(reviewItem.dataset.reviewItem, true, "review");
         reviewItem.disabled = true;
-        reviewItem.textContent = `✓ ${reviewItem.dataset.reviewItem}`;
+        reviewItem.textContent = "✓ 복습 소리를 들었어요";
       }
       const wordCard = event.target.closest("[data-word]");
       if (wordCard) playWord(wordCard);
@@ -1082,7 +1092,7 @@
       const topic = event.target.closest("[data-topic]");
       if (topic) chooseTopic(topic.dataset.topic);
       const suggestion = event.target.closest("[data-suggestion]");
-      if (suggestion) sendChat(suggestion.dataset.suggestion);
+      if (suggestion) speak(suggestion.dataset.suggestion, () => sendChat(suggestion.dataset.suggestion));
       const speakButton = event.target.closest("[data-speak]");
       if (speakButton) speak(speakButton.dataset.speak);
       const quickGame = event.target.closest("[data-quick-game]");
@@ -1097,6 +1107,13 @@
         else { showToast("계산 결과를 다시 확인해 주세요."); $("#parentAnswer").select(); }
       }
       if (event.target.closest("#micButton")) startChatMic();
+      if (event.target.closest("#keyboardToggle")) {
+        const form = $("#chatForm");
+        const open = form.classList.toggle("is-keyboard-open");
+        $("#keyboardToggle").setAttribute("aria-expanded", String(open));
+        $("#keyboardToggle").textContent = open ? "입력 닫기" : "어른 입력 도움";
+        if (open) $("#chatInput").focus();
+      }
       if (event.target.closest("#soundButton")) {
         state.voice = !state.voice;
         saveState();
