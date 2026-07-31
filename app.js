@@ -1274,8 +1274,25 @@
     $("#soundButton").setAttribute("aria-label", state.voice ? "소리 끄기" : "소리 켜기");
   }
 
+  function applyTimeScene(date = new Date()) {
+    const stage = $("#sioniStage");
+    if (!stage) return;
+    const hour = date.getHours();
+    const period = hour >= 5 && hour < 10
+      ? "morning"
+      : hour < 17
+        ? "day"
+        : hour < 20
+          ? "evening"
+          : "night";
+    stage.classList.remove("time-morning", "time-day", "time-evening", "time-night");
+    stage.classList.add(`time-${period}`);
+    stage.dataset.timePeriod = period;
+  }
+
   function init() {
     registerVisit();
+    applyTimeScene();
     renderHome();
     renderJourney();
     renderTreasure();
@@ -1283,6 +1300,7 @@
     bindEvents();
     setCharacterState("ready", 1800);
     scheduleIdleMoment();
+    setInterval(applyTimeScene, 60000);
     if ("speechSynthesis" in window) speechSynthesis.getVoices();
   }
 
